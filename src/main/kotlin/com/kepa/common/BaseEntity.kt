@@ -9,16 +9,13 @@ import javax.persistence.*
 
 @MappedSuperclass
 @EntityListeners(value = [AuditingEntityListener::class])
-abstract class BaseEntity {
+abstract class BaseEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Comment("기본키")
-    val id: Long = 0
+    var id: Long = 0,
     @CreatedDate
     @Column(updatable = false, nullable = false)
-    @Comment("생성 시간")
-    val createdAt: LocalDateTime = LocalDateTime.now()
+    var createdAt: LocalDateTime = LocalDateTime.now(),
     @LastModifiedDate
-    @Comment("수정 시간")
-    var updatedAt: LocalDateTime? = null
-}
+    var updatedAt: LocalDateTime = LocalDateTime.now()
+)
