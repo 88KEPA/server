@@ -1,10 +1,13 @@
 package com.kepa.domain.account
 
 import com.kepa.common.BaseEntity
+import java.time.LocalDate
 import javax.persistence.Column
+import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
 
+@Entity
 class Account(
     @Column(nullable = false)
     val name: String,
@@ -26,6 +29,8 @@ class Account(
     val roadAddress: String,
     @Column(nullable = false)
     val roadAddressDetail: String,
+    @Column(nullable = false)
+    val birth: LocalDate,
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     val gender: Gender,
