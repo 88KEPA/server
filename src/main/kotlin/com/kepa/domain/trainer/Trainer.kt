@@ -1,4 +1,4 @@
-package com.kepa.domain.account
+package com.kepa.domain.trainer
 
 import com.kepa.common.BaseEntity
 import java.time.LocalDate
@@ -8,7 +8,7 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 
 @Entity
-class Account(
+class Trainer(
     @Column(nullable = false)
     val name: String,
     @Column(nullable = false)
