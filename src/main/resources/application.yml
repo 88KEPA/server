@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
@@ -11,3 +11,6 @@ spring:
     password: test
     url: jdbc:mysql://127.0.0.1:3306/test
     driver-class-name: com.mysql.jdbc.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
