@@ -1,7 +1,7 @@
-package com.kepa.domain.account
+package com.kepa.domain.trainer
 
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface AccountRepository : JpaRepository<Account,Long> {
+interface TrainerRepository : JpaRepository<Trainer,Long> {
     fun existsByLoginIdOrEmail(loginId: String, email: String) : Boolean
 }
