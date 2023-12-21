@@ -1,17 +1,17 @@
-package com.kepa.application.account.dto.request
+package com.kepa.application.trainer.dto.request
 
 import com.kepa.common.exception.ExceptionCode.ALREADY_INFORMATION
 import com.kepa.common.exception.ExceptionCode.NOT_MATCH_PASSWORD_CONFIRM_PASSWORD
 import com.kepa.common.exception.KepaException
-import com.kepa.domain.account.Account
-import com.kepa.domain.account.Gender
-import com.kepa.domain.account.LoginType
+import com.kepa.domain.trainer.Trainer
+import com.kepa.domain.trainer.Gender
+import com.kepa.domain.trainer.LoginType
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 
 
-data class AccountJoin(
+data class TrainerJoin(
     @NotBlank val name: String,
     @NotBlank val loginId: String,
     @NotBlank val password: String,
@@ -27,8 +27,8 @@ data class AccountJoin(
     @NotBlank val gender: Gender,
     @NotBlank val loginType: LoginType,
 ) {
-    fun create(): Account {
-        return Account(
+    fun create(): Trainer {
+        return Trainer(
             name = name,
             loginId = loginId,
             password = password,
