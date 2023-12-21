@@ -1,10 +1,10 @@
-package com.kepa.application.account
+package com.kepa.application.trainer
 
-import com.kepa.application.account.dto.request.AccountJoin
+import com.kepa.application.trainer.dto.request.TrainerJoin
 import com.kepa.common.exception.KepaException
-import com.kepa.domain.account.AccountRepository
-import com.kepa.domain.account.Gender
-import com.kepa.domain.account.LoginType
+import com.kepa.domain.trainer.TrainerRepository
+import com.kepa.domain.trainer.Gender
+import com.kepa.domain.trainer.LoginType
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,9 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest
 import java.time.LocalDate
 
 @SpringBootTest
-class AccountWriteServiceTest(
-    @Autowired private val accountWriteService: AccountWriteService,
-    @Autowired private val accountRepository: AccountRepository,
+class TrainerWriteServiceTest(
+    @Autowired private val trainerWriteService: TrainerWriteService,
+    @Autowired private val trainerRepository: TrainerRepository,
 ) : BehaviorSpec({
     Given("회원가입에서") {
         val name = "테스트"
@@ -31,7 +31,7 @@ class AccountWriteServiceTest(
         val gender: Gender = Gender.MALE
         val loginType: LoginType = LoginType.ORIGIN
         val birth = LocalDate.of(1928,1,5)
-        val accountJoin = AccountJoin(
+        val trainerJoin = TrainerJoin(
             name = name,
             loginId = loginId,
             email = email,
@@ -47,10 +47,10 @@ class AccountWriteServiceTest(
             loginType = loginType,
             birth = birth
         )
-        val savedAccount = accountRepository.save(accountJoin.create())
+        val savedAccount = trainerRepository.save(trainerJoin.create())
         When("비밀번호와 비밀번호 확인이 다르면") {
             val diffConfirmPassword = "diffPassword"
-            val accountJoinPasswordCheck = AccountJoin(
+            val trainerJoinPasswordCheck = TrainerJoin(
                 name = name,
                 loginId = loginId,
                 email = email,
@@ -68,7 +68,7 @@ class AccountWriteServiceTest(
             )
             Then("예외가 발생한다") {
                 shouldThrow<KepaException> {
-                    accountWriteService.join(accountJoinPasswordCheck)
+                    trainerWriteService.join(trainerJoinPasswordCheck)
                 }
             }
         }
@@ -78,7 +78,7 @@ class AccountWriteServiceTest(
                 shouldThrow<KepaException> {
                     println(savedAccount.loginId)
                     require(savedAccount.loginId != alreadyLoginId) {
-                        accountWriteService.join(accountJoin)
+                        trainerWriteService.join(trainerJoin)
                     }
                 }
             }
@@ -88,7 +88,7 @@ class AccountWriteServiceTest(
             Then("예외가 발생한다.") {
                 shouldThrow<KepaException> {
                     require(savedAccount.email != alreadyEmail) {
-                        accountWriteService.join(accountJoin)
+                        trainerWriteService.join(trainerJoin)
                     }
                 }
             }
