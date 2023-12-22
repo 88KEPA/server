@@ -6,6 +6,7 @@ import com.kepa.common.exception.KepaException
 import com.kepa.domain.trainer.Trainer
 import com.kepa.domain.trainer.Gender
 import com.kepa.domain.trainer.LoginType
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -27,11 +28,11 @@ data class TrainerJoin(
     @NotBlank val gender: Gender,
     @NotBlank val loginType: LoginType,
 ) {
-    fun create(): Trainer {
+    fun create(bCryptPasswordEncoder: BCryptPasswordEncoder): Trainer {
         return Trainer(
             name = name,
             loginId = loginId,
-            password = password,
+            password = bCryptPasswordEncoder.encode(password),
             phone = phone,
             email = email,
             zipCode = zipCode,
