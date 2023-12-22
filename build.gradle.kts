@@ -34,9 +34,17 @@ dependencies {
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
     testImplementation("io.kotest.extensions:kotest-extensions-testcontainers:2.0.2")
 
-    //스웨거
+    //swagger
     implementation(mapOf("group" to "io.springfox", "name" to "springfox-swagger-ui", "version" to "3.0.0"))
     implementation(mapOf("group" to "io.springfox", "name" to "springfox-boot-starter", "version" to "3.0.0"))
+
+    //jwt
+    implementation("io.jsonwebtoken:jjwt-api:0.11.2")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
+
+    //security
+    implementation("org.springframework.boot:spring-boot-starter-security")
 }
 
 tasks.withType<KotlinCompile> {
