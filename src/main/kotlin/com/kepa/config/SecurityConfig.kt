@@ -1,5 +1,7 @@
 package com.kepa.config
 
+import com.kepa.security.LoginFilter
+import com.kepa.token.TokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -8,10 +10,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig : WebSecurityConfigurerAdapter() {
+class SecurityConfig(
+    private val tokenProvider: TokenProvider,
+) : WebSecurityConfigurerAdapter() {
 
     @Bean
     fun bCryptPasswordEncoder() : BCryptPasswordEncoder {
@@ -19,16 +24,15 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
     override fun configure(http: HttpSecurity) {
-       http.cors().disable().formLogin()
-           .successHandler(null)
-           .failureHandler(null)
-           .and()
+       http.cors().disable()
+           .httpBasic().disable()
            .cors().disable()
            .csrf().disable()
            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
            .and()
+           .addFilterBefore(LoginFilter(tokenProvider), UsernamePasswordAuthenticationFilter::class.java)
            .authorizeRequests()
-           .antMatchers("/login/**","/**")
+           .antMatchers("/api/login/**","/**")
            .permitAll()
            .anyRequest().authenticated()
 
