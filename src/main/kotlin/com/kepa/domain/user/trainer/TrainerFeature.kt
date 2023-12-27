@@ -1,4 +1,4 @@
-package com.kepa.domain.trainer
+package com.kepa.domain.user.trainer
 
 enum class Gender(
     val value: String
