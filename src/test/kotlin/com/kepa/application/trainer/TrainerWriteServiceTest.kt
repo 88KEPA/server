@@ -2,23 +2,24 @@ package com.kepa.application.trainer
 
 import com.kepa.application.trainer.dto.request.TrainerJoin
 import com.kepa.common.exception.KepaException
-import com.kepa.domain.trainer.TrainerRepository
-import com.kepa.domain.trainer.Gender
-import com.kepa.domain.trainer.LoginType
+import com.kepa.domain.user.trainer.TrainerRepository
+import com.kepa.domain.user.trainer.Gender
+import com.kepa.domain.user.trainer.LoginType
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.time.LocalDate
 
 @SpringBootTest
 class TrainerWriteServiceTest(
     @Autowired private val trainerWriteService: TrainerWriteService,
     @Autowired private val trainerRepository: TrainerRepository,
+    @Autowired private val bCryptPasswordEncoder: BCryptPasswordEncoder,
 ) : BehaviorSpec({
     Given("회원가입에서") {
         val name = "테스트"
-        val loginId = "test"
         val email = "test@naver.com"
         val password = "test"
         val phone = "01012341234"
@@ -33,7 +34,6 @@ class TrainerWriteServiceTest(
         val birth = LocalDate.of(1928,1,5)
         val trainerJoin = TrainerJoin(
             name = name,
-            loginId = loginId,
             email = email,
             password = password,
             confirmPassword = confirmPassword,
@@ -47,12 +47,11 @@ class TrainerWriteServiceTest(
             loginType = loginType,
             birth = birth
         )
-        val savedAccount = trainerRepository.save(trainerJoin.create())
+        val savedAccount = trainerRepository.save(trainerJoin.create(bCryptPasswordEncoder.encode(password)))
         When("비밀번호와 비밀번호 확인이 다르면") {
             val diffConfirmPassword = "diffPassword"
             val trainerJoinPasswordCheck = TrainerJoin(
                 name = name,
-                loginId = loginId,
                 email = email,
                 password = password,
                 confirmPassword = diffConfirmPassword,
@@ -69,17 +68,6 @@ class TrainerWriteServiceTest(
             Then("예외가 발생한다") {
                 shouldThrow<KepaException> {
                     trainerWriteService.join(trainerJoinPasswordCheck)
-                }
-            }
-        }
-        When("이미 가입된 아이디일 경우") {
-            val alreadyLoginId = "test"
-            Then("예외가 발생한다.") {
-                shouldThrow<KepaException> {
-                    println(savedAccount.loginId)
-                    require(savedAccount.loginId != alreadyLoginId) {
-                        trainerWriteService.join(trainerJoin)
-                    }
                 }
             }
         }
