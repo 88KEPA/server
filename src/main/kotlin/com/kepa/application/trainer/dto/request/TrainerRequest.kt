@@ -1,12 +1,12 @@
 package com.kepa.application.trainer.dto.request
 
+import Role
 import com.kepa.common.exception.ExceptionCode.ALREADY_INFORMATION
 import com.kepa.common.exception.ExceptionCode.NOT_MATCH_PASSWORD_CONFIRM_PASSWORD
 import com.kepa.common.exception.KepaException
-import com.kepa.domain.trainer.Trainer
-import com.kepa.domain.trainer.Gender
-import com.kepa.domain.trainer.LoginType
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import com.kepa.domain.user.trainer.Gender
+import com.kepa.domain.user.trainer.LoginType
+import com.kepa.domain.user.trainer.Trainer
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -14,8 +14,7 @@ import javax.validation.constraints.NotBlank
 
 data class TrainerJoin(
     @NotBlank val name: String,
-    @NotBlank val loginId: String,
-    @NotBlank val password: String,
+    @NotBlank var password: String,
     @NotBlank val confirmPassword: String,
     @NotBlank val phone: String,
     @NotBlank @Email val email: String,
@@ -28,11 +27,10 @@ data class TrainerJoin(
     @NotBlank val gender: Gender,
     @NotBlank val loginType: LoginType,
 ) {
-    fun create(bCryptPasswordEncoder: BCryptPasswordEncoder): Trainer {
+    fun create(encodingPassword: String): Trainer {
         return Trainer(
             name = name,
-            loginId = loginId,
-            password = bCryptPasswordEncoder.encode(password),
+            password = encodingPassword,
             phone = phone,
             email = email,
             zipCode = zipCode,
@@ -58,3 +56,10 @@ data class TrainerJoin(
     }
 
 }
+
+data class LoginInfo(
+    val email: String,
+    val password: String,
+    val loginType: LoginType,
+    val role: Role
+)
