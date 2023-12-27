@@ -1,6 +1,6 @@
 package com.kepa.common
 
-import com.kepa.common.exception.ExceptionCode
+import com.kepa.common.exception.KeapExceptionResponse
 import com.kepa.common.exception.KepaException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -12,7 +12,7 @@ class GlobalException {
     @ExceptionHandler(KepaException::class)
     fun kepaExceptionResponse(
         kepaException: KepaException
-    ): ResponseEntity<KepaException> {
-        return KepaException(kepaException.exceptionCode).toResponse()
+    ): ResponseEntity<KeapExceptionResponse> {
+        return KeapExceptionResponse.toResponse(errorCode = kepaException.exceptionCode)
     }
 }
