@@ -1,6 +1,8 @@
-package com.kepa.domain.trainer
+package com.kepa.domain.user.trainer
 
+import Role
 import com.kepa.common.BaseEntity
+import com.kepa.domain.user.User
 import java.time.LocalDate
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -12,13 +14,11 @@ class Trainer(
     @Column(nullable = false)
     val name: String,
     @Column(nullable = false)
-    val loginId: String,
-    @Column(nullable = false)
     val password: String,
     @Column(nullable = false)
     val phone: String,
     @Column(nullable = false)
-    val email: String,
+    override val email: String,
     @Column(nullable = false)
     val zipCode: String,
     @Column(nullable = false)
@@ -37,4 +37,6 @@ class Trainer(
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     val loginType: LoginType,
-) : BaseEntity()
+    @Enumerated(EnumType.STRING)
+    override val role: Role = Role.TRAINER
+) : BaseEntity(), User
