@@ -1,6 +1,7 @@
 package com.kepa.application.trainer
 
 import com.kepa.application.trainer.dto.request.LoginInfo
+import com.kepa.application.trainer.dto.request.SendCertNumber
 import com.kepa.application.trainer.dto.request.TrainerJoin
 import com.kepa.application.trainer.dto.response.LoginToken
 import io.swagger.annotations.Api
@@ -27,7 +28,8 @@ class TrainerController(
     }
     @Operation(description = "로그인")
     @PostMapping("/login")
-    fun login(@RequestBody loginInfo: LoginInfo): LoginToken = trainerWriteService.login(loginInfo,
+    fun login(@RequestBody loginInfo: LoginInfo): LoginToken = trainerWriteService.login(
+        loginInfo,
         Date()
     )
 
@@ -35,5 +37,14 @@ class TrainerController(
     @PostMapping("/check/email")
     fun checkEmail(@RequestBody email: String) {
         trainerReadService.checkEmail(email)
+    }
+
+    @Operation(description = "인증번호 발송")
+    @PostMapping("/check/number")
+    fun checkNumber(@RequestBody sendCertNumber: SendCertNumber) {
+        trainerWriteService.checkNumber(
+            receiverPhoneNumber = sendCertNumber.receiverPhoneNumber,
+            userId = sendCertNumber.userId
+        )
     }
 }
