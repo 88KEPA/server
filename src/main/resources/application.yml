@@ -18,3 +18,7 @@ jwt:
   secret-key : ${SECRET_KEY}
   access-token-expire-time : 3600
   refresh-token-expire-time : 7200
+aligo :
+  key : ${ALIGO_KEY}
+  send-url : https://apis.aligo.in/send/
+  send-phone-number: ${ALIGO_SEND_PHONE_NUMBER}
