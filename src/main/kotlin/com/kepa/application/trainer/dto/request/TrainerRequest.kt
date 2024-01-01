@@ -43,18 +43,17 @@ data class TrainerJoin(
             birth = birth
         )
     }
-
-    fun checkPassword() {
+    init {
         require(confirmPassword == password) {
             throw KepaException(NOT_MATCH_PASSWORD_CONFIRM_PASSWORD)
         }
     }
+
     fun checkDuplicateInformation(isDuplicate: Boolean) {
         require(!isDuplicate) {
             throw KepaException(ALREADY_INFORMATION)
         }
     }
-
 }
 
 data class LoginInfo(
@@ -62,4 +61,15 @@ data class LoginInfo(
     val password: String,
     val loginType: LoginType,
     val role: Role
+)
+
+data class MessageContent(
+    val certNumber: Int,
+    val receiverPhoneNumber: String,
+    val userId: String,
+)
+
+data class SendCertNumber(
+    val receiverPhoneNumber: String,
+    val userId: String,
 )
