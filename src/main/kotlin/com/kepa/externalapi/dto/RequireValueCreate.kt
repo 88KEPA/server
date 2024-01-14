@@ -1,7 +1,6 @@
-package com.kepa.application.trainer.dto.request
+package com.kepa.externalapi.dto
 
 import java.security.SecureRandom
-import java.util.Random
 
 class RandomNumber {
     companion object {
