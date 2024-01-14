@@ -45,6 +45,9 @@ dependencies {
 
     //security
     implementation("org.springframework.boot:spring-boot-starter-security")
+
+    //mail
+    implementation("org.springframework.boot:spring-boot-starter-mail")
 }
 
 tasks.withType<KotlinCompile> {
