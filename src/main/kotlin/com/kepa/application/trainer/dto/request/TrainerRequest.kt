@@ -1,30 +1,40 @@
 package com.kepa.application.trainer.dto.request
 
 import Role
-import com.kepa.common.exception.ExceptionCode.ALREADY_INFORMATION
 import com.kepa.common.exception.ExceptionCode.NOT_MATCH_PASSWORD_CONFIRM_PASSWORD
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.trainer.Gender
 import com.kepa.domain.user.trainer.LoginType
 import com.kepa.domain.user.trainer.Trainer
+import io.swagger.annotations.ApiModel
+import io.swagger.annotations.ApiModelProperty
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 
-
+@ApiModel(value = "회원가입 요청")
 data class TrainerJoin(
+    @ApiModelProperty(value = "이름")
     @NotBlank val name: String,
+    @ApiModelProperty(value = "비밀번호")
     @NotBlank var password: String,
+    @ApiModelProperty(value = "비밀번호 재확인")
     @NotBlank val confirmPassword: String,
+    @ApiModelProperty(value = "핸드폰 번호")
     @NotBlank val phone: String,
+    @ApiModelProperty(value = "이메일")
     @NotBlank @Email val email: String,
-    @NotBlank val zipCode: String,
-    @NotBlank val jibunAddress: String,
-    @NotBlank val jibunAddressDetail: String,
-    @NotBlank val roadAddress: String,
-    @NotBlank val roadAddressDetail: String,
+    @ApiModelProperty(value = "도로명 또는 지번 주소")
+    @NotBlank val address: String,
+    @ApiModelProperty(value = "건물명")
+    @NotBlank val addressMeta: String,
+    @ApiModelProperty(value = "상세주소")
+    @NotBlank val addressDetail: String,
+    @ApiModelProperty(value = "출생년도")
     @NotBlank val birth: LocalDate,
+    @ApiModelProperty(value = "성별")
     @NotBlank val gender: Gender,
+    @ApiModelProperty(value = "회원가입 또는 로그인 타입")
     @NotBlank val loginType: LoginType,
 ) {
     fun create(encodingPassword: String): Trainer {
@@ -33,11 +43,9 @@ data class TrainerJoin(
             password = encodingPassword,
             phone = phone,
             email = email,
-            zipCode = zipCode,
-            jibunAddress = jibunAddress,
-            jibunAddressDetail = jibunAddressDetail,
-            roadAddress = roadAddress,
-            roadAddressDetail = roadAddressDetail,
+            address = address,
+            addressMeta = addressMeta,
+            addressDetail = addressDetail,
             gender = gender,
             loginType = loginType,
             birth = birth
@@ -48,29 +56,43 @@ data class TrainerJoin(
             throw KepaException(NOT_MATCH_PASSWORD_CONFIRM_PASSWORD)
         }
     }
-
-    fun checkDuplicateInformation(isDuplicate: Boolean) {
-        require(!isDuplicate) {
-            throw KepaException(ALREADY_INFORMATION)
-        }
-    }
 }
 
+@ApiModel(value = "로그인 요청")
 data class LoginInfo(
+    @ApiModelProperty(value = "이메일")
     val email: String,
+    @ApiModelProperty(value = "비밀번호")
     val password: String,
+    @ApiModelProperty(value = "로그인 타입")
     val loginType: LoginType,
+    @ApiModelProperty(value = "회원 권한타입")
     val role: Role
 )
 
 data class MessageContent(
+    @ApiModelProperty(value = "인증번호")
     val certNumber: Int,
+    @ApiModelProperty(value = "수신자 핸드폰번호")
     val receiverPhoneNumber: String,
-    val userId: String,
-    val randomNumber: Int
+    @ApiModelProperty(value = "이메일")
+    val email: String,
 )
 
+@ApiModel(value = "인증번호 발송 요청")
 data class SendCertNumber(
+    @ApiModelProperty(value = "수신자 핸드폰번호")
     val receiverPhoneNumber: String,
-    val userId: String,
+    @ApiModelProperty(value = "이메일")
+    val email: String,
+)
+
+@ApiModel(value = "인증번호 입력 요청")
+data class CheckCertNumber(
+    @ApiModelProperty(value = "수신자 핸드폰번호")
+    val receiverPhoneNumber: String,
+    @ApiModelProperty(value = "이메일")
+    val email: String,
+    @ApiModelProperty(value = "인증번호")
+    val certNumber: Int,
 )
