@@ -1,6 +1,8 @@
 package com.kepa.application.trainer
 
+import CertType
 import com.kepa.application.trainer.dto.request.LoginInfo
+import com.kepa.application.trainer.dto.request.MailContent
 import com.kepa.application.trainer.dto.request.MessageContent
 import com.kepa.application.trainer.dto.request.TrainerJoin
 import com.kepa.application.trainer.dto.response.LoginToken
@@ -47,11 +49,16 @@ class TrainerWriteService(
         return tokenProvider.getToken(trainer.email, trainer.role.name, now)
     }
 
-    fun sendNumber(receiverPhoneNumber: String, email: String, randomNumber: Int) {
-        if(certNumberRepository.existsByReceiverEmail(email)) {
-            certNumberRepository.deleteByReceiverEmail(email)
+    fun sendNumber(receiverPhoneNumber: String, email: String, randomNumber: Int, certType: CertType) {
+        if(certNumberRepository.existsByReceiverEmailAndCertType(email, certType)) {
+            certNumberRepository.deleteByReceiverEmailAndCertType(email,certType)
         }
-        certNumberRepository.save(CertNumber(number = randomNumber, receiverPhoneNumber = receiverPhoneNumber, receiverEmail =  email))
+        certNumberRepository.save(CertNumber(
+            number = randomNumber,
+            receiverPhoneNumber = receiverPhoneNumber,
+            receiverEmail =  email,
+            certType = certType))
+
         applicationEventPublisher.publishEvent(MessageContent(
             certNumber = randomNumber,
             receiverPhoneNumber = receiverPhoneNumber,
@@ -61,9 +68,41 @@ class TrainerWriteService(
 
     @Transactional(noRollbackFor = [RuntimeException::class])
     fun checkNumber(receiverPhoneNumber: String, email: String, randomNumber: Int) {
-        val certNumber = certNumberRepository.findByReceiverEmailAndReceiverPhoneNumber(
+        val certNumber = certNumberRepository.findByReceiverEmailAndReceiverPhoneNumberAndCertType(
             email = email,
-            phoneNumber = receiverPhoneNumber
+            phoneNumber = receiverPhoneNumber,
+            certType = CertType.PHONE
+        ) ?: throw KepaException(NOT_FOUND_CERT_NUMBER)
+        require(certNumber.number == randomNumber) {
+            throw KepaException(NOT_MATCH_CERT_NUMBER)
+        }
+        require(certNumber.createdAt.plusMinutes(3).isAfter(LocalDateTime.now())) {
+            certNumberRepository.deleteById(certNumber.id)
+            throw KepaException(EXPIRE_CERT_NUMBER)
+        }
+    }
+
+    fun sendMail(receiverEmail:String, randomNumber: Int, certType: CertType) {
+        if(certNumberRepository.existsByReceiverEmailAndCertType(receiverEmail, certType)) {
+            certNumberRepository.deleteByReceiverEmailAndCertType(receiverEmail,certType)
+        }
+        certNumberRepository.save(CertNumber(
+            number = randomNumber,
+            receiverEmail =  receiverEmail,
+            certType = certType))
+
+        applicationEventPublisher.publishEvent(MailContent(
+            certNumber = randomNumber,
+            email = receiverEmail,
+        ))
+    }
+
+
+    @Transactional(noRollbackFor = [RuntimeException::class])
+    fun checkEmailNumber(email: String, randomNumber: Int) {
+        val certNumber = certNumberRepository.findByReceiverEmailAndCertType(
+            email = email,
+            certType = CertType.PHONE
         ) ?: throw KepaException(NOT_FOUND_CERT_NUMBER)
         require(certNumber.number == randomNumber) {
             throw KepaException(NOT_MATCH_CERT_NUMBER)
