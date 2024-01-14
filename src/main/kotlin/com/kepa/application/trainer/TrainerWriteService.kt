@@ -2,7 +2,7 @@ package com.kepa.application.trainer
 
 import com.kepa.application.trainer.dto.request.LoginInfo
 import com.kepa.application.trainer.dto.request.MessageContent
-import com.kepa.application.trainer.dto.request.RandomNumber
+import com.kepa.externalapi.dto.RandomNumber
 import com.kepa.application.trainer.dto.request.TrainerJoin
 import com.kepa.application.trainer.dto.response.LoginToken
 import com.kepa.common.exception.ExceptionCode
@@ -47,16 +47,16 @@ class TrainerWriteService(
         return tokenProvider.getToken(trainer.email, trainer.role.name, now)
     }
 
-    fun checkNumber(receiverPhoneNumber: String, userId: String) {
-        val certNumber = RandomNumber.create()
+    fun checkNumber(receiverPhoneNumber: String, userId: String, randomNumber: Int) {
         if(certNumberRepository.existsByReceiverEmail(userId)) {
             certNumberRepository.deleteByReceiverEmail(userId)
         }
-        certNumberRepository.save(CertNumber(certNumber,receiverPhoneNumber))
+        certNumberRepository.save(CertNumber(randomNumber,receiverPhoneNumber))
         applicationEventPublisher.publishEvent(MessageContent(
             certNumber = RandomNumber.create(),
             receiverPhoneNumber = receiverPhoneNumber,
             userId = userId,
+            randomNumber = randomNumber
         ))
     }
 }
