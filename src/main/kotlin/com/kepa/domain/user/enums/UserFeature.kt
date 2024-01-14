@@ -17,3 +17,9 @@ enum class Role(
     ADMIN("관리자"), USER("일반 사용자"), TRAINER("트레이너")
 }
 
+enum class CertType(
+    val type: String,
+) {
+    EMAIL("이메일"), PHONE("핸드폰")
+}
+
