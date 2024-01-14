@@ -100,13 +100,14 @@ data class CheckCertNumber(
     val certNumber: Int,
 )
 
-@ApiModel(value = "[이메일] 인증번호 발송 요청")
+@ApiModel(value = "[이메일] 인증번호 발송")
 data class SendEmailCertNumber(
     @ApiModelProperty(value = "이메일")
     val email: String,
     @ApiModelProperty(value = "인증 방식")
     val certType: CertType
 )
+
 @ApiModel(value = "[이메일] 인증번호 발송 요청")
 data class CheckEmailCertNumber(
     @ApiModelProperty(value = "이메일")
