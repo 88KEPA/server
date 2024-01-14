@@ -91,8 +91,8 @@ class TrainerController(
     )
     @ApiOperation(value = "이메일 인증번호 발송")
     @PostMapping("/check/email/number")
-    fun checkEmail(@RequestBody checkCertNumber: CheckCertNumber) {
-        trainerWriteService.checkEmailNumber(email = checkCertNumber.email, randomNumber = checkCertNumber.certNumber)
+    fun checkEmail(@RequestBody checkEmailCertNumber: CheckEmailCertNumber) {
+        trainerWriteService.checkEmailNumber(email = checkEmailCertNumber.email, randomNumber = checkEmailCertNumber.certNumber)
     }
 
 

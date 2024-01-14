@@ -1,5 +1,6 @@
 package com.kepa.application.trainer.dto.request
 
+import CertType
 import Role
 import com.kepa.common.exception.ExceptionCode.NOT_MATCH_PASSWORD_CONFIRM_PASSWORD
 import com.kepa.common.exception.KepaException
@@ -79,12 +80,14 @@ data class MessageContent(
     val email: String,
 )
 
-@ApiModel(value = "인증번호 발송 요청")
-data class SendCertNumber(
+@ApiModel(value = "[핸드폰] 인증번호 발송 요청")
+data class SendPhoneCertNumber(
     @ApiModelProperty(value = "수신자 핸드폰번호")
     val receiverPhoneNumber: String,
     @ApiModelProperty(value = "이메일")
     val email: String,
+    @ApiModelProperty(value = "인증 방식")
+    val certType: CertType
 )
 
 @ApiModel(value = "인증번호 입력 요청")
@@ -96,3 +99,27 @@ data class CheckCertNumber(
     @ApiModelProperty(value = "인증번호")
     val certNumber: Int,
 )
+
+@ApiModel(value = "[이메일] 인증번호 발송 요청")
+data class SendEmailCertNumber(
+    @ApiModelProperty(value = "이메일")
+    val email: String,
+    @ApiModelProperty(value = "인증 방식")
+    val certType: CertType
+)
+@ApiModel(value = "[이메일] 인증번호 발송 요청")
+data class CheckEmailCertNumber(
+    @ApiModelProperty(value = "이메일")
+    val email: String,
+    @ApiModelProperty(value = "인증번호")
+    val certNumber: Int,
+)
+
+data class MailContent(
+    @ApiModelProperty(value = "인증번호")
+    val certNumber: Int,
+    @ApiModelProperty(value = "이메일")
+    val email: String,
+)
+
+
