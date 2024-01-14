@@ -20,15 +20,9 @@ class Trainer(
     @Column(nullable = false)
     override val email: String,
     @Column(nullable = false)
-    val zipCode: String,
-    @Column(nullable = false)
-    val jibunAddress: String,
-    @Column(nullable = false)
-    val jibunAddressDetail: String,
-    @Column(nullable = false)
-    val roadAddress: String,
-    @Column(nullable = false)
-    val roadAddressDetail: String,
+    val address: String,
+    val addressMeta: String,
+    val addressDetail: String,
     @Column(nullable = false)
     val birth: LocalDate,
     @Column(nullable = false)
