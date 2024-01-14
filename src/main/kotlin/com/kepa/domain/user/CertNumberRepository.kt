@@ -1,11 +1,13 @@
 package com.kepa.domain.user
 
+import CertType
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface CertNumberRepository: JpaRepository<CertNumber, Long> {
 
-    fun existsByReceiverEmail(email: String): Boolean
-    fun deleteByReceiverEmail(email: String)
+    fun existsByReceiverEmailAndCertType(email: String, certType: CertType): Boolean
+    fun deleteByReceiverEmailAndCertType(email: String,certType: CertType)
 
-    fun findByReceiverEmailAndReceiverPhoneNumber(email: String, phoneNumber: String) : CertNumber?
+    fun findByReceiverEmailAndReceiverPhoneNumberAndCertType(email: String, phoneNumber: String, certType: CertType) : CertNumber?
+    fun findByReceiverEmailAndCertType(email: String, certType: CertType) : CertNumber?
 }
