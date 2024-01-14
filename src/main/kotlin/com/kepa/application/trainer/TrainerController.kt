@@ -4,6 +4,7 @@ import com.kepa.application.trainer.dto.request.LoginInfo
 import com.kepa.application.trainer.dto.request.SendCertNumber
 import com.kepa.application.trainer.dto.request.TrainerJoin
 import com.kepa.application.trainer.dto.response.LoginToken
+import com.kepa.externalapi.dto.RandomNumber
 import io.swagger.annotations.Api
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.PostMapping
@@ -44,7 +45,8 @@ class TrainerController(
     fun checkNumber(@RequestBody sendCertNumber: SendCertNumber) {
         trainerWriteService.checkNumber(
             receiverPhoneNumber = sendCertNumber.receiverPhoneNumber,
-            userId = sendCertNumber.userId
+            userId = sendCertNumber.userId,
+            randomNumber = RandomNumber.create()
         )
     }
 }
