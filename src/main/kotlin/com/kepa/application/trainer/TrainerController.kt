@@ -89,7 +89,7 @@ class TrainerController(
         ApiResponse(code = 400, message = "errorMessage: 인증번호가 일치하지 않습니다. / identity : 40004"),
         ApiResponse(code = 404, message = "errorMessage: 인증번호가 존재하지 않습니다. / identity : 40401"),
     )
-    @ApiOperation(value = "이메일 인증번호 발송")
+    @ApiOperation(value = "이메일 인증번호 체크")
     @PostMapping("/check/email/number")
     fun checkEmail(@RequestBody checkEmailCertNumber: CheckEmailCertNumber) {
         trainerWriteService.checkEmailNumber(email = checkEmailCertNumber.email, randomNumber = checkEmailCertNumber.certNumber)
