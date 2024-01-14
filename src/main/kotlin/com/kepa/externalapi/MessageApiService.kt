@@ -23,6 +23,8 @@ class MessageApiService(
     private val aligoSendUrl: String,
     @Value("\${aligo.send-phone-number}")
     private val sendPhoneNumber: String,
+    @Value("\${aligo.send-user-id}")
+    private val sendUserId: String,
 ) {
 
     @TransactionalEventListener
@@ -32,10 +34,10 @@ class MessageApiService(
         val header = HttpHeaders()
         header.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE)
         requestValue.add("key", aligoKey)
-        requestValue.add("user_id", messageContent.userId)
+        requestValue.add("user_id", sendUserId)
         requestValue.add("sender", sendPhoneNumber)
         requestValue.add("receiver", messageContent.receiverPhoneNumber)
-        requestValue.add("msg", "[KEPA]본인확인 인증번호 [${messageContent.randomNumber}]를 화면에 입력해주세요.")
+        requestValue.add("msg", "[KEPA]본인확인 인증번호 [${messageContent.certNumber}]를 화면에 입력해주세요.")
         val httpEntity: HttpEntity<MultiValueMap<String, String>> = HttpEntity(requestValue,header)
         restTemplate.exchange(
             aligoSendUrl, HttpMethod.POST, httpEntity, MessageSendStatus::class.java
