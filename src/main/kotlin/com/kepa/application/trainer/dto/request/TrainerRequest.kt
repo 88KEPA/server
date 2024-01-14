@@ -67,6 +67,7 @@ data class MessageContent(
     val certNumber: Int,
     val receiverPhoneNumber: String,
     val userId: String,
+    val randomNumber: Int
 )
 
 data class SendCertNumber(
