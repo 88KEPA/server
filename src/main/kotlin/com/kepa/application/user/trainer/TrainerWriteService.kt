@@ -1,11 +1,11 @@
-package com.kepa.application.trainer
+package com.kepa.application.user.trainer
 
 import CertType
-import com.kepa.application.trainer.dto.request.LoginInfo
-import com.kepa.application.trainer.dto.request.MailContent
-import com.kepa.application.trainer.dto.request.MessageContent
-import com.kepa.application.trainer.dto.request.TrainerJoin
-import com.kepa.application.trainer.dto.response.LoginToken
+import com.kepa.application.user.trainer.dto.request.LoginInfo
+import com.kepa.application.user.trainer.dto.request.MailContent
+import com.kepa.application.user.trainer.dto.request.MessageContent
+import com.kepa.application.user.trainer.dto.request.TrainerJoin
+import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.common.exception.ExceptionCode.*
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.CertNumber
@@ -42,9 +42,9 @@ class TrainerWriteService(
 
     fun login(loginInfo: LoginInfo, now: Date): LoginToken {
         val trainer = trainerRepository.findByEmail(loginInfo.email)
-            ?: throw KepaException(NOT_EXSISTS_INFO)
+            ?: throw KepaException(NOT_MATCH_ID_OR_PASSWORD)
         if (!bCryptPasswordEncoder.matches(loginInfo.password, trainer.password)) {
-            throw KepaException(NOT_EXSISTS_INFO)
+            throw KepaException(NOT_MATCH_ID_OR_PASSWORD)
         }
         return tokenProvider.getToken(trainer.email, trainer.role.name, now)
     }

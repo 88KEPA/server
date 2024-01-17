@@ -2,28 +2,22 @@ package com.kepa.security
 
 import com.kepa.token.TokenProvider
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.web.filter.OncePerRequestFilter
+import org.springframework.web.filter.GenericFilterBean
 import javax.servlet.FilterChain
+import javax.servlet.ServletRequest
+import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 
 class LoginFilter(
     private val tokenProvider: TokenProvider,
-    ) : OncePerRequestFilter() {
+    ) : GenericFilterBean() {
 
-    override fun doFilterInternal(
-        request: HttpServletRequest,
-        response: HttpServletResponse,
-        filterChain: FilterChain
-    ) {
-        println("동작")
-        tokenProvider.resolveToken(request)?.let {
-            val validateToken = tokenProvider.validateToken(it)
-            if(validateToken) {
-                val token = it.split(" ")[1].trim()
-                val auth = tokenProvider.getAuthentication(token)
-                SecurityContextHolder.getContext().authentication = auth
+    override fun doFilter(request: ServletRequest?, response: ServletResponse?, filterChain: FilterChain) {
+        tokenProvider.resolveToken(request = request as? HttpServletRequest?)?.let {token ->
+            {
+                val authentication = tokenProvider.getAuthentication(token)
+                SecurityContextHolder.getContext().authentication = authentication
             }
         }
         filterChain.doFilter(request,response)

@@ -1,4 +1,4 @@
-package com.kepa.application.trainer
+package com.kepa.application.user.trainer
 
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException

@@ -1,7 +1,7 @@
-package com.kepa.application.trainer
+package com.kepa.application.user.trainer
 
-import com.kepa.application.trainer.dto.request.*
-import com.kepa.application.trainer.dto.response.LoginToken
+import CertType
+import com.kepa.application.user.trainer.dto.request.*
 import com.kepa.externalapi.dto.RandomNumber
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
 import javax.validation.Valid
 
 @RestController
@@ -32,13 +31,6 @@ class TrainerController(
     fun create(@Valid @RequestBody trainerJoin: TrainerJoin) {
         trainerWriteService.join(trainerJoin);
     }
-    @Operation(description = "로그인")
-    @PostMapping("/login")
-    fun login(@RequestBody loginInfo: LoginInfo): LoginToken = trainerWriteService.login(
-        loginInfo,
-        Date()
-    )
-
 
     @ApiResponses(
         ApiResponse(code = 200, message = ""),

@@ -1,9 +1,12 @@
-package com.kepa.application.trainer.dto.response
+package com.kepa.application.user.trainer.dto.response
+
+import java.time.LocalDate
 
 data class LoginToken(
-    val grantType: String = "Bearer",
     val accessToken: String,
     val refreshToken: String,
+    val accessTokenExpiredAt : Long,
+    val refreshTokenExpiredAt : Long,
 )
 
 data class MessageSendStatus(

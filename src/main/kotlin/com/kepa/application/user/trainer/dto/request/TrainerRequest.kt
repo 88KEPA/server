@@ -1,4 +1,4 @@
-package com.kepa.application.trainer.dto.request
+package com.kepa.application.user.trainer.dto.request
 
 import CertType
 import Role

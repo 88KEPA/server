@@ -1,6 +1,6 @@
 package com.kepa.token
 
-import com.kepa.application.trainer.dto.response.LoginToken
+import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.security.LoginUserDetailService
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
@@ -47,7 +47,7 @@ class TokenProvider(
             tokenExpireTime = refreshTokenExpire,
             role = role
         )
-        return LoginToken(accessToken = accessToken, refreshToken = refreshToken)
+        return LoginToken(accessToken = accessToken, refreshToken = refreshToken, accessTokenExpiredAt = accessTokenExpire, refreshTokenExpiredAt = refreshTokenExpire )
     }
 
     fun getAuthentication(token: String) : Authentication {
@@ -76,7 +76,7 @@ class TokenProvider(
         return false
     }
 
-    fun resolveToken(request: HttpServletRequest): String? = request.getHeader("Authorization")
+    fun resolveToken(request: HttpServletRequest?): String? = request?.getHeader("Authorization")
 
     //토큰 생성
     private fun createToken(name: String, tokenExpireTime: Long, role: String): String {

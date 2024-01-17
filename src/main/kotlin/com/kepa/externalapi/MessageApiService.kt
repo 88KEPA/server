@@ -1,7 +1,7 @@
 package com.kepa.externalapi
 
-import com.kepa.application.trainer.dto.request.MessageContent
-import com.kepa.application.trainer.dto.response.MessageSendStatus
+import com.kepa.application.user.trainer.dto.request.MessageContent
+import com.kepa.application.user.trainer.dto.response.MessageSendStatus
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
