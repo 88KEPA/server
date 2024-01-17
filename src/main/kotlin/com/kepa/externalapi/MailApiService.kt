@@ -1,6 +1,6 @@
 package com.kepa.externalapi
 
-import com.kepa.application.trainer.dto.request.MailContent
+import com.kepa.application.user.trainer.dto.request.MailContent
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
