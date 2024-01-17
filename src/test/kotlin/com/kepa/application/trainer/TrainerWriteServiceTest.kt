@@ -1,6 +1,7 @@
 package com.kepa.application.trainer
 
-import com.kepa.application.trainer.dto.request.TrainerJoin
+import com.kepa.application.user.trainer.dto.request.TrainerJoin
+import com.kepa.application.user.trainer.TrainerWriteService
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.trainer.TrainerRepository
 import com.kepa.domain.user.trainer.Gender
