@@ -13,7 +13,6 @@ class LoginUserDetailService(
 ) : UserDetailsService {
 
     override fun loadUserByUsername(username: String?): UserDetails {
-        println("=======loadUserByUsername=======")
         val trainer = trainerRepository.findByEmail(username) ?: throw KepaException(
             ExceptionCode.NOT_EXSISTS_INFO
         )
