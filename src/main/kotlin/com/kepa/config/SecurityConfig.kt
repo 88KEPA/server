@@ -30,7 +30,7 @@ class SecurityConfig(
            .csrf().disable()
            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
            .and()
-           .addFilterBefore(LoginFilter(tokenProvider), UsernamePasswordAuthenticationFilter::class.java)
+           .addFilterBefore(LoginFilter(tokenProvider),UsernamePasswordAuthenticationFilter::class.java)
            .authorizeRequests()
            .antMatchers("/api/login/**","/**")
            .permitAll()
