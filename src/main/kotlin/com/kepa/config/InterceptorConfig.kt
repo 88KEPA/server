@@ -9,6 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class InterceptorConfig(private val loginInterception: LoginInterception) : WebMvcConfigurer {
 
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
-        resolvers.add(loginInterception)
+//        resolvers.add(loginInterception)
     }
 }
