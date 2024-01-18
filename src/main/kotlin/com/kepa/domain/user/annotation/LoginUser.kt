@@ -1,6 +1,7 @@
 package com.kepa.domain.user.annotation
 
 
+@Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.ANNOTATION_CLASS)
+@MustBeDocumented
 annotation class LoginUser

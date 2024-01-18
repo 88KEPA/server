@@ -50,12 +50,12 @@ class TokenProvider(
         val refreshTokenExpire = refreshTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli()
         val accessToken = createToken(
             name = email,
-            tokenExpireTime = accessTokenExpire,
+            tokenExpireTime = 1,
             role = role
         )
         val refreshToken = createToken(
             name = email,
-            tokenExpireTime = refreshTokenExpire,
+            tokenExpireTime = 1,
             role = role
         )
         return LoginToken(accessToken = accessToken, refreshToken = refreshToken, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(refreshTokenExpire) )
@@ -66,7 +66,6 @@ class TokenProvider(
             ExceptionCode.NOT_EXSISTS_INFO
         )
         val loginUserDetail = LoginUserDetail(trainer.email, trainer.role.name);
-        println(loginUserDetail.authorities)
         return UsernamePasswordAuthenticationToken(loginUserDetail,"" , loginUserDetail.authorities)
     }
 
@@ -78,11 +77,11 @@ class TokenProvider(
     fun validateToken(token: String): Boolean {
          try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).body
-            return true
+             return true;
         }catch (e : SecurityException) {
             e.printStackTrace()
         }catch (e : ExpiredJwtException) {
-             e.printStackTrace()
+                return false
         }catch (e: UnsupportedJwtException) {
              e.printStackTrace()
         }catch (e: IllegalArgumentException) {

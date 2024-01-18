@@ -15,7 +15,11 @@ class LoginFilter(
 
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, filterChain: FilterChain) {
         tokenProvider.resolveToken(request = request as? HttpServletRequest?)?.also {
-            val authentication = tokenProvider.getAuthentication(it)
+            val loginToken = it.split(" ")[1]
+            if(!tokenProvider.validateToken(loginToken)) {
+                return
+            }
+            val authentication = tokenProvider.getAuthentication(loginToken)
             SecurityContextHolder.getContext().authentication = authentication
         }
         filterChain.doFilter(request,response)

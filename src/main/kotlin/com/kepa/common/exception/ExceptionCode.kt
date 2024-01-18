@@ -1,5 +1,4 @@
 package com.kepa.common.exception
-
 import org.springframework.http.HttpStatus
 
 enum class ExceptionCode(
@@ -18,6 +17,8 @@ enum class ExceptionCode(
     EXPIRE_CERT_NUMBER(HttpStatus.BAD_REQUEST, "유효시간이 지났습니다.", 40005),
     NOT_MATCH_ID_OR_PASSWORD(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 일치하지 않습니다.",40006),
 
-    NOT_FOUND_CERT_NUMBER(HttpStatus.NOT_FOUND, "인증번호가 존재하지 않습니다.", 40401)
+    NOT_FOUND_CERT_NUMBER(HttpStatus.NOT_FOUND, "인증번호가 존재하지 않습니다.", 40401),
+    TOKEN_EXPIRE(HttpStatus.NOT_FOUND,"로그인 토큰이 만료되었습니다.", 40402),
+
 
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import java.util.*
 
 data class LoginToken(
+    val grantType: String = "Bearer",
     val accessToken: String,
     val refreshToken: String,
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
