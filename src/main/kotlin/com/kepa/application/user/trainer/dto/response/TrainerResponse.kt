@@ -1,12 +1,15 @@
 package com.kepa.application.user.trainer.dto.response
 
-import java.time.LocalDate
+import com.fasterxml.jackson.annotation.JsonFormat
+import java.util.*
 
 data class LoginToken(
     val accessToken: String,
     val refreshToken: String,
-    val accessTokenExpiredAt : Long,
-    val refreshTokenExpiredAt : Long,
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    val accessTokenExpiredAt : Date,
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    val refreshTokenExpiredAt : Date,
 )
 
 data class MessageSendStatus(
