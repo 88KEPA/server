@@ -30,7 +30,7 @@ class SecurityConfig(
            //.addFilterBefore(LoginFilter(tokenProvider),UsernamePasswordAuthenticationFilter::class.java)
            .authorizeRequests()
            //.antMatchers("/api/trainer/**").hasAnyAuthority(Role.TRAINER.name)
-           .antMatchers("/**","")
+           .antMatchers("/**")
            .permitAll()
            .anyRequest().authenticated()
 
