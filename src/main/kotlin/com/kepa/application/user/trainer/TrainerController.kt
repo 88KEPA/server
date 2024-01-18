@@ -1,10 +1,10 @@
 package com.kepa.application.user.trainer
 
 import CertType
+import com.kepa.application.user.LoginUserInfo
 import com.kepa.application.user.trainer.dto.request.*
 import com.kepa.domain.user.annotation.LoginUser
 import com.kepa.externalapi.dto.RandomNumber
-import com.kepa.security.LoginUserDetail
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -58,7 +58,7 @@ class TrainerController(
     @ApiResponses(
         ApiResponse(code = 200, message = ""),
         ApiResponse(code = 400, message = "errorMessage: 인증번호가 일치하지 않습니다. / identity : 40004"),
-        ApiResponse(code = 404, message = "errorMessage: 인증번호가 존재하지 않습니다. / identity : 40401"),
+        ApiResponse(code = 400, message = "errorMessage: 유효시간이 지났습니다. / identity : 40005"),
     )
     @Operation(description = "인증번호 체크")
     @PostMapping("/check/number")
@@ -78,7 +78,7 @@ class TrainerController(
     @ApiResponses(
         ApiResponse(code = 200, message = ""),
         ApiResponse(code = 400, message = "errorMessage: 인증번호가 일치하지 않습니다. / identity : 40004"),
-        ApiResponse(code = 404, message = "errorMessage: 인증번호가 존재하지 않습니다. / identity : 40401"),
+        ApiResponse(code = 400, message = "errorMessage: 유효시간이 지났습니다. / identity : 40005"),
     )
     @ApiOperation(value = "이메일 인증번호 체크")
     @PostMapping("/check/email/number")
@@ -88,9 +88,7 @@ class TrainerController(
 
     @ApiOperation(value = "로그인한 사용자 체크")
     @GetMapping("/info")
-    fun test(@LoginUser loginUserDetail: LoginUserDetail) : LoginUserDetail {
-        return loginUserDetail
+    fun test(@LoginUser loginUserInfo: LoginUserInfo) : LoginUserInfo {
+        return loginUserInfo
     }
-
-
 }
