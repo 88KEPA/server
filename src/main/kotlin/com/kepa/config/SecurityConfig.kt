@@ -1,6 +1,5 @@
 package com.kepa.config
 
-import com.kepa.security.LoginFilter
 import com.kepa.token.TokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
@@ -32,8 +30,8 @@ class SecurityConfig(
            //.addFilterBefore(LoginFilter(tokenProvider),UsernamePasswordAuthenticationFilter::class.java)
            .authorizeRequests()
            //.antMatchers("/api/trainer/**").hasAnyAuthority(Role.TRAINER.name)
-           //.antMatchers("/api/login/**","/api/user")
-           //.permitAll()
+           .antMatchers("/**","")
+           .permitAll()
            .anyRequest().authenticated()
 
     }
