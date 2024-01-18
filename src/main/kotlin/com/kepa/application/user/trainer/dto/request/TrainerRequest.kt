@@ -1,11 +1,11 @@
 package com.kepa.application.user.trainer.dto.request
 
 import CertType
+import Gender
+import LoginType
 import Role
 import com.kepa.common.exception.ExceptionCode.NOT_MATCH_PASSWORD_CONFIRM_PASSWORD
 import com.kepa.common.exception.KepaException
-import com.kepa.domain.user.trainer.Gender
-import com.kepa.domain.user.trainer.LoginType
 import com.kepa.domain.user.trainer.Trainer
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
