@@ -1,7 +1,11 @@
 package com.kepa.token
 
+import Role
 import com.kepa.application.user.trainer.dto.response.LoginToken
-import com.kepa.security.LoginUserDetailService
+import com.kepa.common.exception.ExceptionCode
+import com.kepa.common.exception.KepaException
+import com.kepa.domain.user.trainer.TrainerRepository
+import com.kepa.security.LoginUserDetail
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -14,12 +18,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import java.security.Key
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.temporal.ChronoUnit
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @Component
 class TokenProvider(
-    private val loginUserDetailService: LoginUserDetailService,
+    private val trainerRepository: TrainerRepository,
     @Value("\${jwt.secret-key}")
     private val secretKey: String,
     @Value("\${jwt.access-token-expire-time}")
@@ -35,8 +42,12 @@ class TokenProvider(
      * accessToken, refreshToken 생성
      */
     fun getToken(email: String, role: String, now: Date): LoginToken {
-        val accessTokenExpire = now.time + ACCESS_TOKEN_EXPIRE_TIME.toLong()
-        val refreshTokenExpire = now.time + REFRESH_TOKEN_EXPIRE_TIME.toLong()
+        val now: LocalDateTime = LocalDateTime.now()
+        val accessTokenTime: LocalDateTime = now.plus(ACCESS_TOKEN_EXPIRE_TIME.toLong(), ChronoUnit.SECONDS)
+        val refreshTokenTime: LocalDateTime = now.plus(REFRESH_TOKEN_EXPIRE_TIME.toLong(), ChronoUnit.SECONDS)
+
+        val accessTokenExpire = accessTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli()
+        val refreshTokenExpire = refreshTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli()
         val accessToken = createToken(
             name = email,
             tokenExpireTime = accessTokenExpire,
@@ -47,12 +58,16 @@ class TokenProvider(
             tokenExpireTime = refreshTokenExpire,
             role = role
         )
-        return LoginToken(accessToken = accessToken, refreshToken = refreshToken, accessTokenExpiredAt = accessTokenExpire, refreshTokenExpiredAt = refreshTokenExpire )
+        return LoginToken(accessToken = accessToken, refreshToken = refreshToken, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(refreshTokenExpire) )
     }
 
     fun getAuthentication(token: String) : Authentication {
-        val loginUserDetails = loginUserDetailService.loadUserByUsername(getTrainer(token))
-        return UsernamePasswordAuthenticationToken(loginUserDetails,"" , loginUserDetails.authorities)
+        val trainer = trainerRepository.findByEmailAndRole(getTrainer(token), Role.TRAINER) ?: throw KepaException(
+            ExceptionCode.NOT_EXSISTS_INFO
+        )
+        val loginUserDetail = LoginUserDetail(trainer.email, trainer.role.name);
+        println(loginUserDetail.authorities)
+        return UsernamePasswordAuthenticationToken(loginUserDetail,"" , loginUserDetail.authorities)
     }
 
     fun getTrainer(token: String): String {
@@ -76,7 +91,8 @@ class TokenProvider(
         return false
     }
 
-    fun resolveToken(request: HttpServletRequest?): String? = request?.getHeader("Authorization")
+    fun resolveToken(request: HttpServletRequest?): String? {
+        return request?.getHeader("Authorization")}
 
     //토큰 생성
     private fun createToken(name: String, tokenExpireTime: Long, role: String): String {
