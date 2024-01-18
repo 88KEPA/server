@@ -1,10 +1,7 @@
 package com.kepa.config
 
-import Role
 import com.kepa.security.LoginFilter
 import com.kepa.token.TokenProvider
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -28,7 +25,7 @@ class SecurityConfig(
 
     override fun configure(http: HttpSecurity) {
        http
-           .cors().disable()
+           .cors().and()
            .csrf().disable()
            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
            .and()
