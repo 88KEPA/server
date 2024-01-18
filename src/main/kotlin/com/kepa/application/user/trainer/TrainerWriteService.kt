@@ -25,7 +25,6 @@ class TrainerWriteService(
     private val trainerRepository: TrainerRepository,
     private val certNumberRepository: CertNumberRepository,
     private val bCryptPasswordEncoder: BCryptPasswordEncoder,
-    private val tokenProvider: TokenProvider,
     private val applicationEventPublisher: ApplicationEventPublisher,
 ) {
     fun join(trainerJoin: TrainerJoin) {
@@ -40,14 +39,6 @@ class TrainerWriteService(
         trainerRepository.save(trainerJoin.create(bCryptPasswordEncoder.encode(trainerJoin.password)))
     }
 
-    fun login(loginInfo: LoginInfo, now: Date): LoginToken {
-        val trainer = trainerRepository.findByEmail(loginInfo.email)
-            ?: throw KepaException(NOT_MATCH_ID_OR_PASSWORD)
-        if (!bCryptPasswordEncoder.matches(loginInfo.password, trainer.password)) {
-            throw KepaException(NOT_MATCH_ID_OR_PASSWORD)
-        }
-        return tokenProvider.getToken(trainer.email, trainer.role.name, now)
-    }
 
     fun sendNumber(receiverPhoneNumber: String, email: String, randomNumber: Int, certType: CertType) {
         if(certNumberRepository.existsByReceiverEmailAndCertType(email, certType)) {
