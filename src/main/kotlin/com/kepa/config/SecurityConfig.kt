@@ -1,7 +1,10 @@
 package com.kepa.config
 
+import Role
 import com.kepa.security.LoginFilter
 import com.kepa.token.TokenProvider
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -24,16 +27,16 @@ class SecurityConfig(
     }
 
     override fun configure(http: HttpSecurity) {
-       http.cors().disable()
-           .httpBasic().disable()
+       http
            .cors().disable()
            .csrf().disable()
            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
            .and()
            .addFilterBefore(LoginFilter(tokenProvider),UsernamePasswordAuthenticationFilter::class.java)
            .authorizeRequests()
-           .antMatchers("/api/login/**","/**")
-           .permitAll()
+           //.antMatchers("/api/trainer/**").hasAnyAuthority(Role.TRAINER.name)
+           //.antMatchers("/api/login/**","/api/user")
+           //.permitAll()
            .anyRequest().authenticated()
 
     }
