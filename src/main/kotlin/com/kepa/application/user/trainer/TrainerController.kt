@@ -2,16 +2,15 @@ package com.kepa.application.user.trainer
 
 import CertType
 import com.kepa.application.user.trainer.dto.request.*
+import com.kepa.domain.user.annotation.LoginUser
 import com.kepa.externalapi.dto.RandomNumber
+import com.kepa.security.LoginUserDetail
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import io.swagger.v3.oas.annotations.Operation
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
@@ -85,6 +84,12 @@ class TrainerController(
     @PostMapping("/check/email/number")
     fun checkEmail(@RequestBody checkEmailCertNumber: CheckEmailCertNumber) {
         trainerWriteService.checkEmailNumber(email = checkEmailCertNumber.email, randomNumber = checkEmailCertNumber.certNumber)
+    }
+
+    @ApiOperation(value = "로그인한 사용자 체크")
+    @GetMapping("/info")
+    fun test(@LoginUser loginUserDetail: LoginUserDetail) : LoginUserDetail {
+        return loginUserDetail
     }
 
 
