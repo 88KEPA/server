@@ -14,11 +14,9 @@ class LoginFilter(
     ) : GenericFilterBean() {
 
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, filterChain: FilterChain) {
-        tokenProvider.resolveToken(request = request as? HttpServletRequest?)?.let {token ->
-            {
-                val authentication = tokenProvider.getAuthentication(token)
-                SecurityContextHolder.getContext().authentication = authentication
-            }
+        tokenProvider.resolveToken(request = request as? HttpServletRequest?)?.also {
+            val authentication = tokenProvider.getAuthentication(it)
+            SecurityContextHolder.getContext().authentication = authentication
         }
         filterChain.doFilter(request,response)
     }
