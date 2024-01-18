@@ -18,7 +18,7 @@ class UserWriteService(
 ) {
 
     fun login(loginInfo: LoginInfo, now: Date): LoginToken {
-        val trainer = trainerRepository.findByEmail(loginInfo.email)
+        val trainer = trainerRepository.findByEmailAndRole(loginInfo.email,loginInfo.role)
             ?: throw KepaException(ExceptionCode.NOT_MATCH_ID_OR_PASSWORD)
         if (!bCryptPasswordEncoder.matches(loginInfo.password, trainer.password)) {
             throw KepaException(ExceptionCode.NOT_MATCH_ID_OR_PASSWORD)
