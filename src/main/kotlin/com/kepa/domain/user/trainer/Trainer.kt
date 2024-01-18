@@ -1,5 +1,7 @@
 package com.kepa.domain.user.trainer
 
+import Gender
+import LoginType
 import Role
 import com.kepa.common.BaseEntity
 import com.kepa.domain.user.User
