@@ -48,6 +48,7 @@ dependencies {
 
     //mail
     implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation ("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
 }
 
 tasks.withType<KotlinCompile> {
