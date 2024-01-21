@@ -16,12 +16,13 @@ enum class ExceptionCode(
     NOT_MATCH_CERT_NUMBER(HttpStatus.BAD_REQUEST, "인증번호가 일치하지 않습니다.", 40004),
     EXPIRE_CERT_NUMBER(HttpStatus.BAD_REQUEST, "유효시간이 지났습니다.", 40005),
     NOT_MATCH_ID_OR_PASSWORD(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 일치하지 않습니다.",40006),
-
+    BAD_REQUEST_PHONE_FORMAT(HttpStatus.BAD_REQUEST, "핸드폰 번호 포맷 형태가 잘못되었습니다.", 40007),
     NOT_FOUND_CERT_NUMBER(HttpStatus.NOT_FOUND, "인증번호가 존재하지 않습니다.", 40401),
     TOKEN_EXPIRE(HttpStatus.NOT_FOUND,"로그인 토큰이 만료되었습니다.", 40402),
     REFRESH_TOKEN_EXPIRE(HttpStatus.NOT_FOUND,"리프레시 토큰이 만료되었습니다.", 40403),
 
     NOT_ACCESS(HttpStatus.UNAUTHORIZED, "접근 권한이 존재하지 않습니다",40101)
+
 
 
 }
