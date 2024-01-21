@@ -37,8 +37,8 @@ class TrainerController(
     )
     @Operation(description = "이메일 중복체크")
     @PostMapping("/check/email")
-    fun checkEmail(@RequestBody email: String) {
-        trainerReadService.checkEmail(email)
+    fun checkEmail(@RequestBody duplicateCheckEmail: DuplicateCheckEmail) {
+        trainerReadService.checkEmail(duplicateCheckEmail.email)
     }
 
     @ApiResponses(
@@ -94,5 +94,5 @@ class TrainerController(
 
     @ApiOperation(value = "이메일 찾기")
     @PostMapping("/find/email")
-    fun findEmail(@RequestBody phoneNumber: String) = trainerReadService.findEmail(phoneNumber)
+    fun findEmail(@RequestBody phoneNumber: DuplicateCheckPhone) = trainerReadService.findEmail(phoneNumber.phone)
 }

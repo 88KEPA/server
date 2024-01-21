@@ -125,4 +125,14 @@ data class MailContent(
     val email: String,
 )
 
+data class DuplicateCheckEmail(
+    @ApiModelProperty(value = "이메일")
+    val email: String,
+)
+
+data class DuplicateCheckPhone(
+    @ApiModelProperty(value = "핸드폰")
+    val phone: String,
+)
+
 
