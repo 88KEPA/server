@@ -8,4 +8,8 @@ interface TrainerRepository : JpaRepository<Trainer,Long> {
     fun existsByEmail(email: String) : Boolean
 
     fun findByEmailAndRole(@Param("email")email: String?, @Param("role")role: Role) : Trainer?
+
+    fun findByPhone(phoneNumber: String) : Trainer?
+
+    fun existsByPhone(phoneNumber: String): Boolean
 }
