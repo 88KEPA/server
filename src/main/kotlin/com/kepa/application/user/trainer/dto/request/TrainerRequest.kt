@@ -4,6 +4,7 @@ import CertType
 import Gender
 import LoginType
 import Role
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.kepa.common.exception.ExceptionCode.NOT_MATCH_PASSWORD_CONFIRM_PASSWORD
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.trainer.Trainer
@@ -31,6 +32,7 @@ data class TrainerJoin(
     @NotBlank val addressMeta: String,
     @ApiModelProperty(value = "상세주소")
     @NotBlank val addressDetail: String,
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "출생년도")
     @NotBlank val birth: LocalDate,
     @ApiModelProperty(value = "성별")
