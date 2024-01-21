@@ -1,23 +1,19 @@
 package com.kepa.application.user.trainer
 
 import CertType
-import com.kepa.application.user.trainer.dto.request.LoginInfo
 import com.kepa.application.user.trainer.dto.request.MailContent
 import com.kepa.application.user.trainer.dto.request.MessageContent
 import com.kepa.application.user.trainer.dto.request.TrainerJoin
-import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.common.exception.ExceptionCode.*
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.CertNumber
 import com.kepa.domain.user.CertNumberRepository
 import com.kepa.domain.user.trainer.TrainerRepository
-import com.kepa.token.TokenProvider
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
-import java.util.*
 
 @Service
 @Transactional
@@ -28,6 +24,9 @@ class TrainerWriteService(
     private val applicationEventPublisher: ApplicationEventPublisher,
 ) {
     fun join(trainerJoin: TrainerJoin) {
+        require(!trainerJoin.phone.contains("-")) {
+            throw KepaException(BAD_REQUEST_PHONE_FORMAT)
+        }
         require(
             !trainerRepository.existsByEmail(
                 trainerJoin.email
@@ -41,6 +40,12 @@ class TrainerWriteService(
 
 
     fun sendNumber(receiverPhoneNumber: String, email: String, randomNumber: Int, certType: CertType) {
+        if(trainerRepository.existsByPhone(receiverPhoneNumber)) {
+            throw KepaException(ALREADY_INFORMATION)
+        }
+        require(!receiverPhoneNumber.contains("-")) {
+            throw KepaException(BAD_REQUEST_PHONE_FORMAT)
+        }
         if(certNumberRepository.existsByReceiverEmailAndCertType(email, certType)) {
             certNumberRepository.deleteByReceiverEmailAndCertType(email,certType)
         }
