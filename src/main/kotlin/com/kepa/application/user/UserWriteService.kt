@@ -1,11 +1,14 @@
 package com.kepa.application.user
 
+import Role
 import com.kepa.application.user.trainer.dto.request.LoginInfo
 import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException
+import com.kepa.domain.user.trainer.Trainer
 import com.kepa.domain.user.trainer.TrainerRepository
 import com.kepa.token.TokenProvider
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
@@ -24,5 +27,13 @@ class UserWriteService(
             throw KepaException(ExceptionCode.NOT_MATCH_ID_OR_PASSWORD)
         }
         return tokenProvider.getToken(trainer.email, trainer.role.name, now)
+    }
+
+    fun getToken(id: Long, role: Role, now: Date): LoginToken{
+        if(role == Role.TRAINER) {
+            val trainer : Trainer= trainerRepository.findByIdOrNull(id) ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
+            return tokenProvider.getToken(trainer.email, trainer.role.name, now)
+        }
+        throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
     }
 }

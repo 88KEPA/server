@@ -1,8 +1,6 @@
 package com.kepa.config
 
-import com.kepa.application.user.LoginUserInfo
-import com.kepa.domain.user.annotation.LoginUser
-import com.kepa.security.LoginUserDetail
+import com.kepa.application.user.dto.LoginUserInfo
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import springfox.documentation.builders.ApiInfoBuilder

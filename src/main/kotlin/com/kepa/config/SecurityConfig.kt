@@ -1,5 +1,7 @@
 package com.kepa.config
 
+import com.kepa.security.JwtAccessDeniedHandler
+import com.kepa.security.LoginFilter
 import com.kepa.token.TokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -9,11 +11,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
     private val tokenProvider: TokenProvider,
+    private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
 ) : WebSecurityConfigurerAdapter() {
 
     @Bean
@@ -27,7 +31,10 @@ class SecurityConfig(
            .csrf().disable()
            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
            .and()
-           //.addFilterBefore(LoginFilter(tokenProvider),UsernamePasswordAuthenticationFilter::class.java)
+           .addFilterBefore(LoginFilter(tokenProvider), UsernamePasswordAuthenticationFilter::class.java)
+           .exceptionHandling()
+           .accessDeniedHandler(jwtAccessDeniedHandler)
+           .and()
            .authorizeRequests()
            //.antMatchers("/api/trainer/**").hasAnyAuthority(Role.TRAINER.name)
            .antMatchers("/**")

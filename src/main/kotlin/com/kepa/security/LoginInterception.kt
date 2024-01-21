@@ -1,6 +1,7 @@
 package com.kepa.security
 
-import com.kepa.application.user.LoginUserInfo
+import Role
+import com.kepa.application.user.dto.LoginUserInfo
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.annotation.LoginUser
@@ -23,8 +24,11 @@ class LoginInterception(
     }
 
     override fun resolveArgument(parameter: MethodParameter, mavContainer: ModelAndViewContainer?, webRequest: NativeWebRequest, binderFactory: WebDataBinderFactory?): Any? {
+        println("resolveArgument")
         val authentication = SecurityContextHolder.getContext().authentication
-        val trainer = trainerRepository.findByEmailAndRole(authentication.name, Role.valueOf(authentication.authorities.first().toString()))
+        val trainer = trainerRepository.findByEmailAndRole(
+            authentication.name, Role.valueOf(authentication.authorities.first().toString())
+        )
             ?: throw KepaException(ExceptionCode.TOKEN_EXPIRE)
         return LoginUserInfo(trainer.id, trainer.role)
     }

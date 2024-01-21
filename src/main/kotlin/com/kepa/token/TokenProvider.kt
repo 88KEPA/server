@@ -1,6 +1,8 @@
 package com.kepa.token
 
 import Role
+import com.kepa.application.user.TrainerRefreshTokenRepository
+import com.kepa.application.user.domain.TrainerRefreshToken
 import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException
@@ -33,6 +35,7 @@ class TokenProvider(
     private val ACCESS_TOKEN_EXPIRE_TIME: String,
     @Value("\${jwt.refresh-token-expire-time}")
     private val REFRESH_TOKEN_EXPIRE_TIME: String,
+    private val trainerRefreshTokenRepository: TrainerRefreshTokenRepository,
 ) {
 
     val key: Key by lazy {
@@ -43,6 +46,7 @@ class TokenProvider(
      */
     fun getToken(email: String, role: String, now: Date): LoginToken {
         val now: LocalDateTime = LocalDateTime.now()
+        val nowTokenExpire = now.toInstant(ZoneOffset.UTC).toEpochMilli()
         val accessTokenTime: LocalDateTime = now.plus(ACCESS_TOKEN_EXPIRE_TIME.toLong(), ChronoUnit.SECONDS)
         val refreshTokenTime: LocalDateTime = now.plus(REFRESH_TOKEN_EXPIRE_TIME.toLong(), ChronoUnit.SECONDS)
 
@@ -50,15 +54,27 @@ class TokenProvider(
         val refreshTokenExpire = refreshTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli()
         val accessToken = createToken(
             name = email,
-            tokenExpireTime = 1,
+            tokenExpireTime = accessTokenExpire,
             role = role
         )
-        val refreshToken = createToken(
-            name = email,
-            tokenExpireTime = 1,
-            role = role
-        )
-        return LoginToken(accessToken = accessToken, refreshToken = refreshToken, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(refreshTokenExpire) )
+        val loginUserRole = Role.valueOf(role)
+        var loginToken: LoginToken? = trainerRefreshTokenRepository.findByEmailAndRole(email, loginUserRole)?.let {
+            if (nowTokenExpire > it.expireAt) {
+                throw KepaException(ExceptionCode.REFRESH_TOKEN_EXPIRE)
+            }
+            LoginToken(accessToken = accessToken, refreshToken = it.token, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(it.expireAt))
+        }
+        if(loginToken == null) {
+            val refreshToken = createToken(
+                name = email,
+                tokenExpireTime = refreshTokenExpire,
+                role = role
+            )
+            trainerRefreshTokenRepository.save(TrainerRefreshToken(email = email, token = refreshToken, expireAt =  refreshTokenExpire, role = loginUserRole))
+            loginToken = LoginToken(accessToken = accessToken, refreshToken = refreshToken, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(refreshTokenExpire) )
+        }
+
+        return loginToken
     }
 
     fun getAuthentication(token: String) : Authentication {

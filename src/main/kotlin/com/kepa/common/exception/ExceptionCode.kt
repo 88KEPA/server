@@ -2,7 +2,7 @@ package com.kepa.common.exception
 import org.springframework.http.HttpStatus
 
 enum class ExceptionCode(
-    val status: HttpStatus,
+    var status: HttpStatus,
     val errorMessage: String,
     val identity: Int
 ) {
@@ -19,6 +19,9 @@ enum class ExceptionCode(
 
     NOT_FOUND_CERT_NUMBER(HttpStatus.NOT_FOUND, "인증번호가 존재하지 않습니다.", 40401),
     TOKEN_EXPIRE(HttpStatus.NOT_FOUND,"로그인 토큰이 만료되었습니다.", 40402),
+    REFRESH_TOKEN_EXPIRE(HttpStatus.NOT_FOUND,"리프레시 토큰이 만료되었습니다.", 40403),
+
+    NOT_ACCESS(HttpStatus.UNAUTHORIZED, "접근 권한이 존재하지 않습니다",40101)
 
 
 }

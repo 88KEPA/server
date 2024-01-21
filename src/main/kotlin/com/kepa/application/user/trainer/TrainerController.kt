@@ -1,7 +1,7 @@
 package com.kepa.application.user.trainer
 
 import CertType
-import com.kepa.application.user.LoginUserInfo
+import com.kepa.application.user.dto.LoginUserInfo
 import com.kepa.application.user.trainer.dto.request.*
 import com.kepa.domain.user.annotation.LoginUser
 import com.kepa.externalapi.dto.RandomNumber

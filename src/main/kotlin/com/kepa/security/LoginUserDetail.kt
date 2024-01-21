@@ -11,6 +11,9 @@ class LoginUserDetail(
 ) : UserDetails{
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+        if(role == null) {
+            return mutableListOf()
+        }
         return mutableListOf(SimpleGrantedAuthority(role))
     }
 
