@@ -62,7 +62,9 @@ class TokenProvider(
             if (nowTokenExpire > it.expireAt) {
                 throw KepaException(ExceptionCode.REFRESH_TOKEN_EXPIRE)
             }
-            LoginToken(accessToken = accessToken, refreshToken = it.token, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(it.expireAt))
+            val trainer = trainerRepository.findByEmailAndRole(it.email, it.role)
+                ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
+            LoginToken(accessToken = accessToken, refreshToken = it.token, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(it.expireAt), id =trainer.id )
         }
         if(loginToken == null) {
             val refreshToken = createToken(
@@ -70,8 +72,8 @@ class TokenProvider(
                 tokenExpireTime = refreshTokenExpire,
                 role = role
             )
-            trainerRefreshTokenRepository.save(TrainerRefreshToken(email = email, token = refreshToken, expireAt =  refreshTokenExpire, role = loginUserRole))
-            loginToken = LoginToken(accessToken = accessToken, refreshToken = refreshToken, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(refreshTokenExpire) )
+            val savedTrainer = trainerRefreshTokenRepository.save(TrainerRefreshToken(email = email, token = refreshToken, expireAt = refreshTokenExpire, role = loginUserRole))
+            loginToken = LoginToken(accessToken = accessToken, refreshToken = refreshToken, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(refreshTokenExpire), id= savedTrainer.id )
         }
 
         return loginToken

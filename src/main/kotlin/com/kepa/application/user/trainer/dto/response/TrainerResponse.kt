@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import java.util.*
 
 data class LoginToken(
+    val id: Long,
     val grantType: String = "Bearer",
     val accessToken: String,
     val refreshToken: String,
