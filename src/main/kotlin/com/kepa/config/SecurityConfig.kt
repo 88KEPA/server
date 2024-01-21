@@ -36,7 +36,7 @@ class SecurityConfig(
            .accessDeniedHandler(jwtAccessDeniedHandler)
            .and()
            .authorizeRequests()
-           //.antMatchers("/api/trainer/**").hasAnyAuthority(Role.TRAINER.name)
+           .antMatchers("/api/trainer/info").hasAnyAuthority(Role.TRAINER.name)
            .antMatchers("/**")
            .permitAll()
            .anyRequest().authenticated()
