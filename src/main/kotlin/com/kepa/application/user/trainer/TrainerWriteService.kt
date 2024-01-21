@@ -93,7 +93,7 @@ class TrainerWriteService(
     fun checkEmailNumber(email: String, randomNumber: Int) {
         val certNumber = certNumberRepository.findByReceiverEmailAndCertType(
             email = email,
-            certType = CertType.PHONE
+            certType = CertType.EMAIL
         ) ?: throw KepaException(NOT_FOUND_CERT_NUMBER)
         require(certNumber.number == randomNumber) {
             throw KepaException(NOT_MATCH_CERT_NUMBER)
