@@ -91,4 +91,8 @@ class TrainerController(
     fun test(@LoginUser loginUserInfo: LoginUserInfo) : LoginUserInfo {
         return loginUserInfo
     }
+
+    @ApiOperation(value = "이메일 찾기")
+    @PostMapping("/find/email")
+    fun findEmail(@RequestBody phoneNumber: String) = trainerReadService.findEmail(phoneNumber)
 }
