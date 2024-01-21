@@ -21,8 +21,6 @@ class MailApiService(
         simpleMailMessage.from = senderEmail
         simpleMailMessage.subject = "[KEPA] 이메일 인증번호"
         simpleMailMessage.text = "인증번호 [${mailContent.certNumber}]"
-        println(senderEmail)
-        println(mailContent.email)
         javaMailSender.send(simpleMailMessage)
     }
 }
