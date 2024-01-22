@@ -1,0 +1,41 @@
+server :
+  port: 9003
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+  datasource:
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    url: ${MYSQL_URL}
+    driver-class-name: com.mysql.jdbc.Driver
+  mail:
+    host: smtp.gmail.com # 1
+    port: 587 # 2
+    username: ${MAIL_SENDER_EMAIL}
+    password: ${MAIL_SENDER_PASSWORD}
+    properties:
+      mail :
+        smtp :
+          timeout : 5000
+          starttls:
+            enable: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+jwt:
+  secret-key : ${SECRET_KEY}
+  access-token-expire-time : 3600
+  refresh-token-expire-time : 7200
+aligo :
+  key : ${ALIGO_KEY}
+  send-url : https://apis.aligo.in/send/
+  send-phone-number: ${ALIGO_SEND_PHONE_NUMBER}
+  send-user-id: ${ALOGO_USER_ID}
+
+cors :
+  url : ${CORS_URL}

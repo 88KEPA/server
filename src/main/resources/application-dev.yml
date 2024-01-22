@@ -36,3 +36,6 @@ aligo :
   send-url : https://apis.aligo.in/send/
   send-phone-number: ${ALIGO_SEND_PHONE_NUMBER}
   send-user-id: ${ALOGO_USER_ID}
+
+cors :
+  url : ${CORS_URL}
