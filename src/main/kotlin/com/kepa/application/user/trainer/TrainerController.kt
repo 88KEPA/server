@@ -1,7 +1,8 @@
 package com.kepa.application.user.trainer
 
 import CertType
-import com.kepa.application.user.dto.LoginUserInfo
+import com.kepa.application.user.dto.request.LoginUserInfo
+import com.kepa.application.user.dto.response.DetailInfo
 import com.kepa.application.user.trainer.dto.request.*
 import com.kepa.domain.user.annotation.LoginUser
 import com.kepa.externalapi.dto.RandomNumber
@@ -88,8 +89,8 @@ class TrainerController(
 
     @ApiOperation(value = "로그인한 사용자 체크")
     @GetMapping("/info")
-    fun test(@LoginUser loginUserInfo: LoginUserInfo) : LoginUserInfo {
-        return loginUserInfo
+    fun getDetailInfo(@LoginUser loginUserInfo: LoginUserInfo) : DetailInfo {
+        return DetailInfo.create(trainerReadService.getDetailInfo(id = loginUserInfo.id))
     }
 
     @ApiOperation(value = "이메일 찾기")
