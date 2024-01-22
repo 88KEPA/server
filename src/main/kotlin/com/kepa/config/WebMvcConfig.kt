@@ -11,14 +11,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class WebMvcConfig(
     private val trainerRepository: TrainerRepository,
-    @Value("\${cors.url}")
-    private val corsAccessUrl: String,
 ) : WebMvcConfigurer {
 
 
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins(corsAccessUrl)
+            .allowedOrigins("http://localhost:9402")
             .allowedMethods("OPTIONS","GET","POST","PUT","DELETE");
     }
 
