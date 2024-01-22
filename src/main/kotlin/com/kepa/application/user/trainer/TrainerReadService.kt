@@ -2,7 +2,9 @@ package com.kepa.application.user.trainer
 
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException
+import com.kepa.domain.user.trainer.Trainer
 import com.kepa.domain.user.trainer.TrainerRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -26,6 +28,9 @@ class TrainerReadService(
         val trainer = trainerRepository.findByPhone(phoneNumber) ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
         return trainer.email.masking(FIRST_INDEX, END_INDEX)
     }
+
+    fun getDetailInfo(id: Long) : Trainer = trainerRepository.findByIdOrNull(id) ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
+
 
     fun String.masking(startIndex: Int, endIndex: Int): String {
         val substringTarget = this.substring(startIndex, endIndex)
