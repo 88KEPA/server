@@ -1,6 +1,6 @@
 package com.kepa.application.user
 
-import com.kepa.application.user.dto.LoginUserInfo
+import com.kepa.application.user.dto.request.LoginUserInfo
 import com.kepa.application.user.trainer.dto.request.LoginInfo
 import com.kepa.application.user.trainer.dto.response.LoginToken
 import io.swagger.v3.oas.annotations.Operation
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
-import kotlin.math.log
 
 @RestController
 @RequestMapping("/api")
