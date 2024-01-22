@@ -1,4 +1,4 @@
-package com.kepa.application.user.dto
+package com.kepa.application.user.dto.request
 
 import Role
 
