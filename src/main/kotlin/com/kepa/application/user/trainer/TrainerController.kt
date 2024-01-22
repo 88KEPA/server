@@ -87,7 +87,7 @@ class TrainerController(
         trainerWriteService.checkEmailNumber(email = checkEmailCertNumber.email, randomNumber = checkEmailCertNumber.certNumber)
     }
 
-    @ApiOperation(value = "로그인한 사용자 체크")
+    @ApiOperation(value = "사용자 정보 상세보기")
     @GetMapping("/info")
     fun getDetailInfo(@LoginUser loginUserInfo: LoginUserInfo) : DetailInfo {
         return DetailInfo.create(trainerReadService.getDetailInfo(id = loginUserInfo.id))
