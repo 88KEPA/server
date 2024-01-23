@@ -4,6 +4,7 @@ import CertType
 import com.kepa.application.user.dto.request.LoginUserInfo
 import com.kepa.application.user.dto.response.DetailInfo
 import com.kepa.application.user.trainer.dto.request.*
+import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.domain.user.annotation.LoginUser
 import com.kepa.externalapi.dto.RandomNumber
 import io.swagger.annotations.Api
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.validation.Valid
 
 @RestController
@@ -20,7 +22,8 @@ import javax.validation.Valid
 class TrainerController(
     private val trainerWriteService: TrainerWriteService,
     private val trainerReadService: TrainerReadService,
-) {
+
+    ) {
 
     @ApiResponses(
         ApiResponse(code = 200, message = ""),
@@ -28,8 +31,8 @@ class TrainerController(
     )
     @ApiOperation(value = "트레이너 입회")
     @PostMapping
-    fun create(@Valid @RequestBody trainerJoin: TrainerJoin) {
-        trainerWriteService.join(trainerJoin);
+    fun create(@Valid @RequestBody accountJoin: AccountJoin) {
+        trainerWriteService.join(accountJoin);
     }
 
     @ApiResponses(

@@ -5,30 +5,32 @@ import com.kepa.application.user.trainer.dto.request.LoginInfo
 import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.domain.user.annotation.LoginUser
 import io.swagger.v3.oas.annotations.Operation
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
 @RequestMapping("/api")
-class UserController(
-    private val userWriteService: UserWriteService,
+class AccountController(
+    private val accountWriteService: AccoutWriteService,
 ) {
 
     @Operation(description = "로그인")
     @PostMapping("/login")
-    fun login(@RequestBody loginInfo: LoginInfo): LoginToken = userWriteService.login(
+    fun login(@RequestBody loginInfo: LoginInfo): LoginToken = accountWriteService.login(
         loginInfo,
         Date()
     )
 
+    @Operation(description = "로그아웃")
+    @PostMapping("/logout")
+    fun logout(@LoginUser loginUserInfo: LoginUserInfo) {
+        accountWriteService.logout(loginUserInfo)
+    }
+
 
     @Operation(description = "토큰 재발급")
     @GetMapping("/token")
-    fun getToken(@LoginUser loginUserInfo: LoginUserInfo) : LoginToken = userWriteService.getToken(
+    fun getToken(@LoginUser loginUserInfo: LoginUserInfo) : LoginToken = accountWriteService.getToken(
         loginUserInfo.id, loginUserInfo.role, Date()
     )
 }

@@ -3,7 +3,7 @@ package com.kepa.application.user.dto.response
 import Gender
 import Role
 import com.fasterxml.jackson.annotation.JsonFormat
-import com.kepa.domain.user.trainer.Trainer
+import com.kepa.domain.user.account.Account
 import java.time.LocalDate
 
 data class DetailInfo(
@@ -19,17 +19,17 @@ data class DetailInfo(
     val role: Role
 ) {
     companion object {
-        fun create(trainer: Trainer) : DetailInfo{
+        fun create(account: Account) : DetailInfo{
             return DetailInfo(
-                name = trainer.name,
-                gender =  trainer.gender,
-                email = trainer.email,
-                birth = trainer.birth,
-                address = trainer.address,
-                addressMeta = trainer.addressMeta,
-                addressDetail = trainer.addressDetail,
-                phone = trainer.phone,
-                role =  trainer.role
+                name = account.name,
+                gender =  account.gender,
+                email = account.email,
+                birth = account.birth,
+                address = account.address,
+                addressMeta = account.addressMeta,
+                addressDetail = account.addressDetail,
+                phone = account.phone,
+                role =  account.role
             )
         }
     }

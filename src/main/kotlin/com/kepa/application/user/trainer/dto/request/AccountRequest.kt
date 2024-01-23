@@ -7,7 +7,7 @@ import Role
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.kepa.common.exception.ExceptionCode.NOT_MATCH_PASSWORD_CONFIRM_PASSWORD
 import com.kepa.common.exception.KepaException
-import com.kepa.domain.user.trainer.Trainer
+import com.kepa.domain.user.account.Account
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import java.time.LocalDate
@@ -15,7 +15,7 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 
 @ApiModel(value = "회원가입 요청")
-data class TrainerJoin(
+data class AccountJoin(
     @ApiModelProperty(value = "이름")
     @NotBlank val name: String,
     @ApiModelProperty(value = "비밀번호")
@@ -40,8 +40,8 @@ data class TrainerJoin(
     @ApiModelProperty(value = "회원가입 또는 로그인 타입")
     @NotBlank val loginType: LoginType,
 ) {
-    fun create(encodingPassword: String): Trainer {
-        return Trainer(
+    fun create(encodingPassword: String): Account {
+        return Account(
             name = name,
             password = encodingPassword,
             phone = phone,

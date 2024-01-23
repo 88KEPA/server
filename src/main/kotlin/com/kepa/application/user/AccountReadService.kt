@@ -1,4 +1,4 @@
-package com.kepa.application.user.trainer
+package com.kepa.application.user
 
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional(readOnly = true)
 @Service
-class TrainerReadService(
+class AccountReadService(
     private val accountRepository: AccountRepository,
 ) {
     companion object {

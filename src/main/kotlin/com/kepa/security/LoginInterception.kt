@@ -5,7 +5,7 @@ import com.kepa.application.user.dto.request.LoginUserInfo
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.annotation.LoginUser
-import com.kepa.domain.user.trainer.TrainerRepository
+import com.kepa.domain.user.account.AccountRepository
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
@@ -17,7 +17,7 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
 class LoginInterception(
-    private val trainerRepository: TrainerRepository,
+    private val accountRepository: AccountRepository,
 ) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.hasParameterAnnotation(LoginUser::class.java)
@@ -25,7 +25,7 @@ class LoginInterception(
 
     override fun resolveArgument(parameter: MethodParameter, mavContainer: ModelAndViewContainer?, webRequest: NativeWebRequest, binderFactory: WebDataBinderFactory?): Any? {
         val authentication = SecurityContextHolder.getContext().authentication
-        val trainer = trainerRepository.findByEmailAndRole(
+        val trainer = accountRepository.findByEmailAndRole(
             authentication.name, Role.valueOf(authentication.authorities.first().toString())
         )
             ?: throw KepaException(ExceptionCode.TOKEN_EXPIRE)

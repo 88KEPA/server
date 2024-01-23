@@ -1,12 +1,12 @@
 package com.kepa.token
 
 import Role
-import com.kepa.application.user.TrainerRefreshTokenRepository
-import com.kepa.application.user.domain.TrainerRefreshToken
+import com.kepa.application.user.RefreshTokenRepository
+import com.kepa.application.user.domain.RefreshToken
 import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException
-import com.kepa.domain.user.trainer.TrainerRepository
+import com.kepa.domain.user.account.AccountRepository
 import com.kepa.security.LoginUserDetail
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
@@ -28,19 +28,20 @@ import javax.servlet.http.HttpServletRequest
 
 @Component
 class TokenProvider(
-    private val trainerRepository: TrainerRepository,
+    private val accountRepository: AccountRepository,
     @Value("\${jwt.secret-key}")
     private val secretKey: String,
     @Value("\${jwt.access-token-expire-time}")
     private val ACCESS_TOKEN_EXPIRE_TIME: String,
     @Value("\${jwt.refresh-token-expire-time}")
     private val REFRESH_TOKEN_EXPIRE_TIME: String,
-    private val trainerRefreshTokenRepository: TrainerRefreshTokenRepository,
+    private val refreshTokenRepository: RefreshTokenRepository,
 ) {
 
     val key: Key by lazy {
         Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey))
     }
+
     /**
      * accessToken, refreshToken 생성
      */
@@ -54,68 +55,69 @@ class TokenProvider(
         val refreshTokenExpire = refreshTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli()
         val accessToken = createToken(
             name = email,
-            tokenExpireTime = 5000,
+            tokenExpireTime = accessTokenExpire,
             role = role
         )
         val loginUserRole = Role.valueOf(role)
-        var loginToken: LoginToken? = trainerRefreshTokenRepository.findByEmailAndRole(email, loginUserRole)?.let {
+        var loginToken: LoginToken? = refreshTokenRepository.findByEmailAndRole(email, loginUserRole)?.let {
             if (nowTokenExpire > it.expireAt) {
                 throw KepaException(ExceptionCode.REFRESH_TOKEN_EXPIRE)
             }
-            val trainer = trainerRepository.findByEmailAndRole(it.email, it.role)
+
+            val account = accountRepository.findByEmailAndRole(it.email, it.role)
                 ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
-            LoginToken(accessToken = accessToken, refreshToken = it.token, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(it.expireAt), id =trainer.id )
+            LoginToken(accessToken = accessToken, refreshToken = it.token, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(it.expireAt), id = account.id)
         }
-        if(loginToken == null) {
+        if (loginToken == null) {
             val refreshToken = createToken(
                 name = email,
                 tokenExpireTime = refreshTokenExpire,
                 role = role
             )
-            val savedTrainer = trainerRefreshTokenRepository.save(TrainerRefreshToken(email = email, token = refreshToken, expireAt = refreshTokenExpire, role = loginUserRole))
-            loginToken = LoginToken(accessToken = accessToken, refreshToken = refreshToken, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(refreshTokenExpire), id= savedTrainer.id )
+            val savedAccount = refreshTokenRepository.save(RefreshToken(email = email, token = refreshToken, expireAt = refreshTokenExpire, role = loginUserRole))
+            loginToken = LoginToken(accessToken = accessToken, refreshToken = refreshToken, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(refreshTokenExpire), id = savedAccount.id)
         }
-
         return loginToken
     }
 
-    fun getAuthentication(token: String) : Authentication {
-        val trainer = trainerRepository.findByEmailAndRole(getTrainer(token), Role.TRAINER) ?: throw KepaException(
+    fun getAuthentication(token: String): Authentication {
+        val account = accountRepository.findByEmail(getAccount(token)) ?: throw KepaException(
             ExceptionCode.NOT_EXSISTS_INFO
         )
-        val loginUserDetail = LoginUserDetail(trainer.email, trainer.role.name);
-        return UsernamePasswordAuthenticationToken(loginUserDetail,"" , loginUserDetail.authorities)
+        val loginUserDetail = LoginUserDetail(account.email, account.role.name);
+        return UsernamePasswordAuthenticationToken(loginUserDetail, "", loginUserDetail.authorities)
     }
 
-    fun getTrainer(token: String): String {
+    fun getAccount(token: String): String {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).body.subject
     }
 
 
     fun validateToken(token: String): Boolean {
-         try {
+        try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).body
-             return true;
-        }catch (e : SecurityException) {
+            return true;
+        } catch (e: SecurityException) {
             e.printStackTrace()
-        }catch (e : ExpiredJwtException) {
-                return false
-        }catch (e: UnsupportedJwtException) {
-             e.printStackTrace()
-        }catch (e: IllegalArgumentException) {
-             e.printStackTrace()
+        } catch (e: ExpiredJwtException) {
+            return false
+        } catch (e: UnsupportedJwtException) {
+            e.printStackTrace()
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
         }
         return false
     }
 
     fun resolveToken(request: HttpServletRequest?): String? {
-        return request?.getHeader("Authorization")}
+        return request?.getHeader("Authorization")
+    }
 
     //토큰 생성
     private fun createToken(name: String, tokenExpireTime: Long, role: String): String {
         return Jwts.builder()
             .setSubject(name)
-            .claim("auth",role)
+            .claim("auth", role)
             .setExpiration(Date(tokenExpireTime))
             .signWith(key, SignatureAlgorithm.HS512)
             .compact()

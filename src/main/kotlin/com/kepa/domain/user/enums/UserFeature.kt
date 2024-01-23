@@ -14,7 +14,7 @@ enum class LoginType(
 enum class Role(
     val type: String
 ) {
-    ADMIN("관리자"), USER("일반 사용자"), TRAINER("트레이너")
+    ADMIN("관리자"), USER("일반 사용자"), TRAINER("트레이너"), SUPER_ADMIN("슈퍼 관리자")
 }
 
 enum class CertType(
