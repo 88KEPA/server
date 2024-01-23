@@ -1,28 +1,21 @@
 package com.kepa.application.user.trainer
 
 import CertType
-import Role
 import com.kepa.application.user.RefreshTokenRepository
-import com.kepa.application.user.dto.request.LoginUserInfo
-import com.kepa.application.user.trainer.dto.request.LoginInfo
+import com.kepa.application.user.trainer.dto.request.AccountJoin
 import com.kepa.application.user.trainer.dto.request.MailContent
 import com.kepa.application.user.trainer.dto.request.MessageContent
-import com.kepa.application.user.trainer.dto.request.AccountJoin
-import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.common.exception.ExceptionCode.*
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.CertNumber
 import com.kepa.domain.user.CertNumberRepository
-import com.kepa.domain.user.account.Account
 import com.kepa.domain.user.account.AccountRepository
 import com.kepa.token.TokenProvider
 import org.springframework.context.ApplicationEventPublisher
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
-import java.util.*
 
 @Service
 @Transactional

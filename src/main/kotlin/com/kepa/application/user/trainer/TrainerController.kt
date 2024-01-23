@@ -1,10 +1,10 @@
 package com.kepa.application.user.trainer
 
 import CertType
+import com.kepa.application.user.AccountReadService
 import com.kepa.application.user.dto.request.LoginUserInfo
 import com.kepa.application.user.dto.response.DetailInfo
 import com.kepa.application.user.trainer.dto.request.*
-import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.domain.user.annotation.LoginUser
 import com.kepa.externalapi.dto.RandomNumber
 import io.swagger.annotations.Api
@@ -13,7 +13,6 @@ import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.*
-import java.util.*
 import javax.validation.Valid
 
 @RestController
@@ -21,7 +20,7 @@ import javax.validation.Valid
 @RequestMapping("/api/trainer")
 class TrainerController(
     private val trainerWriteService: TrainerWriteService,
-    private val trainerReadService: TrainerReadService,
+    private val accountReadService: AccountReadService,
 
     ) {
 
@@ -42,7 +41,7 @@ class TrainerController(
     @Operation(description = "이메일 중복체크")
     @PostMapping("/check/email")
     fun checkEmail(@RequestBody duplicateCheckEmail: DuplicateCheckEmail) {
-        trainerReadService.checkEmail(duplicateCheckEmail.email)
+        accountReadService.checkEmail(duplicateCheckEmail.email)
     }
 
     @ApiResponses(
@@ -93,10 +92,10 @@ class TrainerController(
     @ApiOperation(value = "사용자 정보 상세보기")
     @GetMapping("/info")
     fun getDetailInfo(@LoginUser loginUserInfo: LoginUserInfo) : DetailInfo {
-        return DetailInfo.create(trainerReadService.getDetailInfo(id = loginUserInfo.id))
+        return DetailInfo.create(accountReadService.getDetailInfo(id = loginUserInfo.id))
     }
 
     @ApiOperation(value = "이메일 찾기")
     @PostMapping("/find/email")
-    fun findEmail(@RequestBody phoneNumber: DuplicateCheckPhone) = trainerReadService.findEmail(phoneNumber.phone)
+    fun findEmail(@RequestBody phoneNumber: DuplicateCheckPhone) = accountReadService.findEmail(phoneNumber.phone)
 }
