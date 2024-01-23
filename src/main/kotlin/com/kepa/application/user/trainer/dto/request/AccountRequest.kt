@@ -69,8 +69,6 @@ data class LoginInfo(
     val password: String,
     @ApiModelProperty(value = "로그인 타입")
     val loginType: LoginType,
-    @ApiModelProperty(value = "회원 권한타입")
-    val role: Role
 )
 
 data class MessageContent(
