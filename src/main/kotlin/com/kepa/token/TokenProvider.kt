@@ -54,7 +54,7 @@ class TokenProvider(
         val refreshTokenExpire = refreshTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli()
         val accessToken = createToken(
             name = email,
-            tokenExpireTime = accessTokenExpire,
+            tokenExpireTime = 5000,
             role = role
         )
         val loginUserRole = Role.valueOf(role)
