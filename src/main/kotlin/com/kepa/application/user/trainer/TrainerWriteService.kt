@@ -119,31 +119,4 @@ class TrainerWriteService(
             throw KepaException(EXPIRE_CERT_NUMBER)
         }
     }
-
-    fun login(loginInfo: LoginInfo, now: Date): LoginToken {
-        val trainer = accountRepository.findByEmailAndRole(loginInfo.email,loginInfo.role)
-            ?: throw KepaException(NOT_MATCH_ID_OR_PASSWORD)
-        require(bCryptPasswordEncoder.matches(loginInfo.password, trainer.password)) {
-            throw KepaException(NOT_MATCH_ID_OR_PASSWORD)
-        }
-        if(refreshTokenRepository.existsByEmailAndRole(trainer.email,trainer.role)) {
-            refreshTokenRepository.deleteByEmail(trainer.email)
-        }
-        return tokenProvider.getToken(trainer.email, trainer.role.name, now)
-    }
-
-    fun logout(loginUserInfo: LoginUserInfo) {
-        val trainer = accountRepository.findByIdOrNull(loginUserInfo.id)
-            ?: throw KepaException(NOT_MATCH_ID_OR_PASSWORD)
-        refreshTokenRepository.deleteByEmail(trainer.email)
-    }
-
-
-    fun getToken(id: Long, role: Role, now: Date): LoginToken {
-        if(role == Role.TRAINER) {
-            val account : Account = accountRepository.findByIdOrNull(id) ?: throw KepaException(NOT_EXSISTS_INFO)
-            return tokenProvider.getToken(account.email, account.role.name, now)
-        }
-        throw KepaException(NOT_EXSISTS_INFO)
-    }
 }

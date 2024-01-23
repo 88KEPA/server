@@ -34,7 +34,7 @@ class AccoutWriteService(
 ) {
 
     fun login(loginInfo: LoginInfo, now: Date): LoginToken {
-        val trainer = accountRepository.findByEmailAndRole(loginInfo.email,loginInfo.role)
+        val trainer = accountRepository.findByEmail(loginInfo.email)
             ?: throw KepaException(NOT_MATCH_ID_OR_PASSWORD)
         require(bCryptPasswordEncoder.matches(loginInfo.password, trainer.password)) {
             throw KepaException(NOT_MATCH_ID_OR_PASSWORD)
