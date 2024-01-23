@@ -9,5 +9,5 @@ interface TrainerRefreshTokenRepository : JpaRepository<TrainerRefreshToken, Lon
     fun existsByEmailAndRole(email: String, role: Role): Boolean
 
     fun findByEmailAndRole(email:String, role: Role): TrainerRefreshToken?
-
+    fun deleteByEmail(email: String)
 }

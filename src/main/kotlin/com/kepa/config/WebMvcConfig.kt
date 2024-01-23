@@ -17,7 +17,8 @@ class WebMvcConfig(
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
             .allowedOrigins("http://localhost:9402")
-            .allowedMethods("OPTIONS","GET","POST","PUT","DELETE");
+            .allowedMethods("OPTIONS","GET","POST","PUT","DELETE")
+            .exposedHeaders("Authorization")
     }
 
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
