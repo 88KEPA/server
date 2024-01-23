@@ -29,7 +29,7 @@ class UserWriteService(
         if (!bCryptPasswordEncoder.matches(loginInfo.password, trainer.password)) {
             throw KepaException(ExceptionCode.NOT_MATCH_ID_OR_PASSWORD)
         }
-        require(!trainerRefreshTokenRepository.existsByEmailAndRole(trainer.email,trainer.role)) {
+        if(trainerRefreshTokenRepository.existsByEmailAndRole(trainer.email,trainer.role)) {
             trainerRefreshTokenRepository.deleteByEmail(trainer.email)
         }
         return tokenProvider.getToken(trainer.email, trainer.role.name, now)
