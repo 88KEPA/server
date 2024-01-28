@@ -12,14 +12,6 @@ class WebMvcConfig(
     private val accountRepository: AccountRepository,
 ) : WebMvcConfigurer {
 
-
-    override fun addCorsMappings(registry: CorsRegistry) {
-        registry.addMapping("/**")
-            .allowedOrigins("http://localhost:9402", "https://www.kepa.associates")
-            .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE")
-            .exposedHeaders("Authorization")
-    }
-
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
         resolvers.add(LoginInterception(accountRepository))
     }
