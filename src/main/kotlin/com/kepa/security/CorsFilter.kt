@@ -1,3 +1,4 @@
+/*
 package com.kepa.security
 
 import org.springframework.core.Ordered
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpServletResponse.SC_OK
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-class CorsFilter : Filter {
+class CorsFilter {
     override fun doFilter(req: ServletRequest, res: ServletResponse, p2: FilterChain) {
         val request = req as HttpServletRequest
         val response = res as HttpServletResponse
@@ -31,4 +32,4 @@ class CorsFilter : Filter {
         }
 
     }
-}
+}*/
