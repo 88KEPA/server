@@ -17,7 +17,6 @@ class CorsFilter : Filter {
     override fun doFilter(req: ServletRequest, res: ServletResponse, p2: FilterChain) {
         val request = req as HttpServletRequest
         val response = res as HttpServletResponse
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:9402");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods","*");
         response.setHeader("Access-Control-Max-Age", "3600");
