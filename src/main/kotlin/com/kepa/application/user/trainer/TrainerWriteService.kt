@@ -1,7 +1,7 @@
 package com.kepa.application.user.trainer
 
 import CertType
-import com.kepa.application.user.RefreshTokenRepository
+import com.kepa.domain.user.account.RefreshTokenRepository
 import com.kepa.application.user.trainer.dto.request.AccountJoin
 import com.kepa.application.user.trainer.dto.request.MailContent
 import com.kepa.application.user.trainer.dto.request.MessageContent
