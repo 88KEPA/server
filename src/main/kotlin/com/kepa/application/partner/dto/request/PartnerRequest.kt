@@ -28,3 +28,10 @@ data class PartnerCreate(
         )
     }
 }
+
+data class PartnerMessageContent(
+    @ApiModelProperty(value = "수신자 핸드폰번호")
+    val receiverPhoneNumber: String,
+    @ApiModelProperty(value = "수신자 성함")
+    val name: String,
+)
