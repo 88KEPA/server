@@ -47,7 +47,7 @@ class MessageApiService(
         val restTemplate = RestTemplate()
         val header = getHeaders()
         val requestValue : MultiValueMap<String, String> = getCommonRequestValue(partnerMessageContent.receiverPhoneNumber)
-        requestValue.add("msg", "${partnerMessageContent.name}님 KEPA 서비스 이용에 관심을 가져주셔서 감사합니다. 운동을 통한 건강을 위해 고객님께 하루빨리 연락드리겠습니다" )
+        requestValue.add("msg", "${partnerMessageContent.name}님 KEPA 서비스 이용에 관심을 가져주셔서 감사합니다. 운동을 통한 건강을 위해 하루빨리 연락드리겠습니다." )
         request(requestValue, header, restTemplate)
     }
 
