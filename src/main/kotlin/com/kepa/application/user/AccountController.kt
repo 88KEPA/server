@@ -4,11 +4,13 @@ import com.kepa.application.user.dto.request.LoginUserInfo
 import com.kepa.application.user.trainer.dto.request.LoginInfo
 import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.domain.user.annotation.LoginUser
+import io.swagger.annotations.Api
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
+@Api(tags = ["[LOGIN] 로그인 관련 API"])
 @RequestMapping("/api")
 class AccountController(
     private val accountWriteService: AccoutWriteService,
