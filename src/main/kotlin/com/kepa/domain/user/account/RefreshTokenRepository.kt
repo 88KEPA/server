@@ -1,7 +1,6 @@
-package com.kepa.application.user
+package com.kepa.domain.user.account
 
 import Role
-import com.kepa.application.user.domain.RefreshToken
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface RefreshTokenRepository : JpaRepository<RefreshToken, Long> {
