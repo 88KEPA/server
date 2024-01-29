@@ -13,8 +13,7 @@ class LoginFilter(
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         tokenProvider.resolveToken(request = request as? HttpServletRequest?)?.also {
             val loginToken = it.split(" ")[1]
-            if(!tokenProvider.validateToken(loginToken)) {
-                println("asdasdsa")
+            if(!it.toLowerCase().startsWith("bearer ") && !tokenProvider.validateToken(loginToken)) {
                 response.sendError(401,"aa")
                 return
             }
