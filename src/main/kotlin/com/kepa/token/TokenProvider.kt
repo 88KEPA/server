@@ -1,8 +1,8 @@
 package com.kepa.token
 
 import Role
-import com.kepa.application.user.RefreshTokenRepository
-import com.kepa.application.user.domain.RefreshToken
+import com.kepa.domain.user.account.RefreshTokenRepository
+import com.kepa.domain.user.account.RefreshToken
 import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException
