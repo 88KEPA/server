@@ -1,4 +1,4 @@
-package com.kepa.application.user.domain
+package com.kepa.domain.user.account
 
 import Role
 import com.kepa.common.BaseEntity
