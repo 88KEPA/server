@@ -35,3 +35,24 @@ data class DetailInfo(
     }
 }
 
+data class PageResponse(
+    val contents: List<Any>,
+    val totalCount: Long,
+    val page: Int,
+    var limit: Int,
+) {
+    companion object {
+        fun toResponse(contents: List<Any>,
+                   totalCount: Long,
+                   page: Int,
+                   limit: Int,) : PageResponse {
+            return PageResponse(
+                contents = contents,
+                totalCount = totalCount,
+                page = page,
+                limit = limit
+            )
+        }
+    }
+}
+
