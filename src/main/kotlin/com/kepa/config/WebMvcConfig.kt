@@ -17,7 +17,8 @@ class WebMvcConfig(
         registry.addMapping("/**")
             .allowedOrigins("http://localhost:9402","http://localhost:9401" ,"https://www.kepa.associates/")
             .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE")
-            .allowedHeaders("Authorization", "Origin","X-Requested-With" ,"Content-Type", "Accept")
+            .allowedHeaders("*")
+            .exposedHeaders("*")
             .allowCredentials(true)
             .maxAge(3600)
 
