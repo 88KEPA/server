@@ -9,7 +9,7 @@ data class PartnerCreate(
     @ApiModelProperty(value = "성함")
     @NotBlank val name: String,
     @ApiModelProperty(value = "조직")
-    @NotBlank val organization : String,
+    @NotBlank val organization: String,
     @ApiModelProperty(value = "이메일")
     @Email
     @NotBlank val email: String,
@@ -17,14 +17,17 @@ data class PartnerCreate(
     @NotBlank val phone: String,
     @ApiModelProperty(value = "상담시 참고사항")
     @NotBlank val content: String,
+    @ApiModelProperty(value = "상담시 참고사항")
+    @NotBlank val position: String,
 ) {
-    fun createPartner() : Partner {
+    fun createPartner(): Partner {
         return Partner(
             name = name,
             organization = organization,
             email = email,
-            phone =  phone,
-            content = content
+            phone = phone,
+            content = content,
+            position = position
         )
     }
 }
