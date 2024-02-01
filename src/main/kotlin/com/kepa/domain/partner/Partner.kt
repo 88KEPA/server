@@ -21,5 +21,6 @@ class Partner(
     val organization: String,
     @Enumerated(EnumType.STRING)
     val approveStatus: ApproveStatus = ApproveStatus.READY,
+    val position: String,
 ) : BaseEntity(){
 }
