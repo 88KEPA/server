@@ -1,7 +1,7 @@
 package com.kepa.application.user.admin
 
 import com.kepa.application.user.AccountReadService
-import com.kepa.application.user.admin.dto.request.PageRequest
+import com.kepa.application.user.admin.dto.request.TrainerListFilter
 import com.kepa.application.user.dto.request.LoginUserInfo
 import com.kepa.application.user.dto.response.DetailInfo
 import com.kepa.application.user.dto.response.PageResponse
@@ -27,7 +27,7 @@ class AdminController(
 
     @ApiOperation(value = "트레이너 목록")
     @GetMapping("/list/trainer")
-    fun getTrainer(@LoginUser loginUserInfo: LoginUserInfo, pageRequest: PageRequest) : PageResponse {
-        return adminReadService.getJoinTrainer(page = pageRequest.page, limit = pageRequest.limit)
+    fun getTrainer(@LoginUser loginUserInfo: LoginUserInfo, trainerListFilter: TrainerListFilter) : PageResponse {
+        return adminReadService.getJoinTrainer(page = trainerListFilter.page, limit = trainerListFilter.limit, trainerListFilter.keyword)
     }
 }
