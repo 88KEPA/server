@@ -1,6 +1,10 @@
 package com.kepa.application.user.admin.dto.request
 
-data class PageRequest(
-    val limit: Int,
-    val page: Int
+abstract class PageRequest(
+    val limit: Int = 10,
+    val page: Int = 0
 )
+
+data class TrainerListFilter(
+    val keyword: String?,
+) : PageRequest()
