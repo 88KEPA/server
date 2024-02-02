@@ -18,6 +18,6 @@ interface AccountRepository : JpaRepository<Account,Long> {
 
     fun findAllByRole(role: Role) : List<Account>
 
-    @Query(value = "SELECT a FROM Account a WHERE (a.email = :keyword OR a.name = :keyword) AND a.role = :role")
-    fun findAllByEmailOrName(@Param("keyword")keyword: String,@Param("role") role: Role): List<Account>
+    @Query(value = "SELECT a FROM Account a WHERE (a.email = :keyword OR a.name = :keyword OR a.phone = :keyword) AND a.role = :role")
+    fun findAllByEmailOrNameOrPhone(@Param("keyword")keyword: String, @Param("role") role: Role): List<Account>
 }

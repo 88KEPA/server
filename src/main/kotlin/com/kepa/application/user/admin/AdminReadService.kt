@@ -5,7 +5,6 @@ import com.kepa.application.user.admin.dto.response.ApplyPartnerDetailInfo
 import com.kepa.application.user.admin.dto.response.ApplyPartners
 import com.kepa.application.user.admin.dto.response.JoinTrainers
 import com.kepa.application.user.dto.response.PageResponse
-import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.ExceptionCode.NOT_EXSISTS_INFO
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.partner.PartnerRepository
@@ -23,7 +22,7 @@ class AdminReadService(
 
     fun getJoinTrainer(page: Int, limit: Int, keyword: String?): PageResponse {
         val findAllTrainers = keyword?.let {
-            accountRepository.findAllByEmailOrName(keyword, Role.TRAINER)
+            accountRepository.findAllByEmailOrNameOrPhone(keyword, Role.TRAINER)
         } ?: accountRepository.findAllByRole(Role.TRAINER)
 
         val trainers = findAllTrainers.map { JoinTrainers(id = it.id, name = it.name, birth =  it.birth, createdAt =  it.createdAt) }
