@@ -41,7 +41,7 @@ class SecurityConfig(
     }
 
     override fun configure(http: HttpSecurity) {
-       http
+       http.httpBasic().disable()
            .cors().configurationSource(corsConfigurationSource())
            .and()
            .csrf().disable()
