@@ -10,7 +10,6 @@ import javax.persistence.Enumerated
 @Entity
 class CertNumber(
     val receiverPhoneNumber: String? = null,
-    @Column(nullable = false)
     val receiverEmail: String? =null,
     @Column(nullable = false)
     val number: Int,
