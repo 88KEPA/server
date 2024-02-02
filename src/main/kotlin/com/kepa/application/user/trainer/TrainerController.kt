@@ -21,7 +21,7 @@ import javax.validation.Valid
 class TrainerController(
     private val trainerWriteService: TrainerWriteService,
     private val accountReadService: AccountReadService,
-
+    private val trainerCertWriteService : TrainerCertWriteService,
     ) {
 
     @ApiResponses(
@@ -47,10 +47,10 @@ class TrainerController(
     @ApiResponses(
         ApiResponse(code = 200, message = ""),
     )
-    @Operation(description = "비밀번호 찾기 / 회원가입 인증번호 발송")
+    @Operation(description = "비밀번호 찾기(FIND), 회원가입(PHONE) 인증번호 발송")
     @PostMapping("/send/number")
     fun sendNumber(@RequestBody sendPhoneCertNumber: SendPhoneCertNumber) {
-        trainerWriteService.sendNumber(
+        trainerCertWriteService.sendNumber(
             receiverPhoneNumber = sendPhoneCertNumber.receiverPhoneNumber,
             email = sendPhoneCertNumber.email,
             randomNumber = RandomNumber.create(),
@@ -63,19 +63,20 @@ class TrainerController(
         ApiResponse(code = 400, message = "errorMessage: 인증번호가 일치하지 않습니다. / identity : 40004"),
         ApiResponse(code = 400, message = "errorMessage: 유효시간이 지났습니다. / identity : 40005"),
     )
-    @Operation(description = "인증번호 체크")
+    @Operation(description = "비밀번호 찾기(FIND), 회원가입(PHONE)인증번호 체크")
     @PostMapping("/check/number")
     fun checkNumber(@Valid @RequestBody checkCertNumber: CheckCertNumber) {
-        trainerWriteService.checkNumber(receiverPhoneNumber = checkCertNumber.receiverPhoneNumber,
+        trainerCertWriteService.checkNumber(receiverPhoneNumber = checkCertNumber.receiverPhoneNumber,
             email = checkCertNumber.email,
-            randomNumber = checkCertNumber.certNumber)
+            randomNumber = checkCertNumber.certNumber,
+            certType = checkCertNumber.certType)
     }
 
 
     @ApiOperation(value = "이메일 인증번호 발송")
     @PostMapping("/send/email")
     fun sendEmail(@RequestBody sendEmailCertNumber: SendEmailCertNumber) {
-        trainerWriteService.sendMail(sendEmailCertNumber.email, RandomNumber.create(), CertType.EMAIL)
+        trainerCertWriteService.sendMail(sendEmailCertNumber.email, RandomNumber.create(), CertType.EMAIL)
     }
 
     @ApiResponses(
@@ -86,7 +87,7 @@ class TrainerController(
     @ApiOperation(value = "이메일 인증번호 체크")
     @PostMapping("/check/email/number")
     fun checkEmail(@RequestBody checkEmailCertNumber: CheckEmailCertNumber) {
-        trainerWriteService.checkEmailNumber(email = checkEmailCertNumber.email, randomNumber = checkEmailCertNumber.certNumber)
+        trainerCertWriteService.checkEmailNumber(email = checkEmailCertNumber.email, randomNumber = checkEmailCertNumber.certNumber)
     }
 
     @ApiOperation(value = "사용자 정보 상세보기")
@@ -102,12 +103,18 @@ class TrainerController(
     @ApiOperation(value = "이메일 찾기 인증번호 발송")
     @PostMapping("/recovery/send/email")
     fun recoverySendEmail(@RequestBody phoneNumber: PhoneInfo) {
-        trainerWriteService.recoverySend(phoneNumber.phone, RandomNumber.create())
+        trainerCertWriteService.recoverySend(phoneNumber.phone, RandomNumber.create())
+    }
+
+    @ApiOperation(value = "이메일 찾기 인증번호 체크")
+    @PostMapping("/recovery/check")
+    fun recoveryCheck(@RequestBody recoveryCheck: RecoveryCheck) {
+        trainerCertWriteService.recoveryCheck(recoveryCheck.phoneNumber, recoveryCheck.certNumber, CertType.FIND)
     }
 
     @ApiOperation(value = "비밀번호 변경")
     @PostMapping("/change/password")
     fun changePassword(changePassword: ChangePassword) {
-        trainerWriteService.chagePassword(email= changePassword.email, password = changePassword.password)
+        trainerWriteService.changePassword(email= changePassword.email, password = changePassword.password)
     }
 }
