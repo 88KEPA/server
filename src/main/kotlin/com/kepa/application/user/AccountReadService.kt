@@ -2,6 +2,7 @@ package com.kepa.application.user
 
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException
+import com.kepa.domain.user.CertNumberRepository
 import com.kepa.domain.user.account.Account
 import com.kepa.domain.user.account.AccountRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class AccountReadService(
     private val accountRepository: AccountRepository,
+    private val certNumberRepository: CertNumberRepository,
 ) {
     companion object {
         val FIRST_INDEX = 0
@@ -24,7 +26,14 @@ class AccountReadService(
         }
     }
 
-    fun findEmail(phoneNumber: String): String {
+    fun findEmail(phoneNumber: String?, certId: Int?): String {
+        if(phoneNumber == null || certId == null) {
+            throw KepaException(ExceptionCode.BAD_REQUEST)
+        }
+        if(!certNumberRepository.existsByNumberAndReceiverPhoneNumberAndCertType(certType = CertType.FIND_RESULT, number = certId, phoneNumber = phoneNumber)) {
+            throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
+        }
+        certNumberRepository.deleteByNumberAndReceiverPhoneNumberAndCertType(certType = CertType.FIND_RESULT, number = certId, phoneNumber = phoneNumber)
         val trainer = accountRepository.findByPhone(phoneNumber) ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
         return trainer.email.masking(FIRST_INDEX, END_INDEX)
     }

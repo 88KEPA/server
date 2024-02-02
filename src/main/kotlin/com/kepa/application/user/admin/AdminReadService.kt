@@ -1,8 +1,16 @@
 package com.kepa.application.user.admin
 
+import com.kepa.application.user.admin.dto.response.AccountDetailInfo
+import com.kepa.application.user.admin.dto.response.ApplyPartnerDetailInfo
+import com.kepa.application.user.admin.dto.response.ApplyPartners
 import com.kepa.application.user.admin.dto.response.JoinTrainers
 import com.kepa.application.user.dto.response.PageResponse
+import com.kepa.common.exception.ExceptionCode
+import com.kepa.common.exception.ExceptionCode.NOT_EXSISTS_INFO
+import com.kepa.common.exception.KepaException
+import com.kepa.domain.partner.PartnerRepository
 import com.kepa.domain.user.account.AccountRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -10,15 +18,42 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class AdminReadService(
     private val accountRepository: AccountRepository,
+    private val partnerRepository: PartnerRepository,
 ) {
 
     fun getJoinTrainer(page: Int, limit: Int, keyword: String?): PageResponse {
         val findAllTrainers = keyword?.let {
             accountRepository.findAllByEmailOrName(keyword, Role.TRAINER)
         } ?: accountRepository.findAllByRole(Role.TRAINER)
-            .map { JoinTrainers(it.name, it.birth, it.createdAt) }
 
-        val totalCount = findAllTrainers.size.toLong()
+        val trainers = findAllTrainers.map { JoinTrainers(id = it.id, name = it.name, birth =  it.birth, createdAt =  it.createdAt) }
+
+        val result = getSliceResult(trainers,page,limit)
+        return PageResponse.toResponse(result, trainers.size.toLong() ,page,limit)
+    }
+
+    fun getAccountDetailInfo(id: Long) : AccountDetailInfo {
+        val findAccount = accountRepository.findByIdOrNull(id) ?: throw KepaException(NOT_EXSISTS_INFO)
+        return AccountDetailInfo.toResponse(findAccount);
+    }
+
+    fun getPartners(page: Int, limit: Int, keyword: String?): PageResponse {
+        val partners = keyword?.let {
+            partnerRepository.findAllByOrganization(keyword)
+        } ?: partnerRepository.findAll()
+        val applyPartners = partners.map { ApplyPartners(id = it.id, approveStatus = it.approveStatus, organization = it.organization, createdAt = it.createdAt) }
+
+        val result = getSliceResult(applyPartners,page,limit)
+        return PageResponse.toResponse(result, partners.size.toLong() ,page,limit)
+    }
+
+    fun getPartnerDetailInfo(id: Long) : ApplyPartnerDetailInfo {
+        val partner = partnerRepository.findByIdOrNull(id) ?: throw KepaException(NOT_EXSISTS_INFO)
+        return ApplyPartnerDetailInfo.toResponse(partner)
+    }
+
+    private fun getSliceResult(data: List<Any>, page: Int, limit: Int, ) : List<Any> {
+        val totalCount = data.size.toLong()
         val endIndexTemp = page * limit + limit
         val endIndex = if(endIndexTemp >= totalCount) {
             totalCount - 1
@@ -27,7 +62,7 @@ class AdminReadService(
         }
 
         val startIndex = page * limit
-        val result = findAllTrainers.slice(startIndex..endIndex.toInt())
-        return PageResponse.toResponse(result, totalCount ,page,limit)
+        return data.slice(startIndex..endIndex.toInt())
     }
+
 }

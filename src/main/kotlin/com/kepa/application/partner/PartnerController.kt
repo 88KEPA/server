@@ -14,20 +14,11 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/partner")
 class PartnerController(
     private val partnerWriteService: PartnerWriteService,
-    private val partnerReadService: PartnerReadService,
 ) {
 
     //등록
     @PostMapping
     fun create(@RequestBody partnerCreate: PartnerCreate) {
         partnerWriteService.applyPartner(partnerCreate)
-
     }
-
-    //리스트
-//    @GetMapping
-
-
-    //상세보기
-
 }

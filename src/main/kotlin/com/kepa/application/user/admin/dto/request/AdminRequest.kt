@@ -5,6 +5,6 @@ abstract class PageRequest(
     val page: Int = 0
 )
 
-data class TrainerListFilter(
+data class FilterRequest(
     val keyword: String?,
 ) : PageRequest()

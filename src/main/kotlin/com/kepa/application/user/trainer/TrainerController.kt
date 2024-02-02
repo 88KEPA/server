@@ -65,8 +65,8 @@ class TrainerController(
     )
     @ApiOperation(value = "비밀번호 찾기(FIND), 회원가입(PHONE)인증번호 체크")
     @PostMapping("/check/number")
-    fun checkNumber(@Valid @RequestBody checkCertNumber: CheckCertNumber) {
-        trainerCertWriteService.checkNumber(receiverPhoneNumber = checkCertNumber.receiverPhoneNumber,
+    fun checkNumber(@Valid @RequestBody checkCertNumber: CheckCertNumber): Int {
+      return trainerCertWriteService.checkNumber(receiverPhoneNumber = checkCertNumber.receiverPhoneNumber,
             email = checkCertNumber.email,
             randomNumber = checkCertNumber.certNumber,
             certType = checkCertNumber.certType)
@@ -98,7 +98,7 @@ class TrainerController(
 
     @ApiOperation(value = "이메일 찾기")
     @PostMapping("/find/email")
-    fun findEmail(@RequestBody phoneNumber: PhoneInfo) = accountReadService.findEmail(phoneNumber.phone)
+    fun findEmail(@RequestBody phoneInfo: PhoneInfo) = accountReadService.findEmail(phoneNumber = phoneInfo.phone, certId = phoneInfo.certId)
 
     @ApiOperation(value = "이메일 찾기 인증번호 발송")
     @PostMapping("/recovery/send/email")
@@ -108,13 +108,13 @@ class TrainerController(
 
     @ApiOperation(value = "이메일 찾기 인증번호 체크")
     @PostMapping("/recovery/check")
-    fun recoveryCheck(@RequestBody recoveryCheck: RecoveryCheck) {
-        trainerCertWriteService.recoveryCheck(recoveryCheck.phoneNumber, recoveryCheck.certNumber, CertType.FIND)
+    fun recoveryCheck(@RequestBody recoveryCheck: RecoveryCheck): Int {
+        return trainerCertWriteService.recoveryCheck(recoveryCheck.phoneNumber, recoveryCheck.certNumber, CertType.FIND)
     }
 
     @ApiOperation(value = "비밀번호 변경")
     @PostMapping("/change/password")
-    fun changePassword(changePassword: ChangePassword) {
-        trainerWriteService.changePassword(email= changePassword.email, password = changePassword.password)
+    fun changePassword(@RequestBody changePassword: ChangePassword) {
+        trainerWriteService.changePassword(certId = changePassword.certId,email= changePassword.email, password = changePassword.password)
     }
 }

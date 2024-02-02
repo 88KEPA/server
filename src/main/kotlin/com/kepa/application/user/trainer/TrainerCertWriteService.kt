@@ -8,10 +8,12 @@ import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.CertNumber
 import com.kepa.domain.user.CertNumberRepository
 import com.kepa.domain.user.account.AccountRepository
+import com.kepa.externalapi.dto.RandomNumber
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
+import java.util.Random
 
 @Transactional
 @Service
@@ -53,7 +55,7 @@ class TrainerCertWriteService(
     }
 
     @Transactional(noRollbackFor = [RuntimeException::class])
-    fun checkNumber(receiverPhoneNumber: String, email: String, randomNumber: Int, certType: CertType) {
+    fun checkNumber(receiverPhoneNumber: String, email: String, randomNumber: Int, certType: CertType): Int {
         val certNumber = certNumberRepository.findByReceiverEmailAndReceiverPhoneNumberAndCertType(
             email = email,
             phoneNumber = receiverPhoneNumber,
@@ -68,6 +70,9 @@ class TrainerCertWriteService(
             throw KepaException(ExceptionCode.NOT_MATCH_CERT_NUMBER)
         }
         certNumberRepository.deleteById(certNumber.id)
+        val randomNumber = RandomNumber.create()
+        certNumberRepository.save(CertNumber(receiverEmail = email, number = randomNumber, certType = CertType.FIND_RESULT))
+        return randomNumber
     }
 
     fun sendMail(receiverEmail: String, randomNumber: Int, certType: CertType) {
@@ -124,7 +129,7 @@ class TrainerCertWriteService(
     }
 
     @Transactional(noRollbackFor = [RuntimeException::class])
-    fun recoveryCheck(phoneNumber: String, certNumber: Int, certType: CertType) {
+    fun recoveryCheck(phoneNumber: String, certNumber: Int, certType: CertType): Int{
         val findCert = certNumberRepository.findByReceiverPhoneNumberAndCertType(phoneNumber, certType)
             ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
         require(findCert.createdAt.plusMinutes(CHECKT_EXPIRE_TIME).isAfter(LocalDateTime.now())) {
@@ -135,5 +140,8 @@ class TrainerCertWriteService(
             throw KepaException(ExceptionCode.NOT_MATCH_CERT_NUMBER)
         }
         certNumberRepository.deleteById(findCert.id)
+        val randomNumber = RandomNumber.create()
+        certNumberRepository.save(CertNumber(receiverPhoneNumber = phoneNumber, number = randomNumber, certType = CertType.FIND_RESULT))
+        return randomNumber
     }
 }

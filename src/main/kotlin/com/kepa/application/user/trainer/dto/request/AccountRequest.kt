@@ -130,14 +130,15 @@ data class DuplicateCheckEmail(
 )
 
 data class PhoneInfo(
+    val certId: Int?,
     @ApiModelProperty(value = "핸드폰")
     val phone: String,
 )
 
 data class ChangePassword(
-    @Email
-    @NotBlank val email: String,
-    @NotBlank val password: String,
+    val certId: Int?,
+    val email: String?,
+    val password: String?,
 )
 
 data class RecoveryCheck(
