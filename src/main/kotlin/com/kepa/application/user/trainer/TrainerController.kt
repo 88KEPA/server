@@ -38,7 +38,7 @@ class TrainerController(
         ApiResponse(code = 200, message = ""),
         ApiResponse(code = 409, message = "errorMessage: 이미 가입된 정보입니다. / identity : 40901")
     )
-    @Operation(description = "이메일 중복체크")
+    @ApiOperation(value = "이메일 중복체크")
     @PostMapping("/check/email")
     fun checkEmail(@RequestBody duplicateCheckEmail: DuplicateCheckEmail) {
         accountReadService.checkEmail(duplicateCheckEmail.email)
@@ -47,7 +47,7 @@ class TrainerController(
     @ApiResponses(
         ApiResponse(code = 200, message = ""),
     )
-    @Operation(description = "비밀번호 찾기(FIND), 회원가입(PHONE) 인증번호 발송")
+    @ApiOperation(value = "비밀번호 찾기(FIND), 회원가입(PHONE) 인증번호 발송")
     @PostMapping("/send/number")
     fun sendNumber(@RequestBody sendPhoneCertNumber: SendPhoneCertNumber) {
         trainerCertWriteService.sendNumber(
@@ -63,7 +63,7 @@ class TrainerController(
         ApiResponse(code = 400, message = "errorMessage: 인증번호가 일치하지 않습니다. / identity : 40004"),
         ApiResponse(code = 400, message = "errorMessage: 유효시간이 지났습니다. / identity : 40005"),
     )
-    @Operation(description = "비밀번호 찾기(FIND), 회원가입(PHONE)인증번호 체크")
+    @ApiOperation(value = "비밀번호 찾기(FIND), 회원가입(PHONE)인증번호 체크")
     @PostMapping("/check/number")
     fun checkNumber(@Valid @RequestBody checkCertNumber: CheckCertNumber) {
         trainerCertWriteService.checkNumber(receiverPhoneNumber = checkCertNumber.receiverPhoneNumber,
