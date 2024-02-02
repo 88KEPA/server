@@ -107,6 +107,7 @@ class TrainerCertWriteService(
         }
         certNumberRepository.deleteById(certNumber.id)
     }
+
     fun recoverySend(phoneNumber: String, randomNumber: Int) {
         if (!accountRepository.existsByPhone(phoneNumber)) {
             throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)

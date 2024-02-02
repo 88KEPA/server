@@ -1,5 +1,6 @@
 package com.kepa.application.user
 
+import com.kepa.application.user.trainer.TrainerCertWriteService
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.CertNumberRepository
@@ -8,6 +9,7 @@ import com.kepa.domain.user.account.AccountRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Transactional(readOnly = true)
 @Service
@@ -30,17 +32,20 @@ class AccountReadService(
         if(phoneNumber == null || certId == null) {
             throw KepaException(ExceptionCode.BAD_REQUEST)
         }
-        if(!certNumberRepository.existsByNumberAndReceiverPhoneNumberAndCertType(certType = CertType.FIND_RESULT, number = certId, phoneNumber = phoneNumber)) {
-            throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
+        val certNumber = certNumberRepository.findByNumberAndReceiverPhoneNumberAndCertType(certType = CertType.FIND_RESULT, number = certId, phoneNumber = phoneNumber)
+            ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
+
+        require(certNumber.createdAt.plusMinutes(TrainerCertWriteService.CHECKT_EXPIRE_TIME).isAfter(LocalDateTime.now())) {
+            certNumberRepository.deleteById(certNumber.id)
+            throw KepaException(ExceptionCode.EXPIRE_CERT_NUMBER)
         }
-        certNumberRepository.deleteByNumberAndReceiverPhoneNumberAndCertType(certType = CertType.FIND_RESULT, number = certId, phoneNumber = phoneNumber)
+        certNumberRepository.deleteById(certNumber.id)
+
         val trainer = accountRepository.findByPhone(phoneNumber) ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
         return trainer.email.masking(FIRST_INDEX, END_INDEX)
     }
 
     fun getDetailInfo(id: Long) : Account = accountRepository.findByIdOrNull(id) ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
-
-
 
 
     fun String.masking(startIndex: Int, endIndex: Int): String {

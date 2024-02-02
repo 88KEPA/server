@@ -16,9 +16,7 @@ interface CertNumberRepository: JpaRepository<CertNumber, Long> {
 
     fun findByReceiverPhoneNumberAndCertType(phoneNumber: String, certType: CertType) : CertNumber?
 
-    fun existsByNumberAndReceiverEmailAndCertType(number: Int,email: String ,certType: CertType) : Boolean
-    fun deleteByNumberAndReceiverEmailAndCertType(number: Int,email: String ,certType: CertType)
+    fun findByNumberAndReceiverEmailAndCertType(number: Int,email: String ,certType: CertType) : CertNumber?
 
-    fun existsByNumberAndReceiverPhoneNumberAndCertType(number: Int,phoneNumber: String ,certType: CertType) : Boolean
-    fun deleteByNumberAndReceiverPhoneNumberAndCertType(number: Int,phoneNumber: String ,certType: CertType)
+    fun findByNumberAndReceiverPhoneNumberAndCertType(number: Int,phoneNumber: String ,certType: CertType) : CertNumber?
 }
