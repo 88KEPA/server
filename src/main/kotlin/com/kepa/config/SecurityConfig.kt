@@ -26,10 +26,10 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         var config = CorsConfiguration()
-        config.allowedOrigins = listOf("http://localhost:9402","http://localhost:9401", "https://www.kepa.associates/")
+        config.allowedOrigins = listOf("http://localhost:9402/","http://localhost:9401/", "https://www.kepa.associates/")
         config.allowedMethods = listOf("OPTIONS", "GET", "POST", "PUT", "DELETE")
         config.allowedHeaders = listOf("*")
-        config.allowCredentials = false
+        config.allowCredentials = true
 
         var source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**",config)
