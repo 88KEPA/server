@@ -97,6 +97,8 @@ data class CheckCertNumber(
     val email: String,
     @ApiModelProperty(value = "인증번호")
     val certNumber: Int,
+    @ApiModelProperty(value = "인증 방식")
+    val certType: CertType
 )
 
 @ApiModel(value = "[이메일] 인증번호 발송")
@@ -138,4 +140,10 @@ data class ChangePassword(
     @NotBlank val password: String,
 )
 
+data class RecoveryCheck(
+    @ApiModelProperty(value = "전화번호")
+    val phoneNumber: String,
+    @ApiModelProperty(value = "인증번호")
+    val certNumber: Int,
+)
 
