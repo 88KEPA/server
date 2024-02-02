@@ -24,11 +24,14 @@ class LoginInterception(
     }
 
     override fun resolveArgument(parameter: MethodParameter, mavContainer: ModelAndViewContainer?, webRequest: NativeWebRequest, binderFactory: WebDataBinderFactory?): Any? {
+
         val authentication = SecurityContextHolder.getContext().authentication
-        val trainer = accountRepository.findByEmailAndRole(
+        println("Role.valueOf(authentication.authorities.first().toString()) = ${Role.valueOf(authentication.authorities.first().toString())}")
+        val account = accountRepository.findByEmailAndRole(
             authentication.name, Role.valueOf(authentication.authorities.first().toString())
         )
             ?: throw KepaException(ExceptionCode.TOKEN_EXPIRE)
-        return LoginUserInfo(trainer.id, trainer.role)
+        println("account = ${account.id}")
+        return LoginUserInfo(account.id, account.role)
     }
 }
