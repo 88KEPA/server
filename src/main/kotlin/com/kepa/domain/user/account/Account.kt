@@ -15,7 +15,7 @@ class Account(
     @Column(nullable = false)
     val name: String,
     @Column(nullable = false)
-    val password: String,
+    var password: String,
     @Column(nullable = false)
     val phone: String,
     @Column(nullable = false)

@@ -3,7 +3,6 @@ package com.kepa.application.user.trainer.dto.request
 import CertType
 import Gender
 import LoginType
-import Role
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.kepa.common.exception.ExceptionCode.NOT_MATCH_PASSWORD_CONFIRM_PASSWORD
 import com.kepa.common.exception.KepaException
@@ -77,7 +76,7 @@ data class MessageContent(
     @ApiModelProperty(value = "수신자 핸드폰번호")
     val receiverPhoneNumber: String,
     @ApiModelProperty(value = "이메일")
-    val email: String,
+    val email: String? = null,
 )
 
 @ApiModel(value = "[핸드폰] 인증번호 발송 요청")
@@ -128,9 +127,15 @@ data class DuplicateCheckEmail(
     val email: String,
 )
 
-data class DuplicateCheckPhone(
+data class PhoneInfo(
     @ApiModelProperty(value = "핸드폰")
     val phone: String,
+)
+
+data class ChangePassword(
+    @Email
+    @NotBlank val email: String,
+    @NotBlank val password: String,
 )
 
 

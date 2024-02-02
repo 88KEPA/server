@@ -11,7 +11,7 @@ import javax.persistence.Enumerated
 class CertNumber(
     val receiverPhoneNumber: String? = null,
     @Column(nullable = false)
-    val receiverEmail: String,
+    val receiverEmail: String? =null,
     @Column(nullable = false)
     val number: Int,
     @Enumerated(EnumType.STRING)

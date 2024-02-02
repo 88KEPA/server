@@ -32,6 +32,8 @@ class AccountReadService(
     fun getDetailInfo(id: Long) : Account = accountRepository.findByIdOrNull(id) ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
 
 
+
+
     fun String.masking(startIndex: Int, endIndex: Int): String {
         val substringTarget = this.substring(startIndex, endIndex)
         val substringOrigin = this.substring(endIndex)

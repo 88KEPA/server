@@ -1,7 +1,6 @@
 package com.kepa.application.user.trainer
 
 import CertType
-import com.kepa.domain.user.account.RefreshTokenRepository
 import com.kepa.application.user.trainer.dto.request.AccountJoin
 import com.kepa.application.user.trainer.dto.request.MailContent
 import com.kepa.application.user.trainer.dto.request.MessageContent
@@ -10,7 +9,6 @@ import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.CertNumber
 import com.kepa.domain.user.CertNumberRepository
 import com.kepa.domain.user.account.AccountRepository
-import com.kepa.token.TokenProvider
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -24,8 +22,6 @@ class TrainerWriteService(
     private val certNumberRepository: CertNumberRepository,
     private val bCryptPasswordEncoder: BCryptPasswordEncoder,
     private val applicationEventPublisher: ApplicationEventPublisher,
-    private val tokenProvider: TokenProvider,
-    private val refreshTokenRepository: RefreshTokenRepository,
 ) {
     fun join(trainerJoin: AccountJoin) {
         require(!trainerJoin.phone.contains("-")) {
@@ -44,19 +40,25 @@ class TrainerWriteService(
 
 
     fun sendNumber(receiverPhoneNumber: String, email: String, randomNumber: Int, certType: CertType) {
-        if(accountRepository.existsByPhone(receiverPhoneNumber)) {
-            throw KepaException(ALREADY_INFORMATION)
+        if (certType == CertType.FIND) {
+            if (!accountRepository.existsByPhone(receiverPhoneNumber)) {
+                throw KepaException(NOT_EXSISTS_INFO)
+            }
+        } else {
+            if (accountRepository.existsByPhone(receiverPhoneNumber)) {
+                throw KepaException(ALREADY_INFORMATION)
+            }
         }
         require(!receiverPhoneNumber.contains("-")) {
             throw KepaException(BAD_REQUEST_PHONE_FORMAT)
         }
-        if(certNumberRepository.existsByReceiverEmailAndCertType(email, certType)) {
-            certNumberRepository.deleteByReceiverEmailAndCertType(email,certType)
+        if (certNumberRepository.existsByReceiverEmailAndCertType(email, certType)) {
+            certNumberRepository.deleteByReceiverEmailAndCertType(email, certType)
         }
         certNumberRepository.save(CertNumber(
             number = randomNumber,
             receiverPhoneNumber = receiverPhoneNumber,
-            receiverEmail =  email,
+            receiverEmail = email,
             certType = certType))
 
         applicationEventPublisher.publishEvent(MessageContent(
@@ -82,13 +84,13 @@ class TrainerWriteService(
         }
     }
 
-    fun sendMail(receiverEmail:String, randomNumber: Int, certType: CertType) {
-        if(certNumberRepository.existsByReceiverEmailAndCertType(receiverEmail, certType)) {
-            certNumberRepository.deleteByReceiverEmailAndCertType(receiverEmail,certType)
+    fun sendMail(receiverEmail: String, randomNumber: Int, certType: CertType) {
+        if (certNumberRepository.existsByReceiverEmailAndCertType(receiverEmail, certType)) {
+            certNumberRepository.deleteByReceiverEmailAndCertType(receiverEmail, certType)
         }
         certNumberRepository.save(CertNumber(
             number = randomNumber,
-            receiverEmail =  receiverEmail,
+            receiverEmail = receiverEmail,
             certType = certType))
 
         applicationEventPublisher.publishEvent(MailContent(
@@ -112,4 +114,31 @@ class TrainerWriteService(
             throw KepaException(EXPIRE_CERT_NUMBER)
         }
     }
+
+    fun recoverySend(phoneNumber: String, randomNumber: Int) {
+        if (!accountRepository.existsByPhone(phoneNumber)) {
+            throw KepaException(NOT_EXSISTS_INFO)
+        }
+        require(!phoneNumber.contains("-")) {
+            throw KepaException(BAD_REQUEST_PHONE_FORMAT)
+        }
+        if (certNumberRepository.existsByReceiverPhoneNumberAndCertType(phoneNumber, CertType.PHONE)) {
+            certNumberRepository.deleteByReceiverPhoneNumberAndCertType(phoneNumber, CertType.PHONE)
+        }
+        certNumberRepository.save(CertNumber(
+            number = randomNumber,
+            receiverPhoneNumber = phoneNumber,
+            certType = CertType.PHONE))
+
+        applicationEventPublisher.publishEvent(MessageContent(
+            certNumber = randomNumber,
+            receiverPhoneNumber = phoneNumber
+        ))
+    }
+
+    fun chagePassword(email: String, password: String) {
+        val findAccount = accountRepository.findByEmail(email) ?: throw KepaException(NOT_EXSISTS_INFO)
+        findAccount.password = bCryptPasswordEncoder.encode(password)
+    }
+
 }

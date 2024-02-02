@@ -26,7 +26,7 @@ class TrainerController(
 
     @ApiResponses(
         ApiResponse(code = 200, message = ""),
-        ApiResponse(code = 409, message = "errorMessage: 이미 가입된 정보입니다. / identity : 40901",)
+        ApiResponse(code = 409, message = "errorMessage: 이미 가입된 정보입니다. / identity : 40901")
     )
     @ApiOperation(value = "트레이너 입회")
     @PostMapping
@@ -36,7 +36,7 @@ class TrainerController(
 
     @ApiResponses(
         ApiResponse(code = 200, message = ""),
-        ApiResponse(code = 409, message = "errorMessage: 이미 가입된 정보입니다. / identity : 40901",)
+        ApiResponse(code = 409, message = "errorMessage: 이미 가입된 정보입니다. / identity : 40901")
     )
     @Operation(description = "이메일 중복체크")
     @PostMapping("/check/email")
@@ -47,14 +47,14 @@ class TrainerController(
     @ApiResponses(
         ApiResponse(code = 200, message = ""),
     )
-    @Operation(description = "인증번호 발송")
+    @Operation(description = "비밀번호 찾기 / 회원가입 인증번호 발송")
     @PostMapping("/send/number")
     fun sendNumber(@RequestBody sendPhoneCertNumber: SendPhoneCertNumber) {
         trainerWriteService.sendNumber(
             receiverPhoneNumber = sendPhoneCertNumber.receiverPhoneNumber,
             email = sendPhoneCertNumber.email,
             randomNumber = RandomNumber.create(),
-            certType =  sendPhoneCertNumber.certType
+            certType = sendPhoneCertNumber.certType
         )
     }
 
@@ -75,7 +75,7 @@ class TrainerController(
     @ApiOperation(value = "이메일 인증번호 발송")
     @PostMapping("/send/email")
     fun sendEmail(@RequestBody sendEmailCertNumber: SendEmailCertNumber) {
-        trainerWriteService.sendMail(sendEmailCertNumber.email,RandomNumber.create(),CertType.EMAIL)
+        trainerWriteService.sendMail(sendEmailCertNumber.email, RandomNumber.create(), CertType.EMAIL)
     }
 
     @ApiResponses(
@@ -91,11 +91,23 @@ class TrainerController(
 
     @ApiOperation(value = "사용자 정보 상세보기")
     @GetMapping("/info")
-    fun getDetailInfo(@LoginUser loginUserInfo: LoginUserInfo) : DetailInfo {
+    fun getDetailInfo(@LoginUser loginUserInfo: LoginUserInfo): DetailInfo {
         return DetailInfo.create(accountReadService.getDetailInfo(id = loginUserInfo.id))
     }
 
     @ApiOperation(value = "이메일 찾기")
     @PostMapping("/find/email")
-    fun findEmail(@RequestBody phoneNumber: DuplicateCheckPhone) = accountReadService.findEmail(phoneNumber.phone)
+    fun findEmail(@RequestBody phoneNumber: PhoneInfo) = accountReadService.findEmail(phoneNumber.phone)
+
+    @ApiOperation(value = "이메일 찾기 인증번호 발송")
+    @PostMapping("/recovery/send/email")
+    fun recoverySendEmail(@RequestBody phoneNumber: PhoneInfo) {
+        trainerWriteService.recoverySend(phoneNumber.phone, RandomNumber.create())
+    }
+
+    @ApiOperation(value = "비밀번호 변경")
+    @PostMapping("/change/password")
+    fun changePassword(changePassword: ChangePassword) {
+        trainerWriteService.chagePassword(email= changePassword.email, password = changePassword.password)
+    }
 }

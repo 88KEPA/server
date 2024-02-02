@@ -20,6 +20,6 @@ enum class Role(
 enum class CertType(
     val type: String,
 ) {
-    EMAIL("이메일"), PHONE("핸드폰")
+    EMAIL("이메일"), PHONE("핸드폰"), FIND("찾기")
 }
 
