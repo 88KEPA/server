@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
@@ -21,13 +24,25 @@ class SecurityConfig(
 ) : WebSecurityConfigurerAdapter() {
 
     @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        var config = CorsConfiguration()
+        config.allowedOrigins = listOf("http://localhost:9402","http://localhost:9401", "https://www.kepa.associates/")
+        config.allowedMethods = listOf("OPTIONS", "GET", "POST", "PUT", "DELETE")
+        config.allowedHeaders = listOf("*")
+
+        var source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**",config)
+        return source
+    }
+    @Bean
     fun bCryptPasswordEncoder() : BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
     override fun configure(http: HttpSecurity) {
        http
-           .cors().disable()
+           .cors().configurationSource(corsConfigurationSource())
+           .and()
            .csrf().disable()
            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
            .and()

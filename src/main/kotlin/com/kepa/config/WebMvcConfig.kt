@@ -7,7 +7,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
-@Configuration
+/*@Configuration
 class WebMvcConfig(
     private val accountRepository: AccountRepository,
 ) : WebMvcConfigurer {
@@ -28,3 +28,5 @@ class WebMvcConfig(
         resolvers.add(LoginInterception(accountRepository))
     }
 }
+
+ */
