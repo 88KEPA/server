@@ -17,7 +17,7 @@ data class PartnerCreate(
     @NotBlank val phone: String,
     @ApiModelProperty(value = "상담시 참고사항")
     @NotBlank val content: String,
-    @ApiModelProperty(value = "상담시 참고사항")
+    @ApiModelProperty(value = "직책")
     @NotBlank val position: String,
 ) {
     fun createPartner(): Partner {
