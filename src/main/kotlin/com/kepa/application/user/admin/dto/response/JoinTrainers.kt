@@ -32,7 +32,7 @@ data class AccountDetailInfo(
     @ApiModelProperty("이름")
     val name: String,
     @ApiModelProperty("전화번호")
-    val phoneNumber: String,
+    val phone: String,
     @ApiModelProperty("이메일")
     val email: String,
     @ApiModelProperty("생년월일")
@@ -57,7 +57,7 @@ data class AccountDetailInfo(
             return AccountDetailInfo(
                 id = account.id,
                 name = account.name,
-                phoneNumber = account.phone,
+                phone = account.phone,
                 email = account.email,
                 birth = account.birth,
                 gender = account.gender,
@@ -94,7 +94,7 @@ data class ApplyPartnerDetailInfo(
     @ApiModelProperty(value = "직책")
     val position: String,
     @ApiModelProperty(value = "연락처")
-    val phoneNumber: String,
+    val phone: String,
     @ApiModelProperty(value = "신청일자")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     val createdAt: LocalDateTime,
@@ -106,7 +106,7 @@ data class ApplyPartnerDetailInfo(
                 approveStatus =  partner.approveStatus,
                 organization =  partner.organization,
                 position = partner.position,
-                phoneNumber = partner.phone,
+                phone = partner.phone,
                 createdAt = partner.createdAt,
             )
         }

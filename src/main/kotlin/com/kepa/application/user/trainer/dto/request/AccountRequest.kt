@@ -143,7 +143,7 @@ data class ChangePassword(
 
 data class RecoveryCheck(
     @ApiModelProperty(value = "전화번호")
-    val phoneNumber: String,
+    val phone: String,
     @ApiModelProperty(value = "인증번호")
     val certNumber: Int,
 )

@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
-import java.util.Random
 
 @Transactional
 @Service
@@ -108,24 +107,24 @@ class TrainerCertWriteService(
         certNumberRepository.deleteById(certNumber.id)
     }
 
-    fun recoverySend(phoneNumber: String, randomNumber: Int) {
-        if (!accountRepository.existsByPhone(phoneNumber)) {
+    fun recoverySend(phone: String, randomNumber: Int) {
+        if (!accountRepository.existsByPhone(phone)) {
             throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
         }
-        require(!phoneNumber.contains("-")) {
+        require(!phone.contains("-")) {
             throw KepaException(ExceptionCode.BAD_REQUEST_PHONE_FORMAT)
         }
-        if (certNumberRepository.existsByReceiverPhoneNumberAndCertType(phoneNumber, CertType.FIND)) {
-            certNumberRepository.deleteByReceiverPhoneNumberAndCertType(phoneNumber, CertType.FIND)
+        if (certNumberRepository.existsByReceiverPhoneNumberAndCertType(phone, CertType.FIND)) {
+            certNumberRepository.deleteByReceiverPhoneNumberAndCertType(phone, CertType.FIND)
         }
         certNumberRepository.save(CertNumber(
             number = randomNumber,
-            receiverPhoneNumber = phoneNumber,
+            receiverPhoneNumber = phone,
             certType = CertType.FIND))
 
         applicationEventPublisher.publishEvent(MessageContent(
             certNumber = randomNumber,
-            receiverPhoneNumber = phoneNumber
+            receiverPhoneNumber = phone
         ))
     }
 

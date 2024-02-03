@@ -28,11 +28,11 @@ class AccountReadService(
         }
     }
 
-    fun findEmail(phoneNumber: String?, certId: Int?): String {
-        if(phoneNumber == null || certId == null) {
+    fun findEmail(phone: String?, certId: Int?): String {
+        if(phone == null || certId == null) {
             throw KepaException(ExceptionCode.BAD_REQUEST)
         }
-        val certNumber = certNumberRepository.findByNumberAndReceiverPhoneNumberAndCertType(certType = CertType.FIND_RESULT, number = certId, phoneNumber = phoneNumber)
+        val certNumber = certNumberRepository.findByNumberAndReceiverPhoneNumberAndCertType(certType = CertType.FIND_RESULT, number = certId, phoneNumber = phone)
             ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
 
         require(certNumber.createdAt.plusMinutes(TrainerCertWriteService.CHECKT_EXPIRE_TIME).isAfter(LocalDateTime.now())) {
@@ -41,7 +41,7 @@ class AccountReadService(
         }
         certNumberRepository.deleteById(certNumber.id)
 
-        val trainer = accountRepository.findByPhone(phoneNumber) ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
+        val trainer = accountRepository.findByPhone(phone) ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
         return trainer.email.masking(FIRST_INDEX, END_INDEX)
     }
 
