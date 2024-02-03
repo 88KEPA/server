@@ -12,6 +12,7 @@ class MailApiService(
     private val javaMailSender: JavaMailSender,
     @Value("\${spring.mail.username}")
     private val senderEmail: String,
+
 ) {
 
     @TransactionalEventListener
@@ -22,5 +23,6 @@ class MailApiService(
         simpleMailMessage.subject = "[KEPA] 이메일 인증번호"
         simpleMailMessage.text = "인증번호 [${mailContent.certNumber}]"
         javaMailSender.send(simpleMailMessage)
+        println("메일전송")
     }
 }

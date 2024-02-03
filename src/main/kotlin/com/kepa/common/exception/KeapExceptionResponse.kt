@@ -28,5 +28,7 @@ class KeapExceptionResponse(
                 )
         }
 
+        //fun toNotNullableResponse()
+
     }
 }
