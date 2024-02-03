@@ -30,7 +30,7 @@ class TrainerController(
     )
     @ApiOperation(value = "트레이너 입회")
     @PostMapping
-    fun create(@Valid @RequestBody accountJoin: AccountJoin) {
+    fun create(@RequestBody accountJoin: AccountJoin) {
         trainerWriteService.join(accountJoin);
     }
 

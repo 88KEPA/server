@@ -23,10 +23,4 @@ class GlobalException(
         return KeapExceptionResponse.toResponse(errorCode = kepaException.exceptionCode)
     }
 
-    @Transactional
-    @ExceptionHandler(HttpMessageNotReadableException::class)
-    fun kepaNotNullableException(e: HttpMessageNotReadableException, request:HttpServletRequest, response: HttpServletResponse) {
-      //  println("e.status = ${e.printStackTrace()}")
-
-    }
 }
