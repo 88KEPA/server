@@ -10,6 +10,8 @@ import com.kepa.domain.user.CertNumberRepository
 import com.kepa.domain.user.account.AccountRepository
 import com.kepa.externalapi.dto.RandomNumber
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.mail.SimpleMailMessage
+import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -17,9 +19,10 @@ import java.time.LocalDateTime
 @Transactional
 @Service
 class TrainerCertWriteService(
-    val accountRepository: AccountRepository,
-    val certNumberRepository: CertNumberRepository,
-    val applicationEventPublisher: ApplicationEventPublisher,
+    private val accountRepository: AccountRepository,
+    private val certNumberRepository: CertNumberRepository,
+    private val applicationEventPublisher: ApplicationEventPublisher,
+    private val javaMailSender: JavaMailSender,
 ) {
     companion object {
         val CHECKT_EXPIRE_TIME: Long = 3
@@ -78,15 +81,24 @@ class TrainerCertWriteService(
         if (certNumberRepository.existsByReceiverEmailAndCertType(receiverEmail, certType)) {
             certNumberRepository.deleteByReceiverEmailAndCertType(receiverEmail, certType)
         }
+        println("=====================================")
+        val simpleMailMessage = SimpleMailMessage()
+        simpleMailMessage.setTo(receiverEmail)
+        simpleMailMessage.from = "test@gmail.com"
+        simpleMailMessage.subject = "[KEPA] 이메일 인증번호"
+        simpleMailMessage.text = "인증번호 [22]"
+        javaMailSender.send(simpleMailMessage)
+        println("=====================================")
         certNumberRepository.save(CertNumber(
             number = randomNumber,
             receiverEmail = receiverEmail,
             certType = certType))
 
-        applicationEventPublisher.publishEvent(MailContent(
+     /*   applicationEventPublisher.publishEvent(MailContent(
             certNumber = randomNumber,
             email = receiverEmail,
-        ))
+        ))*/
+
     }
 
 
