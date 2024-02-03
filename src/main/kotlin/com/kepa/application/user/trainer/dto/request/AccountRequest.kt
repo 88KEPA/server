@@ -132,10 +132,17 @@ data class DuplicateCheckEmail(
 )
 
 data class PhoneInfo(
+    @ApiModelProperty(value = "핸드폰")
+    val phone: String,
+)
+
+data class FindEmail(
     val certId: Int?,
     @ApiModelProperty(value = "핸드폰")
     val phone: String,
 )
+
+
 
 data class ChangePassword(
     val certId: Int?,

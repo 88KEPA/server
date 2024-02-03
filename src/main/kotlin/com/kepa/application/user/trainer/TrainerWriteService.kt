@@ -36,7 +36,7 @@ class TrainerWriteService(
         ) {
             throw KepaException(ALREADY_INFORMATION)
         }
-        //추후에 약관 늘어나면 코드 개선 (급해서 작성한 코드입니다)
+        //추후에 약관 늘어나면 코드 개선 (급해서 작성한 코드입니다) 쿼리 개선
         val terms = termsRepository.findByIdOrNull(trainerJoin.agrees[0]) ?: throw KepaException(NOT_EXSITS_TERMS)
         val savedAccount = accountRepository.save(trainerJoin.create(bCryptPasswordEncoder.encode(trainerJoin.password)))
         agreementTermsRepository.save(AgreementTerms(account = savedAccount, terms =  terms))

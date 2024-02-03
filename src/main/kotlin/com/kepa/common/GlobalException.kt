@@ -3,6 +3,8 @@ package com.kepa.common
 import com.kepa.common.exception.KeapExceptionResponse
 import com.kepa.common.exception.KepaException
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 

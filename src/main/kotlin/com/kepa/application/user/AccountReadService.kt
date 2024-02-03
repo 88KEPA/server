@@ -18,8 +18,8 @@ class AccountReadService(
     private val certNumberRepository: CertNumberRepository,
 ) {
     companion object {
-        val FIRST_INDEX = 0
-        val END_INDEX = 4
+        val START_INDEX = 0;
+        val LIMIT_MAX_LENGTH = 4;
     }
 
     fun checkEmail(email: String) {
@@ -29,7 +29,7 @@ class AccountReadService(
     }
 
     fun findEmail(phone: String?, certId: Int?): String {
-        if(phone == null || certId == null) {
+        if (phone == null || certId == null) {
             throw KepaException(ExceptionCode.BAD_REQUEST)
         }
         val certNumber = certNumberRepository.findByNumberAndReceiverPhoneNumberAndCertType(certType = CertType.FIND_RESULT, number = certId, phoneNumber = phone)
@@ -42,15 +42,33 @@ class AccountReadService(
         certNumberRepository.deleteById(certNumber.id)
 
         val trainer = accountRepository.findByPhone(phone) ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
-        return trainer.email.masking(FIRST_INDEX, END_INDEX)
+        return trainer.email.maskEmail()
     }
 
-    fun getDetailInfo(id: Long) : Account = accountRepository.findByIdOrNull(id) ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
+    fun getDetailInfo(id: Long): Account = accountRepository.findByIdOrNull(id)
+        ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
 
 
-    fun String.masking(startIndex: Int, endIndex: Int): String {
-        val substringTarget = this.substring(startIndex, endIndex)
-        val substringOrigin = this.substring(endIndex)
-        return "*".repeat(substringTarget.length) + substringOrigin
+    /**
+     * 앞에 4
+     * 최대 4
+     * 보여야되는게 최대 4개
+     * */
+    fun String.maskEmail(): String {
+        val expressEmailIndex = this.indexOf('@')
+        val emailAddress = this.substring(expressEmailIndex)
+        val maskTargetEmailAddress = this.substring(START_INDEX, expressEmailIndex)
+        val divideValue = maskTargetEmailAddress.length / LIMIT_MAX_LENGTH
+        val restValue = maskTargetEmailAddress.length % LIMIT_MAX_LENGTH
+        if (divideValue > 2) {
+            return maskTargetEmailAddress.substring(START_INDEX, LIMIT_MAX_LENGTH) +
+                "*".repeat(maskTargetEmailAddress.substring(LIMIT_MAX_LENGTH).length) + emailAddress
+        } else if (divideValue == 1 && restValue > 0) {
+            return maskTargetEmailAddress.substring(START_INDEX, 3) +
+                "*".repeat(maskTargetEmailAddress.substring(3).length) + emailAddress
+        } else {
+            val length = maskTargetEmailAddress.length / 2
+            return maskTargetEmailAddress.substring(START_INDEX, length) + "*".repeat(length) + emailAddress
+        }
     }
 }

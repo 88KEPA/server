@@ -98,12 +98,12 @@ class TrainerController(
 
     @ApiOperation(value = "이메일 찾기")
     @PostMapping("/find/email")
-    fun findEmail(@RequestBody phoneInfo: PhoneInfo) = accountReadService.findEmail(phone = phoneInfo.phone, certId = phoneInfo.certId)
+    fun findEmail(@RequestBody findEmail: FindEmail) = accountReadService.findEmail(phone = findEmail.phone, certId = findEmail.certId)
 
     @ApiOperation(value = "이메일 찾기 인증번호 발송")
-    @PostMapping("/recovery/send/email")
-    fun recoverySendEmail(@RequestBody phoneNumber: PhoneInfo) {
-        trainerCertWriteService.recoverySend(phoneNumber.phone, RandomNumber.create())
+    @PostMapping("/recovery/send/cert-number")
+    fun recoverySendEmail(@RequestBody phoneInfo: PhoneInfo) {
+        trainerCertWriteService.recoverySend(phoneInfo.phone, RandomNumber.create())
     }
 
     @ApiOperation(value = "이메일 찾기 인증번호 체크")
