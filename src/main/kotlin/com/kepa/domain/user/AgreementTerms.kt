@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne
 
 @Entity
 class AgreementTerms(
-    val isAgree: Boolean,
+    val isAgree: Boolean = true,
     @ManyToOne(fetch = FetchType.LAZY)
     val account: Account,
     @ManyToOne(fetch = FetchType.LAZY)

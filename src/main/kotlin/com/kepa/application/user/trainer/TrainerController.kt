@@ -48,7 +48,7 @@ class TrainerController(
         ApiResponse(code = 200, message = ""),
     )
     @ApiOperation(value = "비밀번호 찾기(FIND), 회원가입(PHONE) 인증번호 발송")
-    @PostMapping("/send/number")
+    @PostMapping("/send/cert-number")
     fun sendNumber(@RequestBody sendPhoneCertNumber: SendPhoneCertNumber) {
         trainerCertWriteService.sendNumber(
             receiverPhoneNumber = sendPhoneCertNumber.receiverPhoneNumber,
@@ -64,7 +64,7 @@ class TrainerController(
         ApiResponse(code = 400, message = "errorMessage: 유효시간이 지났습니다. / identity : 40005"),
     )
     @ApiOperation(value = "비밀번호 찾기(FIND), 회원가입(PHONE)인증번호 체크")
-    @PostMapping("/check/number")
+    @PostMapping("/check/cert-number")
     fun checkNumber(@Valid @RequestBody checkCertNumber: CheckCertNumber): Int {
       return trainerCertWriteService.checkNumber(receiverPhoneNumber = checkCertNumber.receiverPhoneNumber,
             email = checkCertNumber.email,
@@ -85,7 +85,7 @@ class TrainerController(
         ApiResponse(code = 400, message = "errorMessage: 유효시간이 지났습니다. / identity : 40005"),
     )
     @ApiOperation(value = "이메일 인증번호 체크")
-    @PostMapping("/check/email/number")
+    @PostMapping("/check/email/cert-number")
     fun checkEmail(@RequestBody checkEmailCertNumber: CheckEmailCertNumber) {
         trainerCertWriteService.checkEmailNumber(email = checkEmailCertNumber.email, randomNumber = checkEmailCertNumber.certNumber)
     }

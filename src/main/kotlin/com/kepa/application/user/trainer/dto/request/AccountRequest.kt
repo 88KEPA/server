@@ -38,6 +38,7 @@ data class AccountJoin(
     @NotBlank val gender: Gender,
     @ApiModelProperty(value = "회원가입 또는 로그인 타입")
     @NotBlank val loginType: LoginType,
+    @NotBlank val agrees: List<Long>
 ) {
     fun create(encodingPassword: String): Account {
         return Account(
@@ -53,6 +54,7 @@ data class AccountJoin(
             birth = birth
         )
     }
+
     init {
         require(confirmPassword == password) {
             throw KepaException(NOT_MATCH_PASSWORD_CONFIRM_PASSWORD)
