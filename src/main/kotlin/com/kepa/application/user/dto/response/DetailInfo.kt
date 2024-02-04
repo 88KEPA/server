@@ -40,17 +40,20 @@ data class PageResponse(
     val totalCount: Long,
     val page: Int,
     var limit: Int,
+    var totalPageCount: Long,
 ) {
     companion object {
         fun toResponse(contents: List<Any>,
                    totalCount: Long,
                    page: Int,
-                   limit: Int,) : PageResponse {
+                   limit: Int,
+                   totalPageCount: Long) : PageResponse {
             return PageResponse(
                 contents = contents,
                 totalCount = totalCount,
                 page = page,
-                limit = limit
+                limit = limit,
+                totalPageCount = totalPageCount
             )
         }
     }

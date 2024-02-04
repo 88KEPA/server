@@ -25,13 +25,18 @@ class AdminReadService(
             accountRepository.findAllByEmailOrNameOrPhone(keyword, Role.TRAINER)
         } ?: accountRepository.findAllByRole(Role.TRAINER)
 
-        val trainers = findAllTrainers.map { JoinTrainers(id = it.id, name = it.name, birth =  it.birth, createdAt =  it.createdAt) }
+        val trainers = findAllTrainers.map { JoinTrainers(id = it.id, name = it.name, birth = it.birth, createdAt = it.createdAt) }
+        val totalCount = trainers.size.toLong()
+        val totalPageCount: Long = totalCount / limit
+        if ((totalCount % limit).toInt() != 0) {
+            totalPageCount + 1
+        }
 
-        val result = getSliceResult(trainers,page,limit)
-        return PageResponse.toResponse(result, trainers.size.toLong() ,page,limit)
+        val result = getSliceResult(trainers, page, limit)
+        return PageResponse.toResponse(result, totalCount, page, limit, totalPageCount)
     }
 
-    fun getAccountDetailInfo(id: Long) : AccountDetailInfo {
+    fun getAccountDetailInfo(id: Long): AccountDetailInfo {
         val findAccount = accountRepository.findByIdOrNull(id) ?: throw KepaException(NOT_EXSISTS_INFO)
         return AccountDetailInfo.toResponse(findAccount);
     }
@@ -42,21 +47,26 @@ class AdminReadService(
         } ?: partnerRepository.findAll()
         val applyPartners = partners.map { ApplyPartners(id = it.id, approveStatus = it.approveStatus, organization = it.organization, createdAt = it.createdAt) }
 
-        val result = getSliceResult(applyPartners,page,limit)
-        return PageResponse.toResponse(result, partners.size.toLong() ,page,limit)
+        val totalCount = applyPartners.size.toLong()
+        val totalPageCount: Long = totalCount / limit
+        if ((totalCount % limit).toInt() != 0) {
+            totalPageCount + 1
+        }
+        val result = getSliceResult(applyPartners, page, limit)
+        return PageResponse.toResponse(result, totalCount, page, limit, totalPageCount)
     }
 
-    fun getPartnerDetailInfo(id: Long) : ApplyPartnerDetailInfo {
+    fun getPartnerDetailInfo(id: Long): ApplyPartnerDetailInfo {
         val partner = partnerRepository.findByIdOrNull(id) ?: throw KepaException(NOT_EXSISTS_INFO)
         return ApplyPartnerDetailInfo.toResponse(partner)
     }
 
-    private fun getSliceResult(data: List<Any>, page: Int, limit: Int, ) : List<Any> {
+    private fun getSliceResult(data: List<Any>, page: Int, limit: Int): List<Any> {
         val totalCount = data.size.toLong()
         val endIndexTemp = page * limit + limit
-        val endIndex = if(endIndexTemp >= totalCount) {
+        val endIndex = if (endIndexTemp >= totalCount) {
             totalCount - 1
-        }else {
+        } else {
             endIndexTemp
         }
 
