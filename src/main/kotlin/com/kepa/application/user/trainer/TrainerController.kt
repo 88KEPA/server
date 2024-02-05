@@ -32,7 +32,6 @@ class TrainerController(
     @ApiOperation(value = "트레이너 입회")
     @PostMapping
     fun create(@RequestBody accountJoin: AccountJoin) {
-        println("LocalDateTime.now() = ${LocalDateTime.now()}")
         trainerWriteService.join(accountJoin);
     }
 
