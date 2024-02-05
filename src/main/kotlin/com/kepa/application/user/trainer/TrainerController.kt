@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
 import javax.validation.Valid
 
 @RestController
@@ -31,6 +32,7 @@ class TrainerController(
     @ApiOperation(value = "트레이너 입회")
     @PostMapping
     fun create(@RequestBody accountJoin: AccountJoin) {
+        println("LocalDateTime.now() = ${LocalDateTime.now()}")
         trainerWriteService.join(accountJoin);
     }
 
