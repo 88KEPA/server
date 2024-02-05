@@ -10,10 +10,6 @@ import javax.annotation.PostConstruct
 @SpringBootApplication
 class KepaApplication
 
-@PostConstruct
-fun started() {
-    TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"))
-}
 fun main(args: Array<String>) {
     runApplication<KepaApplication>(*args)
 }
