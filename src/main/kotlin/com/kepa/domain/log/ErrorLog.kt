@@ -9,7 +9,7 @@ import javax.persistence.Lob
 class ErrorLog(
     @Lob
     @Column(columnDefinition = "TEXT")
-    val message: String,
+    val message: String?,
     val requestURI: String,
 ) : BaseEntity() {
 }

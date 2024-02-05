@@ -1,15 +1,14 @@
 package com.kepa.common
 
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.kepa.common.exception.KeapExceptionResponse
 import com.kepa.common.exception.KepaException
+import com.kepa.domain.log.ErrorLog
 import com.kepa.domain.log.ErrorLogRepository
 import org.springframework.http.ResponseEntity
-import org.springframework.http.converter.HttpMessageNotReadableException
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @RestControllerAdvice
 class GlobalException(
@@ -23,4 +22,13 @@ class GlobalException(
         return KeapExceptionResponse.toResponse(errorCode = kepaException.exceptionCode)
     }
 
+    @ExceptionHandler(MissingKotlinParameterException::class)
+    fun notNullExceptionResponse(e: MissingKotlinParameterException): ResponseEntity<KeapExceptionResponse> {
+        return KeapExceptionResponse.toNotNullableResponse("${e.path[0].fieldName} 필수로 입력해야합니다.")
+    }
+
+    @ExceptionHandler(Exception::class)
+    fun saveErrorLog(e: Exception, request: HttpServletRequest) {
+        errorLogRepository.save(ErrorLog(e.message,request.requestURI))
+    }
 }

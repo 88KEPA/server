@@ -1,6 +1,7 @@
 package com.kepa.common.exception
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import java.time.LocalDateTime
 
@@ -28,7 +29,16 @@ class KeapExceptionResponse(
                 )
         }
 
-        //fun toNotNullableResponse()
+        fun toNotNullableResponse(message: String): ResponseEntity<KeapExceptionResponse> {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body( KeapExceptionResponse(
+                    status = HttpStatus.BAD_REQUEST.value(),
+                    code = HttpStatus.BAD_REQUEST.name,
+                    message = message,
+                    time = LocalDateTime.now(),
+                    identity = 40000
+                ))
+        }
 
     }
 }
