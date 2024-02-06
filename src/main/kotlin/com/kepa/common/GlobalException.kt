@@ -30,5 +30,6 @@ class GlobalException(
     @ExceptionHandler(Exception::class)
     fun saveErrorLog(e: Exception, request: HttpServletRequest) {
         errorLogRepository.save(ErrorLog(e.message,request.requestURI))
+        throw e
     }
 }
