@@ -91,12 +91,6 @@ class TrainerController(
         trainerCertWriteService.checkEmailNumber(email = checkEmailCertNumber.email, randomNumber = checkEmailCertNumber.certNumber)
     }
 
-    @ApiOperation(value = "사용자 정보 상세보기")
-    @GetMapping("/info")
-    fun getDetailInfo(@LoginUser loginUserInfo: LoginUserInfo): DetailInfo {
-        return DetailInfo.create(accountReadService.getDetailInfo(id = loginUserInfo.id))
-    }
-
     @ApiOperation(value = "이메일 찾기")
     @PostMapping("/find/email")
     fun findEmail(@RequestBody findEmail: FindEmail) = accountReadService.findEmail(phone = findEmail.phone, certId = findEmail.certId)
