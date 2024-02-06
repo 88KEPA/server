@@ -2,20 +2,17 @@ package com.kepa.domain.user.account
 
 import Role
 import com.kepa.common.BaseEntity
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
+import javax.persistence.*
 
 @Entity
 class RefreshToken(
-    @Column(nullable = false)
-    val email: String,
     @Enumerated(EnumType.STRING)
     val role: Role,
     @Column(nullable = false)
     val token: String,
     @Column(nullable = false)
-    val expireAt: Long
+    val expireAt: Long,
+    @OneToOne(fetch = FetchType.LAZY)
+    val account: Account,
 ) : BaseEntity() {
 }
