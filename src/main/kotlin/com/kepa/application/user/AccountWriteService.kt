@@ -29,31 +29,31 @@ class AccountWriteService(
 ) {
 
     fun login(loginInfo: LoginInfo, now: Date): LoginToken {
-        val trainer = accountRepository.findByEmail(loginInfo.email)
+        val account = accountRepository.findByEmail(loginInfo.email)
             ?: throw KepaException(NOT_MATCH_ID_OR_PASSWORD)
-        require(bCryptPasswordEncoder.matches(loginInfo.password, trainer.password)) {
+        require(bCryptPasswordEncoder.matches(loginInfo.password, account.password)) {
             throw KepaException(NOT_MATCH_ID_OR_PASSWORD)
         }
 
-        if (refreshTokenRepository.existsByEmailAndRole(trainer.email, trainer.role)) {
-            refreshTokenRepository.deleteByEmail(trainer.email)
+        if (refreshTokenRepository.existsByAccountId(account.id)) {
+            refreshTokenRepository.deleteByAccountId(account.id)
         }
-        return tokenProvider.getToken(trainer.email, trainer.role.name, now)
+        return tokenProvider.getToken(account.id, account.role.name, now)
     }
 
     fun logout(loginUserInfo: LoginUserInfo) {
         val account = accountRepository.findByIdOrNull(loginUserInfo.id)
             ?: throw KepaException(NOT_MATCH_ID_OR_PASSWORD)
-        refreshTokenRepository.deleteByEmail(account.email)
+        refreshTokenRepository.deleteByAccountId(account.id)
     }
 
     fun getToken(id: Long, role: Role, now: Date): LoginToken {
         val account: Account = accountRepository.findByIdOrNull(id) ?: throw KepaException(NOT_EXSISTS_INFO)
-        return tokenProvider.getToken(account.email, account.role.name, now)
+        return tokenProvider.getToken(account.id, account.role.name, now)
     }
     fun withdrawAccount(accountId: Long) {
         val account = accountRepository.findByIdOrNull(accountId) ?: throw KepaException(NOT_EXSISTS_INFO)
-        refreshTokenRepository.deleteByEmail(account.email)
+        refreshTokenRepository.deleteByAccountId(account.id)
         agreementTermsRepository.deleteByAccountId(accountId)
         accountRepository.withdrawAccount(accountId)
     }
