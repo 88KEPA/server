@@ -1,5 +1,6 @@
 package com.kepa.application.user.trainer
 
+import UpdateInfo
 import com.kepa.application.user.AccountReadService
 import com.kepa.application.user.dto.request.LoginUserInfo
 import com.kepa.application.user.dto.response.DetailInfo
@@ -7,6 +8,8 @@ import com.kepa.domain.user.annotation.LoginUser
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -22,4 +25,18 @@ class TrainerInfoController(
     fun getDetailInfo(@LoginUser loginUserInfo: LoginUserInfo): DetailInfo {
         return DetailInfo.create(accountReadService.getDetailInfo(id = loginUserInfo.id))
     }
+
+    @ApiOperation(value = "정보 수정하기")
+    @PutMapping
+    fun update(@LoginUser loginUserInfo: LoginUserInfo, @RequestBody updateInfo: UpdateInfo) {
+        trainerWriteService.update(
+            accountId =  loginUserInfo.id,
+            email =  updateInfo.email,
+            address = updateInfo.address,
+            addressMeta = updateInfo.addressMeta,
+            addressDetail = updateInfo.addressDetail,
+            phone = updateInfo.phone,
+        )
+    }
+
 }
