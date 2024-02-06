@@ -7,6 +7,7 @@ import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.common.exception.ExceptionCode.NOT_EXSISTS_INFO
 import com.kepa.common.exception.ExceptionCode.NOT_MATCH_ID_OR_PASSWORD
 import com.kepa.common.exception.KepaException
+import com.kepa.domain.user.AgreementTermsRepository
 import com.kepa.domain.user.account.Account
 import com.kepa.domain.user.account.AccountRepository
 import com.kepa.domain.user.account.RefreshTokenRepository
@@ -19,11 +20,12 @@ import java.util.*
 
 @Service
 @Transactional
-class AccoutWriteService(
+class AccountWriteService(
     private val accountRepository: AccountRepository,
     private val bCryptPasswordEncoder: BCryptPasswordEncoder,
     private val tokenProvider: TokenProvider,
     private val refreshTokenRepository: RefreshTokenRepository,
+    private val agreementTermsRepository: AgreementTermsRepository,
 ) {
 
     fun login(loginInfo: LoginInfo, now: Date): LoginToken {
@@ -48,6 +50,11 @@ class AccoutWriteService(
     fun getToken(id: Long, role: Role, now: Date): LoginToken {
         val account: Account = accountRepository.findByIdOrNull(id) ?: throw KepaException(NOT_EXSISTS_INFO)
         return tokenProvider.getToken(account.email, account.role.name, now)
-
+    }
+    fun withdrawAccount(accountId: Long) {
+        val account = accountRepository.findByIdOrNull(accountId) ?: throw KepaException(NOT_EXSISTS_INFO)
+        refreshTokenRepository.deleteByEmail(account.email)
+        agreementTermsRepository.deleteByAccountId(accountId)
+        accountRepository.withdrawAccount(accountId)
     }
 }
