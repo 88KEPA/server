@@ -5,7 +5,7 @@ import com.kepa.application.user.trainer.dto.request.LoginInfo
 import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.domain.user.annotation.LoginUser
 import io.swagger.annotations.Api
-import io.swagger.v3.oas.annotations.Operation
+import io.swagger.annotations.ApiOperation
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -13,26 +13,32 @@ import java.util.*
 @Api(tags = ["[LOGIN] 로그인 관련 API"])
 @RequestMapping("/api")
 class AccountController(
-    private val accountWriteService: AccoutWriteService,
+    private val accountWriteService: AccountWriteService,
 ) {
 
-    @Operation(description = "로그인")
+    @ApiOperation(value = "로그인")
     @PostMapping("/login")
     fun login(@RequestBody loginInfo: LoginInfo): LoginToken = accountWriteService.login(
         loginInfo,
         Date()
     )
 
-    @Operation(description = "로그아웃")
+    @ApiOperation(value = "로그아웃")
     @PostMapping("/logout")
     fun logout(@LoginUser loginUserInfo: LoginUserInfo) {
         accountWriteService.logout(loginUserInfo)
     }
 
 
-    @Operation(description = "토큰 재발급")
+    @ApiOperation(value = "토큰 재발급")
     @GetMapping("/token")
     fun getToken(@LoginUser loginUserInfo: LoginUserInfo) : LoginToken = accountWriteService.getToken(
         loginUserInfo.id, loginUserInfo.role, Date()
     )
+
+    @ApiOperation(value = "회원탈퇴")
+    @DeleteMapping("/withdraw")
+    fun withdrawAccount(@LoginUser loginUserInfo: LoginUserInfo) {
+        accountWriteService.withdrawAccount(loginUserInfo.id)
+    }
 }
