@@ -30,4 +30,13 @@ class Account(
     @Enumerated(EnumType.STRING)
     var role: Role = Role.TRAINER,
     var withdrawAt: LocalDateTime? = null,
-) : BaseEntity()
+) : BaseEntity() {
+
+    fun update(email: String, address: String, addressMeta: String, addressDetail: String, phone: String) {
+        this.email = email
+        this.address = address
+        this.addressMeta = addressMeta
+        this.addressDetail = addressDetail
+        this.phone = phone
+    }
+}
