@@ -39,7 +39,7 @@ class TrainerWriteService(
         //추후에 약관 늘어나면 코드 개선 (급해서 작성한 코드입니다) 쿼리 개선
         val terms = termsRepository.findByIdOrNull(trainerJoin.agrees[0]) ?: throw KepaException(NOT_EXSITS_TERMS)
         val savedAccount = accountRepository.save(trainerJoin.create(bCryptPasswordEncoder.encode(trainerJoin.password)))
-        agreementTermsRepository.save(AgreementTerms(account = savedAccount, terms =  terms))
+        agreementTermsRepository.save(AgreementTerms(account = savedAccount, terms = terms))
     }
 
     fun changePassword(certId: Int?, email: String?, password: String?) {
@@ -56,5 +56,17 @@ class TrainerWriteService(
         certNumberRepository.deleteById(certNumber.id)
         val findAccount = accountRepository.findByEmail(email) ?: throw KepaException(NOT_EXSISTS_INFO)
         findAccount.password = bCryptPasswordEncoder.encode(password)
+    }
+
+    fun update(accountId: Long, email: String, address: String, addressMeta: String, addressDetail: String, phone: String) {
+        val account = (accountRepository.findByIdOrNull(accountId)
+            ?: throw KepaException(NOT_EXSISTS_INFO))
+        account.update(
+            email = email,
+            address = address,
+            addressMeta = addressMeta,
+            addressDetail = addressDetail,
+            phone = phone,
+        )
     }
 }
