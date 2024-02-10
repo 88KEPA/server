@@ -21,7 +21,7 @@ class TrainerInfoController(
     private val trainerWriteService: TrainerWriteService,
 ) {
     @ApiOperation(value = "사용자 정보 상세보기")
-    @GetMapping("/info")
+    @GetMapping
     fun getDetailInfo(@LoginUser loginUserInfo: LoginUserInfo): DetailInfo {
         return DetailInfo.create(accountReadService.getDetailInfo(id = loginUserInfo.id))
     }
