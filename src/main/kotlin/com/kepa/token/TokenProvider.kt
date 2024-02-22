@@ -55,7 +55,6 @@ class TokenProvider(
             now.plus(ACCESS_TOKEN_EXPIRE_TIME.toLong(), ChronoUnit.SECONDS)
         val refreshTokenTime: LocalDateTime =
             now.plus(REFRESH_TOKEN_EXPIRE_TIME.toLong(), ChronoUnit.SECONDS)
-
         val accessToken = createToken(
             id = id,
             tokenExpireTime = accessTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli(),
@@ -86,7 +85,8 @@ class TokenProvider(
                 ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
             val savedRefreshToken = refreshTokenRepository.save(
                 RefreshToken(
-                    account = account, token = refreshToken,
+                    account = account,
+                    token = refreshToken,
                     expireAt = refreshTokenTime,
                     role = loginUserRole,
                     accessToken = accessToken,
