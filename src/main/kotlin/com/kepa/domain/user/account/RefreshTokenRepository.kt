@@ -8,4 +8,6 @@ interface RefreshTokenRepository : JpaRepository<RefreshToken, Long> {
 
     fun findByAccountId(accountId: Long): RefreshToken?
     fun deleteByAccountId(accountId: Long)
+
+    fun findByAccessToken(accessToken: String): RefreshToken?
 }
