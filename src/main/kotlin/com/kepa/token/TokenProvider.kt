@@ -21,7 +21,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import java.security.Key
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -48,36 +50,56 @@ class TokenProvider(
      */
     fun getToken(id: Long, role: String, now: Date): LoginToken {
         val now: LocalDateTime = LocalDateTime.now()
-        val nowTokenExpire = now.toInstant(ZoneOffset.UTC).toEpochMilli()
-        val accessTokenTime: LocalDateTime = now.plus(ACCESS_TOKEN_EXPIRE_TIME.toLong(), ChronoUnit.SECONDS)
-        val refreshTokenTime: LocalDateTime = now.plus(REFRESH_TOKEN_EXPIRE_TIME.toLong(), ChronoUnit.SECONDS)
 
-        val accessTokenExpire = accessTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli()
-        val refreshTokenExpire = refreshTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli()
+        val accessTokenTime: LocalDateTime =
+            now.plus(ACCESS_TOKEN_EXPIRE_TIME.toLong(), ChronoUnit.SECONDS)
+        val refreshTokenTime: LocalDateTime =
+            now.plus(REFRESH_TOKEN_EXPIRE_TIME.toLong(), ChronoUnit.SECONDS)
+
         val accessToken = createToken(
             id = id,
-            tokenExpireTime = accessTokenExpire,
+            tokenExpireTime = accessTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli(),
             role = role
         )
         val loginUserRole = Role.valueOf(role)
         var loginToken: LoginToken? = refreshTokenRepository.findByAccountId(id)?.let {
-            if (nowTokenExpire > it.expireAt) {
+            if (now.isAfter(it.expireAt)) {
                 throw KepaException(ExceptionCode.REFRESH_TOKEN_EXPIRE)
             }
             val account = accountRepository.findByIdOrNull(it.id)
                 ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
-            LoginToken(accessToken = accessToken, refreshToken = it.token, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(it.expireAt), id = account.id)
+            LoginToken(
+                accessToken = accessToken,
+                refreshToken = it.token,
+                accessTokenExpiredAt = accessTokenTime,
+                refreshTokenExpiredAt = it.expireAt,
+                id = account.id
+            )
         }
         if (loginToken == null) {
             val refreshToken = createToken(
                 id = id,
-                tokenExpireTime = refreshTokenExpire,
+                tokenExpireTime = refreshTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli(),
                 role = role
             )
             val account = accountRepository.findByIdOrNull(id)
                 ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
-            val savedRefreshToken = refreshTokenRepository.save(RefreshToken(account = account, token = refreshToken, expireAt = refreshTokenExpire, role = loginUserRole))
-            loginToken = LoginToken(accessToken = accessToken, refreshToken = refreshToken, accessTokenExpiredAt = Date(accessTokenExpire), refreshTokenExpiredAt = Date(refreshTokenExpire), id = savedRefreshToken.id)
+            val savedRefreshToken = refreshTokenRepository.save(
+                RefreshToken(
+                    account = account, token = refreshToken,
+                    expireAt = refreshTokenTime,
+                    role = loginUserRole,
+                    accessToken = accessToken,
+                    accessTokenExpireAt = accessTokenTime
+                )
+            )
+            loginToken = LoginToken(
+                accessToken = accessToken,
+                refreshToken = refreshToken,
+                accessTokenExpiredAt = accessTokenTime,
+                refreshTokenExpiredAt = refreshTokenTime,
+                id = savedRefreshToken.id
+            )
         }
         return loginToken
     }
@@ -91,7 +113,8 @@ class TokenProvider(
     }
 
     fun getAccount(token: String): Long {
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).body.subject.toLong()
+        return Jwts.parserBuilder().setSigningKey(secretKey).build()
+            .parseClaimsJws(token).body.subject.toLong()
     }
 
 
