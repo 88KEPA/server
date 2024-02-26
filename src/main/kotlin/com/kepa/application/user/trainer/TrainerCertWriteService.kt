@@ -81,23 +81,10 @@ class TrainerCertWriteService(
         if (certNumberRepository.existsByReceiverEmailAndCertType(receiverEmail, certType)) {
             certNumberRepository.deleteByReceiverEmailAndCertType(receiverEmail, certType)
         }
-        println("=====================================")
-        val simpleMailMessage = SimpleMailMessage()
-        simpleMailMessage.setTo(receiverEmail)
-        simpleMailMessage.from = "test@gmail.com"
-        simpleMailMessage.subject = "[KEPA] 이메일 인증번호"
-        simpleMailMessage.text = "인증번호 [22]"
-        javaMailSender.send(simpleMailMessage)
-        println("=====================================")
-        certNumberRepository.save(CertNumber(
-            number = randomNumber,
-            receiverEmail = receiverEmail,
-            certType = certType))
-
-     /*   applicationEventPublisher.publishEvent(MailContent(
+        applicationEventPublisher.publishEvent(MailContent(
             certNumber = randomNumber,
             email = receiverEmail,
-        ))*/
+        ))
 
     }
 
