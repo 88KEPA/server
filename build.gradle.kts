@@ -48,6 +48,9 @@ dependencies {
 
     //mail
     implementation("org.springframework.boot:spring-boot-starter-mail")
+
+    //aws s3
+    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
 }
 
 tasks.withType<KotlinCompile> {

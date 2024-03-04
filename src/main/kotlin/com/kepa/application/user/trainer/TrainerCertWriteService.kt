@@ -10,8 +10,6 @@ import com.kepa.domain.user.CertNumberRepository
 import com.kepa.domain.user.account.AccountRepository
 import com.kepa.externalapi.dto.RandomNumber
 import org.springframework.context.ApplicationEventPublisher
-import org.springframework.mail.SimpleMailMessage
-import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -22,12 +20,17 @@ class TrainerCertWriteService(
     private val accountRepository: AccountRepository,
     private val certNumberRepository: CertNumberRepository,
     private val applicationEventPublisher: ApplicationEventPublisher,
-    private val javaMailSender: JavaMailSender,
 ) {
     companion object {
         val CHECKT_EXPIRE_TIME: Long = 3
     }
-    fun sendNumber(receiverPhoneNumber: String, email: String, randomNumber: Int, certType: CertType) {
+
+    fun sendNumber(
+        receiverPhoneNumber: String,
+        email: String,
+        randomNumber: Int,
+        certType: CertType
+    ) {
         if (certType == CertType.FIND) {
             if (!accountRepository.existsByPhone(receiverPhoneNumber)) {
                 throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
@@ -43,21 +46,31 @@ class TrainerCertWriteService(
         if (certNumberRepository.existsByReceiverEmailAndCertType(email, certType)) {
             certNumberRepository.deleteByReceiverEmailAndCertType(email, certType)
         }
-        certNumberRepository.save(CertNumber(
-            number = randomNumber,
-            receiverPhoneNumber = receiverPhoneNumber,
-            receiverEmail = email,
-            certType = certType))
+        certNumberRepository.save(
+            CertNumber(
+                number = randomNumber,
+                receiverPhoneNumber = receiverPhoneNumber,
+                receiverEmail = email,
+                certType = certType
+            )
+        )
 
-        applicationEventPublisher.publishEvent(MessageContent(
-            certNumber = randomNumber,
-            receiverPhoneNumber = receiverPhoneNumber,
-            email = email,
-        ))
+        applicationEventPublisher.publishEvent(
+            MessageContent(
+                certNumber = randomNumber,
+                receiverPhoneNumber = receiverPhoneNumber,
+                email = email,
+            )
+        )
     }
 
     @Transactional(noRollbackFor = [RuntimeException::class])
-    fun checkNumber(receiverPhoneNumber: String, email: String, randomNumber: Int, certType: CertType): Int {
+    fun checkNumber(
+        receiverPhoneNumber: String,
+        email: String,
+        randomNumber: Int,
+        certType: CertType
+    ): Int {
         val certNumber = certNumberRepository.findByReceiverEmailAndReceiverPhoneNumberAndCertType(
             email = email,
             phoneNumber = receiverPhoneNumber,
@@ -73,7 +86,13 @@ class TrainerCertWriteService(
         }
         certNumberRepository.deleteById(certNumber.id)
         val randomNumber = RandomNumber.create()
-        certNumberRepository.save(CertNumber(receiverEmail = email, number = randomNumber, certType = CertType.FIND_RESULT))
+        certNumberRepository.save(
+            CertNumber(
+                receiverEmail = email,
+                number = randomNumber,
+                certType = CertType.FIND_RESULT
+            )
+        )
         return randomNumber
     }
 
@@ -81,10 +100,12 @@ class TrainerCertWriteService(
         if (certNumberRepository.existsByReceiverEmailAndCertType(receiverEmail, certType)) {
             certNumberRepository.deleteByReceiverEmailAndCertType(receiverEmail, certType)
         }
-        applicationEventPublisher.publishEvent(MailContent(
-            certNumber = randomNumber,
-            email = receiverEmail,
-        ))
+        applicationEventPublisher.publishEvent(
+            MailContent(
+                certNumber = randomNumber,
+                email = receiverEmail,
+            )
+        )
 
     }
 
@@ -116,21 +137,27 @@ class TrainerCertWriteService(
         if (certNumberRepository.existsByReceiverPhoneNumberAndCertType(phone, CertType.FIND)) {
             certNumberRepository.deleteByReceiverPhoneNumberAndCertType(phone, CertType.FIND)
         }
-        certNumberRepository.save(CertNumber(
-            number = randomNumber,
-            receiverPhoneNumber = phone,
-            certType = CertType.FIND))
+        certNumberRepository.save(
+            CertNumber(
+                number = randomNumber,
+                receiverPhoneNumber = phone,
+                certType = CertType.FIND
+            )
+        )
 
-        applicationEventPublisher.publishEvent(MessageContent(
-            certNumber = randomNumber,
-            receiverPhoneNumber = phone
-        ))
+        applicationEventPublisher.publishEvent(
+            MessageContent(
+                certNumber = randomNumber,
+                receiverPhoneNumber = phone
+            )
+        )
     }
 
     @Transactional(noRollbackFor = [RuntimeException::class])
-    fun recoveryCheck(phoneNumber: String, certNumber: Int, certType: CertType): Int{
-        val findCert = certNumberRepository.findByReceiverPhoneNumberAndCertType(phoneNumber, certType)
-            ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
+    fun recoveryCheck(phoneNumber: String, certNumber: Int, certType: CertType): Int {
+        val findCert =
+            certNumberRepository.findByReceiverPhoneNumberAndCertType(phoneNumber, certType)
+                ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
         require(findCert.createdAt.plusMinutes(CHECKT_EXPIRE_TIME).isAfter(LocalDateTime.now())) {
             certNumberRepository.deleteById(findCert.id)
             throw KepaException(ExceptionCode.EXPIRE_CERT_NUMBER)
@@ -140,7 +167,13 @@ class TrainerCertWriteService(
         }
         certNumberRepository.deleteById(findCert.id)
         val randomNumber = RandomNumber.create()
-        certNumberRepository.save(CertNumber(receiverPhoneNumber = phoneNumber, number = randomNumber, certType = CertType.FIND_RESULT))
+        certNumberRepository.save(
+            CertNumber(
+                receiverPhoneNumber = phoneNumber,
+                number = randomNumber,
+                certType = CertType.FIND_RESULT
+            )
+        )
         return randomNumber
     }
 }

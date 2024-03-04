@@ -28,6 +28,11 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+      enabled: true
 jwt:
   secret-key : ${SECRET_KEY}
   access-token-expire-time : 300
@@ -37,3 +42,20 @@ aligo :
   send-url : https://apis.aligo.in/send/
   send-phone-number: ${ALIGO_SEND_PHONE_NUMBER}
   send-user-id: ${ALOGO_USER_ID}
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_BUCKET}
+    region:
+      static: ${S3_REGION}
+    stack:
+      auto: false
+    credentials:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_ACCESS_SECRET}
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
