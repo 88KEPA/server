@@ -26,14 +26,12 @@ class LoginFilter(
                     .isAfter(findToken.accessTokenExpireAt) || !it.toLowerCase()
                     .startsWith("bearer ") || !tokenProvider.validateToken(loginToken)
             ) {
-                response.sendError(401, "aa")
+                response.sendError(401)
                 return
             }
             val authentication = tokenProvider.getAuthentication(loginToken)
             SecurityContextHolder.getContext().authentication = authentication
         }
-
         filterChain.doFilter(request, response)
     }
-
 }

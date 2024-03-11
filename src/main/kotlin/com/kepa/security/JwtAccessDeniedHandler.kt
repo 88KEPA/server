@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse
 @Component
 class JwtAccessDeniedHandler : AccessDeniedHandler{
     override fun handle(request: HttpServletRequest?, response: HttpServletResponse, accessDeniedException: AccessDeniedException?) {
-        println("접근 거부")
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
     }
 }

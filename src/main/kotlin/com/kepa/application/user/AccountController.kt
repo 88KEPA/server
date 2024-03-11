@@ -6,6 +6,7 @@ import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.domain.user.annotation.LoginUser
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -25,6 +26,7 @@ class AccountController(
 
     @ApiOperation(value = "로그아웃")
     @PostMapping("/logout")
+    @Secured(value = ["ROLE_ADMIN", "ROLE_USER","ROLE_TRAINER","ROLE_SUPER_ADMIN"])
     fun logout(@LoginUser loginUserInfo: LoginUserInfo) {
         accountWriteService.logout(loginUserInfo)
     }
@@ -32,12 +34,14 @@ class AccountController(
 
     @ApiOperation(value = "토큰 재발급")
     @GetMapping("/token")
+    @Secured(value = ["ROLE_ADMIN", "ROLE_USER","ROLE_TRAINER","ROLE_SUPER_ADMIN"])
     fun getToken(@LoginUser loginUserInfo: LoginUserInfo) : LoginToken = accountWriteService.getToken(
         loginUserInfo.id, loginUserInfo.role, Date()
     )
 
     @ApiOperation(value = "회원탈퇴")
     @DeleteMapping("/withdraw")
+    @Secured(value = ["ROLE_ADMIN", "ROLE_USER","ROLE_TRAINER","ROLE_SUPER_ADMIN"])
     fun withdrawAccount(@LoginUser loginUserInfo: LoginUserInfo) {
         accountWriteService.withdrawAccount(loginUserInfo.id)
     }

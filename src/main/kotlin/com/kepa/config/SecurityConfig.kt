@@ -6,6 +6,7 @@ import com.kepa.security.LoginFilter
 import com.kepa.token.TokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -19,6 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 class SecurityConfig(
     private val tokenProvider: TokenProvider,
     private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
@@ -61,27 +63,6 @@ class SecurityConfig(
             .accessDeniedHandler(jwtAccessDeniedHandler)
             .and()
             .authorizeRequests()
-            .antMatchers("/api/trainer/info/**")
-            .hasAnyAuthority(Role.TRAINER.name, Role.ADMIN.name, Role.SUPER_ADMIN.name)
-            .antMatchers("/api/admin/**").hasAnyAuthority(Role.ADMIN.name, Role.SUPER_ADMIN.name)
-            .antMatchers("/api/withdraw").hasAnyAuthority(
-                Role.ADMIN.name,
-                Role.SUPER_ADMIN.name,
-                Role.TRAINER.name,
-                Role.USER.name
-            )
-            .antMatchers("/api/token").hasAnyAuthority(
-                Role.ADMIN.name,
-                Role.SUPER_ADMIN.name,
-                Role.TRAINER.name,
-                Role.USER.name
-            )
-            .antMatchers("/api/logout").hasAnyAuthority(
-                Role.ADMIN.name,
-                Role.SUPER_ADMIN.name,
-                Role.TRAINER.name,
-                Role.USER.name
-            )
             .antMatchers("/**")
             .permitAll()
             .anyRequest().authenticated()
