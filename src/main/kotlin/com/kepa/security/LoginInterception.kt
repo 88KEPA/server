@@ -37,10 +37,12 @@ class LoginInterception(
             } else {
                 "${role[1]}_${role[2]}"
             }
+        if(authenRole == "ANONYMOUS") {
+            throw KepaException(ExceptionCode.NO_AUTHENTICATION)
+        }
         val account = accountRepository.findByEmailAndRole(
             authentication.name, Role.valueOf(authenRole)
-        )
-            ?: throw KepaException(ExceptionCode.TOKEN_EXPIRE)
+        ) ?: throw KepaException(ExceptionCode.TOKEN_EXPIRE)
         return LoginUserInfo(account.id, account.role)
     }
 }
