@@ -19,7 +19,9 @@ enum class ExceptionCode(
     NOT_MATCH_ID_OR_PASSWORD(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 일치하지 않습니다.",40006),
     BAD_REQUEST_PHONE_FORMAT(HttpStatus.BAD_REQUEST, "핸드폰 번호 포맷 형태가 잘못되었습니다.", 40007),
     NOT_EXSITS_TERMS(HttpStatus.BAD_REQUEST, "약관 동의가 존재하지 않습니다.", 40008),
-
+    BAD_REQUEST_DATA(HttpStatus.BAD_REQUEST, "데이터 변환이 불가능합니다.", 40009),
+    NOT_EXSITS_FILE_EXTENSION(HttpStatus.BAD_REQUEST,"잘못된 파일 확장자입니다.", 40010),
+    NOT_SUPPORT_FILE_EXTENSION(HttpStatus.BAD_REQUEST,"지원하지 않는 파일 형식입니다.", 40011),
 
     NOT_FOUND_CERT_NUMBER(HttpStatus.NOT_FOUND, "인증번호가 존재하지 않습니다.", 40401),
     TOKEN_EXPIRE(HttpStatus.NOT_FOUND,"로그인 토큰이 만료되었습니다.", 40402),

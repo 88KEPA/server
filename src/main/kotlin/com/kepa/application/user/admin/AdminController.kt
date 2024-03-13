@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 @Api(tags = ["[Admin] 관리자 API"])
 @RestController
 @RequestMapping("/api/admin")
+//@Secured(value = ["ADMIN"])
 class AdminController(
     private val accountReadService: AccountReadService,
     private val adminReadService: AdminReadService,

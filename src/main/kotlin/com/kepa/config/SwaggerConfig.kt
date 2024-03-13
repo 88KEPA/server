@@ -50,6 +50,4 @@ class SwaggerConfig {
         return listOf(SecurityReference(HEADER_NAME, authorizationScopes))
 
     }
-
-
 }
