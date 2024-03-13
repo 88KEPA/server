@@ -35,9 +35,9 @@ class TokenProvider(
     @Value("\${jwt.secret-key}")
     private val secretKey: String,
     @Value("\${jwt.access-token-expire-time}")
-    private val ACCESS_TOKEN_EXPIRE_TIME: String,
+    private val ACCESS_TOKEN_EXPIRE_TIME: Long,
     @Value("\${jwt.refresh-token-expire-time}")
-    private val REFRESH_TOKEN_EXPIRE_TIME: String,
+    private val REFRESH_TOKEN_EXPIRE_TIME: Long,
     private val refreshTokenRepository: RefreshTokenRepository,
 ) {
 
@@ -52,16 +52,16 @@ class TokenProvider(
         val now: LocalDateTime = LocalDateTime.now()
 
         val accessTokenTime: LocalDateTime =
-            now.plus(ACCESS_TOKEN_EXPIRE_TIME.toLong(), ChronoUnit.SECONDS)
+            now.plus(ACCESS_TOKEN_EXPIRE_TIME, ChronoUnit.SECONDS)
         val refreshTokenTime: LocalDateTime =
-            now.plus(REFRESH_TOKEN_EXPIRE_TIME.toLong(), ChronoUnit.SECONDS)
+            now.plus(REFRESH_TOKEN_EXPIRE_TIME, ChronoUnit.SECONDS)
         val accessToken = createToken(
             id = id,
             tokenExpireTime = accessTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli(),
             role = role
         )
         val loginUserRole = Role.valueOf(role)
-        var loginToken: LoginToken? = refreshTokenRepository.findByAccountId(id)?.let {
+        return refreshTokenRepository.findByAccountId(id)?.let {
             if (now.isAfter(it.expireAt)) {
                 throw KepaException(ExceptionCode.REFRESH_TOKEN_EXPIRE)
             }
@@ -74,34 +74,46 @@ class TokenProvider(
                 refreshTokenExpiredAt = it.expireAt,
                 id = account.id
             )
-        }
-        if (loginToken == null) {
-            val refreshToken = createToken(
-                id = id,
-                tokenExpireTime = refreshTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli(),
-                role = role
-            )
-            val account = accountRepository.findByIdOrNull(id)
-                ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
-            val savedRefreshToken = refreshTokenRepository.save(
-                RefreshToken(
-                    account = account,
-                    token = refreshToken,
-                    expireAt = refreshTokenTime,
-                    role = loginUserRole,
-                    accessToken = accessToken,
-                    accessTokenExpireAt = accessTokenTime
-                )
-            )
-            loginToken = LoginToken(
+        } ?: createLoginToken(
+            id = id,
+            refreshTokenTime = refreshTokenTime,
+            loginUserRole = loginUserRole,
+            accessToken = accessToken,
+            accessTokenTime = accessTokenTime,
+        )
+    }
+
+    private fun createLoginToken(
+        id: Long,
+        refreshTokenTime: LocalDateTime,
+        loginUserRole: Role,
+        accessToken: String,
+        accessTokenTime: LocalDateTime,
+    ): LoginToken {
+        val refreshToken = createToken(
+            id = id,
+            tokenExpireTime = refreshTokenTime.toInstant(ZoneOffset.UTC).toEpochMilli(),
+            role = loginUserRole.name
+        )
+        val account = accountRepository.findByIdOrNull(id)
+            ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
+        val savedRefreshToken = refreshTokenRepository.save(
+            RefreshToken(
+                account = account,
+                token = refreshToken,
+                expireAt = refreshTokenTime,
+                role = loginUserRole,
                 accessToken = accessToken,
-                refreshToken = refreshToken,
-                accessTokenExpiredAt = accessTokenTime,
-                refreshTokenExpiredAt = refreshTokenTime,
-                id = savedRefreshToken.id
+                accessTokenExpireAt = accessTokenTime
             )
-        }
-        return loginToken
+        )
+        return LoginToken(
+            accessToken = accessToken,
+            refreshToken = refreshToken,
+            accessTokenExpiredAt = accessTokenTime,
+            refreshTokenExpiredAt = refreshTokenTime,
+            id = savedRefreshToken.id
+        )
     }
 
     fun getAuthentication(token: String): Authentication {

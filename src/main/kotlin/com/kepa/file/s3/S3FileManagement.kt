@@ -2,6 +2,8 @@ package com.kepa.file.s3
 
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.ObjectMetadata
+import com.kepa.common.exception.ExceptionCode
+import com.kepa.common.exception.KepaException
 import com.kepa.file.validate.FileValidate
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -25,38 +27,41 @@ class S3FileManagement(
     private val bucket: String,
     private val amazonS3: AmazonS3,
 ) {
-    fun uploadImages(multipartFile: List<MultipartFile>): List<String> {
-        return multipartFile.map {
-            val originalFilename = it.originalFilename ?: ""
-            FileValidate.checkImageFormat(originalFilename)
-            val fileName = "${UUID.randomUUID()}-${originalFilename}"
-            val objectMetadata = ObjectMetadata()
-            objectMetadata.contentType = "/image/${getFileExtension(originalFilename)}"
-            objectMetadata.contentLength = it.inputStream.available().toLong()
-            amazonS3.putObject(bucket, fileName, it.inputStream, objectMetadata)
-            amazonS3.getUrl(bucket, fileName).toString()
-        }
+    companion object {
+        const val TYPE_IMAGE = "image"
     }
-
     fun uploadImage(multipartFile: MultipartFile): String {
-        val originalFilename = multipartFile.originalFilename ?: ""
+        val originalFilename = multipartFile.originalFilename
+            ?: throw KepaException(ExceptionCode.WRONG_FORMAT_FILE_NAME)
         FileValidate.checkImageFormat(originalFilename)
         val fileName = "${UUID.randomUUID()}-${originalFilename}"
-        val objectMetadata = ObjectMetadata()
-        objectMetadata.contentType = "/image/${getFileExtension(originalFilename)}"
-        objectMetadata.contentLength = multipartFile.inputStream.available().toLong()
+        val objectMetadata = setFileDateOption(
+            type = TYPE_IMAGE,
+            file = getFileExtension(originalFilename),
+            multipartFile = multipartFile
+        )
         amazonS3.putObject(bucket, fileName, multipartFile.inputStream, objectMetadata)
-        return getFile(fileName)
+        return fileName
     }
 
     fun getFile(fileName: String): String {
-        return amazonS3.getUrl(bucket, fileName).toString()
+        return amazonS3.getUrl(bucket,fileName).toString()
     }
 
     private fun getFileExtension(fileName: String): String {
         val extensionIndex = fileName.lastIndexOf('.')
         return fileName.substring(extensionIndex + 1)
+    }
 
+    private fun setFileDateOption(
+        type: String,
+        file: String,
+        multipartFile: MultipartFile
+    ): ObjectMetadata {
+        val objectMetadata = ObjectMetadata()
+        objectMetadata.contentType = "/${type}/${getFileExtension(file)}"
+        objectMetadata.contentLength = multipartFile.inputStream.available().toLong()
+        return objectMetadata
     }
 
 }
