@@ -3,6 +3,7 @@ package com.kepa.config
 import com.kepa.domain.user.account.RefreshTokenRepository
 import com.kepa.security.JwtAccessDeniedHandler
 import com.kepa.security.LoginFilter
+import com.kepa.security.TokenAuthenticationEntryPoint
 import com.kepa.token.TokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -25,6 +26,7 @@ class SecurityConfig(
     private val tokenProvider: TokenProvider,
     private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
     private val refreshTokenRepository: RefreshTokenRepository,
+    private val tokenAuthenticationEntryPoint: TokenAuthenticationEntryPoint,
 ) : WebSecurityConfigurerAdapter() {
 
     @Bean
@@ -56,10 +58,11 @@ class SecurityConfig(
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .addFilterBefore(
-                LoginFilter(tokenProvider, refreshTokenRepository),
+                LoginFilter(tokenProvider, refreshTokenRepository, tokenAuthenticationEntryPoint),
                 UsernamePasswordAuthenticationFilter::class.java
             )
             .exceptionHandling()
+            .authenticationEntryPoint(tokenAuthenticationEntryPoint)
             .accessDeniedHandler(jwtAccessDeniedHandler)
             .and()
             .authorizeRequests()

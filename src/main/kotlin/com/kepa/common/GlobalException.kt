@@ -1,7 +1,7 @@
 package com.kepa.common
 
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import com.kepa.common.exception.KeapExceptionResponse
+import com.kepa.common.exception.KepaExceptionResponse
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.log.ErrorLog
 import com.kepa.domain.log.ErrorLogRepository
@@ -18,13 +18,13 @@ class GlobalException(
     @ExceptionHandler(KepaException::class)
     fun kepaExceptionResponse(
         kepaException: KepaException
-    ): ResponseEntity<KeapExceptionResponse> {
-        return KeapExceptionResponse.toResponse(errorCode = kepaException.exceptionCode)
+    ): ResponseEntity<KepaExceptionResponse> {
+        return KepaExceptionResponse.toResponse(errorCode = kepaException.exceptionCode)
     }
 
     @ExceptionHandler(MissingKotlinParameterException::class)
-    fun notNullExceptionResponse(e: MissingKotlinParameterException): ResponseEntity<KeapExceptionResponse> {
-        return KeapExceptionResponse.toNotNullableResponse("${e.path[0].fieldName} 필수로 입력해야합니다.")
+    fun notNullExceptionResponse(e: MissingKotlinParameterException): ResponseEntity<KepaExceptionResponse> {
+        return KepaExceptionResponse.toNotNullableResponse("${e.path[0].fieldName} 필수로 입력해야합니다.")
     }
 
     @ExceptionHandler(Exception::class)
