@@ -6,11 +6,13 @@ enum class ExceptionCode(
     val errorMessage: String,
     val identity: Int
 ) {
+    //409
     ALREADY_INFORMATION(HttpStatus.CONFLICT, "이미 가입된 정보입니다.",40901),
 
-    NO_AUTHENTICATION(HttpStatus.UNAUTHORIZED, "권한이 올바르지 않습니다.",40101),
+    //401
+    NO_AUTHENTICATION(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다.",40101),
 
-
+    //400
     NOT_MATCH_PASSWORD_CONFIRM_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호와 비밀번호 재확인이 일치하지 않습니다.",40001),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.",40002),
     NOT_EXSISTS_INFO(HttpStatus.BAD_REQUEST, "존재하지 않는 정보입니다.",40003),
@@ -23,12 +25,11 @@ enum class ExceptionCode(
     NOT_EXSITS_FILE_EXTENSION(HttpStatus.BAD_REQUEST,"잘못된 파일 확장자입니다.", 40010),
     NOT_SUPPORT_FILE_EXTENSION(HttpStatus.BAD_REQUEST,"지원하지 않는 파일 형식입니다.", 40011),
 
+    //403
+    NOT_ACCESS(HttpStatus.FORBIDDEN,"접근할 수 없는 권한입니다.", 40300),
+
+    //404
     NOT_FOUND_CERT_NUMBER(HttpStatus.NOT_FOUND, "인증번호가 존재하지 않습니다.", 40401),
     TOKEN_EXPIRE(HttpStatus.NOT_FOUND,"로그인 토큰이 만료되었습니다.", 40402),
     REFRESH_TOKEN_EXPIRE(HttpStatus.NOT_FOUND,"리프레시 토큰이 만료되었습니다.", 40403),
-
-    NOT_ACCESS(HttpStatus.UNAUTHORIZED, "접근 권한이 존재하지 않습니다",40101)
-
-
-
 }

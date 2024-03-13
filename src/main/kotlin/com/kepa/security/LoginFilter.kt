@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse
 class LoginFilter(
     private val tokenProvider: TokenProvider,
     private val refreshTokenRepository: RefreshTokenRepository,
+    private val tokenAuthenticationEntryPoint: TokenAuthenticationEntryPoint,
 ) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -26,14 +27,16 @@ class LoginFilter(
                     .isAfter(findToken.accessTokenExpireAt) || !it.toLowerCase()
                     .startsWith("bearer ") || !tokenProvider.validateToken(loginToken)
             ) {
-                response.sendError(401, "aa")
+                tokenAuthenticationEntryPoint.commence(
+                    request = request,
+                    response = response,
+                    authException = null
+                )
                 return
             }
             val authentication = tokenProvider.getAuthentication(loginToken)
             SecurityContextHolder.getContext().authentication = authentication
         }
-
         filterChain.doFilter(request, response)
     }
-
 }

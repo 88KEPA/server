@@ -2,18 +2,16 @@ package com.kepa.application.user.trainer
 
 import CertType
 import com.kepa.application.user.AccountReadService
-import com.kepa.application.user.dto.request.LoginUserInfo
-import com.kepa.application.user.dto.response.DetailInfo
 import com.kepa.application.user.trainer.dto.request.*
-import com.kepa.domain.user.annotation.LoginUser
 import com.kepa.externalapi.dto.RandomNumber
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
-import io.swagger.v3.oas.annotations.Operation
-import org.springframework.web.bind.annotation.*
-import java.time.LocalDateTime
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController

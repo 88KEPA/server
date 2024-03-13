@@ -10,6 +10,7 @@ import com.kepa.application.user.dto.response.PageResponse
 import com.kepa.domain.user.annotation.LoginUser
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 @Api(tags = ["[Admin] 관리자 API"])
 @RestController
 @RequestMapping("/api/admin")
-//@Secured(value = ["ADMIN"])
+@Secured(value = ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"])
 class AdminController(
     private val accountReadService: AccountReadService,
     private val adminReadService: AdminReadService,
