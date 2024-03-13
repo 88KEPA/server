@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity
 import java.time.LocalDateTime
 
 
-class KeapExceptionResponse(
+class KepaExceptionResponse(
     val status: Int,
     val code: String,
     val message: String,
@@ -16,10 +16,10 @@ class KeapExceptionResponse(
 ) {
 
     companion object {
-        fun toResponse(errorCode: ExceptionCode): ResponseEntity<KeapExceptionResponse> {
+        fun toResponse(errorCode: ExceptionCode): ResponseEntity<KepaExceptionResponse> {
             return ResponseEntity.status(errorCode.status)
                 .body(
-                    KeapExceptionResponse(
+                    KepaExceptionResponse(
                         status = errorCode.status.value(),
                         code = errorCode.status.name,
                         message = errorCode.errorMessage,
@@ -29,9 +29,9 @@ class KeapExceptionResponse(
                 )
         }
 
-        fun toNotNullableResponse(message: String): ResponseEntity<KeapExceptionResponse> {
+        fun toNotNullableResponse(message: String): ResponseEntity<KepaExceptionResponse> {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body( KeapExceptionResponse(
+                .body( KepaExceptionResponse(
                     status = HttpStatus.BAD_REQUEST.value(),
                     code = HttpStatus.BAD_REQUEST.name,
                     message = message,
@@ -39,6 +39,5 @@ class KeapExceptionResponse(
                     identity = 40000
                 ))
         }
-
     }
 }

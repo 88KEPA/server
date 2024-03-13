@@ -48,12 +48,6 @@ class AccountReadService(
     fun getDetailInfo(id: Long): Account = accountRepository.findByIdOrNull(id)
         ?: throw KepaException(ExceptionCode.NOT_EXSISTS_INFO)
 
-
-    /**
-     * 앞에 4
-     * 최대 4
-     * 보여야되는게 최대 4개
-     * */
     fun String.maskEmail(): String {
         val expressEmailIndex = this.indexOf('@')
         val emailAddress = this.substring(expressEmailIndex)

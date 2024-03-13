@@ -18,7 +18,7 @@ import springfox.documentation.spring.web.plugins.Docket
 @Configuration
 class SwaggerConfig {
     companion object {
-        val HEADER_NAME  = "Authorization"
+        const val HEADER_NAME  = "Authorization"
     }
 
     @Bean

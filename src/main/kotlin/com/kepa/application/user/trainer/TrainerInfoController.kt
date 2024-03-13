@@ -7,6 +7,7 @@ import com.kepa.application.user.dto.response.DetailInfo
 import com.kepa.domain.user.annotation.LoginUser
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @Api(tags = ["[TRAINER] 트레이너 정보 API"])
 @RequestMapping("/api/trainer/info")
+@Secured(value = ["ROLE_ADMIN","ROLE_TRAINER","ROLE_SUPER_ADMIN"])
 class TrainerInfoController(
     private val accountReadService: AccountReadService,
     private val trainerWriteService: TrainerWriteService,
