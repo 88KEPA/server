@@ -1,8 +1,11 @@
 package com.kepa.application.banner
 
+import com.kepa.common.exception.ExceptionCode
+import com.kepa.common.exception.KepaException
 import com.kepa.domain.banner.Banner
 import com.kepa.domain.banner.BannerRepository
 import com.kepa.file.s3.S3FileManagement
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
@@ -32,11 +35,49 @@ class BannerWriteService(
         image: MultipartFile
     ) {
         val uploadImage = s3FileManagement.uploadImage(image)
-        bannerRepository.save(Banner(
+        bannerRepository.save(
+            Banner(
+                title = title,
+                explanation = explain,
+                backGroundColor = backGroundColor,
+                isActive = isActive,
+                image = uploadImage
+            )
+        )
+    }
+
+    fun delete(bannerId: Long) {
+        val banner = bannerRepository.findByIdOrNull(bannerId)
+            ?: throw KepaException(ExceptionCode.NOT_EXSITS_BANNER)
+        s3FileManagement.delete(banner.image)
+        bannerRepository.deleteById(bannerId)
+    }
+
+    fun updateActive(bannerId: Long, isActive: Boolean) {
+        val banner = bannerRepository.findByIdOrNull(bannerId)
+            ?: throw KepaException(ExceptionCode.NOT_EXSITS_BANNER)
+        banner.isActive = isActive
+
+    }
+
+    fun update(
+        bannerId: Long,
+        title: List<String>,
+        explain: List<String>,
+        backGroundColor: String,
+        isActive: Boolean,
+        image: MultipartFile
+    ) {
+        val banner = bannerRepository.findByIdOrNull(bannerId)
+            ?: throw KepaException(ExceptionCode.NOT_EXSITS_BANNER)
+        s3FileManagement.delete(banner.image)
+        val uploadImage = s3FileManagement.uploadImage(image)
+        banner.update(
             title = title,
-            explanation = explain,
+            explain = explain,
             backGroundColor = backGroundColor,
-            isActive = isActive
-        ))
+            isActive = isActive,
+            image = uploadImage
+        )
     }
 }

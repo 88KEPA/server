@@ -1,6 +1,6 @@
 package com.kepa.domain.banner
 
-import com.kepa.common.BaseEntity
+import com.kepa.common.BaseWithAccountEntity
 import com.kepa.convert.StringListConverter
 import javax.persistence.Column
 import javax.persistence.Convert
@@ -29,5 +29,19 @@ class Banner(
     var backGroundColor: String,
     @Column(nullable = false)
     var isActive: Boolean,
-): BaseEntity() {
+    var image: String,
+): BaseWithAccountEntity() {
+    fun update(
+        title: List<String>,
+        explain: List<String>,
+        backGroundColor: String,
+        isActive: Boolean,
+        image: String
+    ) {
+        this.title = title
+        this.explanation = explain
+        this.backGroundColor = backGroundColor
+        this.isActive = isActive
+        this.image = image
+    }
 }

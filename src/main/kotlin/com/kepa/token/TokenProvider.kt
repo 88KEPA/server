@@ -120,7 +120,7 @@ class TokenProvider(
         val account = accountRepository.findByIdOrNull(getAccount(token)) ?: throw KepaException(
             ExceptionCode.NOT_EXSISTS_INFO
         )
-        val loginUserDetail = LoginUserDetail(account.email, account.role.name);
+        val loginUserDetail = LoginUserDetail(accountId = account.id, account.email, account.role.name);
         return UsernamePasswordAuthenticationToken(loginUserDetail, "", loginUserDetail.authorities)
     }
 

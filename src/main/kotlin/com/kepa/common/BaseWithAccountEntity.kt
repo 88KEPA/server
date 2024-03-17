@@ -23,6 +23,5 @@ abstract class BaseWithAccountEntity(
     @Column(nullable = false, updatable = false)
     var createdById: Long = 0,
     @LastModifiedBy
-    @Column(nullable = false)
     var updatedById: Long = 0
 )

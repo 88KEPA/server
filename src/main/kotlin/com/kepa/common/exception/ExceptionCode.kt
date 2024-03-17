@@ -24,7 +24,8 @@ enum class ExceptionCode(
     BAD_REQUEST_DATA(HttpStatus.BAD_REQUEST, "데이터 변환이 불가능합니다.", 40009),
     NOT_EXSITS_FILE_EXTENSION(HttpStatus.BAD_REQUEST,"잘못된 파일 확장자입니다.", 40010),
     NOT_SUPPORT_FILE_EXTENSION(HttpStatus.BAD_REQUEST,"지원하지 않는 파일 형식입니다.", 40011),
-    WRONG_FORMAT_FILE_NAME(HttpStatus.BAD_REQUEST,"파일이름이 잘못된 형식입니다.", 40011),
+    WRONG_FORMAT_FILE_NAME(HttpStatus.BAD_REQUEST,"파일이름이 잘못된 형식입니다.", 40012),
+    NOT_EXSITS_BANNER(HttpStatus.BAD_REQUEST,"존재하지 않는 배너입니다.", 40013),
     //403
     NOT_ACCESS(HttpStatus.FORBIDDEN,"접근할 수 없는 권한입니다.", 40300),
 

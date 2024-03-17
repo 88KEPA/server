@@ -26,6 +26,8 @@ class S3FileManagement(
     @Value("\${cloud.aws.s3.bucket}")
     private val bucket: String,
     private val amazonS3: AmazonS3,
+    @Value("\${cloud.aws.credentials.access-key}")
+    val accessKey: String,
 ) {
     companion object {
         const val TYPE_IMAGE = "image"
@@ -48,6 +50,10 @@ class S3FileManagement(
         return amazonS3.getUrl(bucket,fileName).toString()
     }
 
+    fun delete(fileName: String) {
+        amazonS3.deleteObject(bucket,fileName)
+    }
+
     private fun getFileExtension(fileName: String): String {
         val extensionIndex = fileName.lastIndexOf('.')
         return fileName.substring(extensionIndex + 1)
@@ -63,5 +69,6 @@ class S3FileManagement(
         objectMetadata.contentLength = multipartFile.inputStream.available().toLong()
         return objectMetadata
     }
+
 
 }

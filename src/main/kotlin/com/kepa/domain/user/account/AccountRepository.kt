@@ -17,6 +17,9 @@ interface AccountRepository : JpaRepository<Account,Long> {
 
     fun findByEmail(email: String) : Account?
 
+    @Query(value = "SELECT a.id FROM Account a WHERE a.email = :email")
+    fun findIdByEmail(@Param(value="email") email: String) : Long?
+
     fun findAllByRole(role: Role) : List<Account>
 
     @Query(value = "SELECT a FROM Account a WHERE (a.email = :keyword OR a.name = :keyword OR a.phone = :keyword) AND a.role = :role")
