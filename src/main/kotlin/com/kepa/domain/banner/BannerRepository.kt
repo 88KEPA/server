@@ -1,8 +1,6 @@
 package com.kepa.domain.banner
 
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 
 /**
  * packageName    : com.kepa.domain.banner
@@ -17,8 +15,7 @@ import org.springframework.data.repository.query.Param
  */
 interface BannerRepository : JpaRepository<Banner, Long> {
 
-    fun findAllByIsActiveIsTrue(): List<Banner>
+    fun findAllByIsActiveIsTrueOrderByOrderNum(): List<Banner>
 
-    @Query("UPDATE Banner SET isActive = :isActive WHERE id = :id")
-    fun updateActive(@Param(value = "isActive") isActive: Boolean,@Param(value = "id") id: Long)
+    fun findAllByOrderByOrderNum(): List<Banner>;
 }

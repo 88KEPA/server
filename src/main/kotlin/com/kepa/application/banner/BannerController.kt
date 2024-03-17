@@ -1,14 +1,17 @@
 package com.kepa.application.banner
 
 import com.kepa.application.banner.dto.request.BannerCreate
+import com.kepa.application.banner.dto.request.BannerOroderUpdate
 import com.kepa.application.banner.dto.response.Banners
 import com.kepa.application.user.dto.request.LoginUserInfo
 import com.kepa.domain.user.annotation.LoginUser
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.security.access.annotation.Secured
+import org.springframework.security.config.BeanIds
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import javax.servlet.http.HttpServletRequest
 
 /**
  * packageName    : com.kepa.application.banner
@@ -48,8 +51,8 @@ class BannerController(
 
     @ApiOperation(value = "배너 목록")
     @GetMapping
-    fun getAll(): List<Banners> {
-        return bannerReadService.getAll()
+    fun getAll(request: HttpServletRequest): List<Banners> {
+        return bannerReadService.getAll(request)
     }
 
     @ApiOperation(value = "배너 상세보기")
@@ -95,4 +98,10 @@ class BannerController(
         )
     }
 
+    @ApiOperation(value = "정렬 순서 수정")
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/order")
+    fun updateOrder(@RequestBody bannerIds: List<Long>) {
+        bannerWriteService.updateOrder(bannerIds)
+    }
 }
