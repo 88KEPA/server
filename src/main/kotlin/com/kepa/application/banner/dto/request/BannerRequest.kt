@@ -25,3 +25,9 @@ data class BannerCreate(
     @ApiModelProperty("활성화 여부")
     val isActive: Boolean,
 )
+
+@ApiModel(value = "배너 순서 수정")
+data class BannerOroderUpdate(
+    @ApiModelProperty("배너 id")
+    val bannerId: Long,
+)

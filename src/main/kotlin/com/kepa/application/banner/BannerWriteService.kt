@@ -41,7 +41,8 @@ class BannerWriteService(
                 explanation = explain,
                 backGroundColor = backGroundColor,
                 isActive = isActive,
-                image = uploadImage
+                image = uploadImage,
+                orderNum = bannerRepository.count()
             )
         )
     }
@@ -57,7 +58,6 @@ class BannerWriteService(
         val banner = bannerRepository.findByIdOrNull(bannerId)
             ?: throw KepaException(ExceptionCode.NOT_EXSITS_BANNER)
         banner.isActive = isActive
-
     }
 
     fun update(
@@ -79,5 +79,11 @@ class BannerWriteService(
             isActive = isActive,
             image = uploadImage
         )
+    }
+
+    fun updateOrder(bannerIds: List<Long>) {
+        bannerRepository.findAll().forEach{
+            it.orderNum = bannerIds.indexOf(it.id).toLong()
+        }
     }
 }

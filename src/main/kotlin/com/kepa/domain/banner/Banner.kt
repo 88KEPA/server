@@ -30,6 +30,7 @@ class Banner(
     @Column(nullable = false)
     var isActive: Boolean,
     var image: String,
+    var orderNum: Long,
 ): BaseWithAccountEntity() {
     fun update(
         title: List<String>,
