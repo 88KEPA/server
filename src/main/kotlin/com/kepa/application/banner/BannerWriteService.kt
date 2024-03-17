@@ -32,9 +32,10 @@ class BannerWriteService(
         explain: List<String>,
         backGroundColor: String,
         isActive: Boolean,
-        image: MultipartFile
+        alt: String?,
+        src: MultipartFile
     ) {
-        val uploadImage = s3FileManagement.uploadImage(image)
+        val uploadImage = s3FileManagement.uploadImage(src)
         bannerRepository.save(
             Banner(
                 title = title,
@@ -42,7 +43,8 @@ class BannerWriteService(
                 backGroundColor = backGroundColor,
                 isActive = isActive,
                 image = uploadImage,
-                orderNum = bannerRepository.count()
+                orderNum = bannerRepository.count(),
+                alt = alt
             )
         )
     }

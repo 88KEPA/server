@@ -1,6 +1,7 @@
 package com.kepa.application.banner
 
 import com.kepa.application.banner.dto.response.Banners
+import com.kepa.application.banner.dto.response.Image
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.banner.Banner
@@ -43,11 +44,11 @@ class BannerReadService(
     fun get(bannerId: Long): Banners {
         val banner = bannerRepository.findByIdOrNull(bannerId)
             ?: throw KepaException(ExceptionCode.NOT_EXSITS_BANNER)
-        return Banners.of(banner, s3FileManagement.getFile(banner.image))
+        return Banners.of(banner, Image(s3FileManagement.getFile(banner.image), banner.alt))
     }
 
     private fun toResponse(banners: List<Banner>): List<Banners> {
-        return banners.map { Banners.of(it, s3FileManagement.getFile(it.image)) }
+        return banners.map { Banners.of(it, Image(src = s3FileManagement.getFile(it.image),alt = it.alt)) }
 
     }
 }

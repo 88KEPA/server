@@ -31,6 +31,7 @@ class Banner(
     var isActive: Boolean,
     var image: String,
     var orderNum: Long,
+    var alt: String?,
 ): BaseWithAccountEntity() {
     fun update(
         title: List<String>,
