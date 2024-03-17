@@ -19,20 +19,27 @@ data class Banners(
     val title: List<String>,
     val explain: List<String>,
     val backGroundColor: String,
-    val image: String,
+    val image: Image,
+    val orderNum: Long
 ) {
     companion object {
         fun of(
             banner: Banner,
-            s3Image: String,
+            s3Image: Image,
         ) : Banners {
             return Banners(
                 id = banner.id,
                 title = banner.title,
                 explain = banner.explanation,
                 backGroundColor = banner.backGroundColor,
-                image = s3Image
+                image = s3Image,
+                orderNum = banner.orderNum
             )
         }
     }
 }
+
+data class Image(
+    val src: String,
+    val alt: String?,
+)

@@ -1,14 +1,12 @@
 package com.kepa.application.banner
 
 import com.kepa.application.banner.dto.request.BannerCreate
-import com.kepa.application.banner.dto.request.BannerOroderUpdate
 import com.kepa.application.banner.dto.response.Banners
 import com.kepa.application.user.dto.request.LoginUserInfo
 import com.kepa.domain.user.annotation.LoginUser
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.security.access.annotation.Secured
-import org.springframework.security.config.BeanIds
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletRequest
@@ -38,14 +36,15 @@ class BannerController(
     fun create(
         @LoginUser loginUserInfo: LoginUserInfo,
         @RequestPart bannerCreate: BannerCreate,
-        @RequestPart image: MultipartFile
+        @RequestPart src: MultipartFile
     ) {
         bannerWriteService.create(
             title = bannerCreate.title,
             explain = bannerCreate.explain,
             backGroundColor = bannerCreate.backGroundColor,
             isActive = bannerCreate.isActive,
-            image = image
+            alt = bannerCreate.alt,
+            src = src
         )
     }
 
