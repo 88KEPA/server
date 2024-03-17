@@ -34,7 +34,6 @@ class AccountWriteService(
         require(bCryptPasswordEncoder.matches(loginInfo.password, account.password)) {
             throw KepaException(NOT_MATCH_ID_OR_PASSWORD)
         }
-
         if (refreshTokenRepository.existsByAccountId(account.id)) {
             refreshTokenRepository.deleteByAccountId(account.id)
         }

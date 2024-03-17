@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails
 
 
 class LoginUserDetail(
+    val accountId: Long,
     val email: String,
     val role: String?,
 ) : UserDetails{

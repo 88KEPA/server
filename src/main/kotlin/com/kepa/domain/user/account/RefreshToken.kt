@@ -19,5 +19,4 @@ class RefreshToken(
     val accessToken: String,
     @Column(nullable = false)
     val accessTokenExpireAt: LocalDateTime
-) : BaseEntity() {
-}
+) : BaseEntity()
