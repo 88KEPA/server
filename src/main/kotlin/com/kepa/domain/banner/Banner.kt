@@ -38,12 +38,14 @@ class Banner(
         explain: List<String>,
         backGroundColor: String,
         isActive: Boolean,
-        image: String
+        image: String,
+        alt: String?
     ) {
         this.title = title
         this.explanation = explain
         this.backGroundColor = backGroundColor
         this.isActive = isActive
         this.image = image
+        this.alt = alt
     }
 }

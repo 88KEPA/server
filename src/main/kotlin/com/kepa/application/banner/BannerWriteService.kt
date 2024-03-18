@@ -68,7 +68,8 @@ class BannerWriteService(
         explain: List<String>,
         backGroundColor: String,
         isActive: Boolean,
-        image: MultipartFile
+        image: MultipartFile,
+        alt: String?
     ) {
         val banner = bannerRepository.findByIdOrNull(bannerId)
             ?: throw KepaException(ExceptionCode.NOT_EXSITS_BANNER)
@@ -79,7 +80,8 @@ class BannerWriteService(
             explain = explain,
             backGroundColor = backGroundColor,
             isActive = isActive,
-            image = uploadImage
+            image = uploadImage,
+            alt = alt
         )
     }
 

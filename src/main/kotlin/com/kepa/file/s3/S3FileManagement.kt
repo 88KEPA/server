@@ -26,8 +26,6 @@ class S3FileManagement(
     @Value("\${cloud.aws.s3.bucket}")
     private val bucket: String,
     private val amazonS3: AmazonS3,
-    @Value("\${cloud.aws.credentials.access-key}")
-    val accessKey: String,
 ) {
     companion object {
         const val TYPE_IMAGE = "image"
@@ -69,6 +67,4 @@ class S3FileManagement(
         objectMetadata.contentLength = multipartFile.inputStream.available().toLong()
         return objectMetadata
     }
-
-
 }

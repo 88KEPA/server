@@ -93,7 +93,8 @@ class BannerController(
             explain = bannerCreate.explain,
             backGroundColor = bannerCreate.backGroundColor,
             isActive = bannerCreate.isActive,
-            image = image
+            image = image,
+            alt = bannerCreate.alt
         )
     }
 

@@ -33,10 +33,10 @@ class S3Config(
     fun amazonS3Client(): AmazonS3Client {
         val credentials = BasicAWSCredentials(accessKey, secretKey)
 
-        return (AmazonS3ClientBuilder
+        return AmazonS3ClientBuilder
             .standard()
             .withRegion(region)
             .withCredentials(AWSStaticCredentialsProvider(credentials))
-            .build() as AmazonS3Client)
+            .build() as AmazonS3Client
     }
 }
