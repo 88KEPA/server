@@ -37,7 +37,7 @@ class SecurityConfig(
             "https://admin.kepa.associates/"
         )
         config.allowedMethods = listOf("OPTIONS", "GET", "POST", "PUT", "DELETE")
-        config.allowedHeaders = listOf("*")
+        config.allowedHeaders = listOf("*","OPTIONS", "GET", "POST", "PUT", "DELETE")
         config.allowCredentials = true
 
         var source = UrlBasedCorsConfigurationSource()

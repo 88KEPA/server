@@ -23,29 +23,29 @@ import javax.servlet.http.HttpServletRequest
  * -----------------------------------------------------------
  * 3/14/24        hoewoonjeong               최초 생성
  */
-@Transactional(readOnly = true)
-@Service
-class BannerReadService(
-    private val s3FileManagement: S3FileManagement,
-    private val bannerRepository: BannerRepository,
-) {
-    companion object {
-        val originList: List<String> = listOf("https://admin.kepa.associates")
-    }
-
-    fun getAll(request: HttpServletRequest): List<Banners> {
-        val origin = request.getHeader("Origin")
-        if (originList.contains(origin)) {
-            return toResponse(bannerRepository.findAllByOrderByOrderNum())
+    @Transactional(readOnly = true)
+    @Service
+    class BannerReadService(
+        private val s3FileManagement: S3FileManagement,
+        private val bannerRepository: BannerRepository,
+    ) {
+        companion object {
+            val originList: List<String> = listOf("https://admin.kepa.associates")
         }
-        return toResponse(bannerRepository.findAllByIsActiveIsTrueOrderByOrderNum())
-    }
 
-    fun get(bannerId: Long): Banners {
-        val banner = bannerRepository.findByIdOrNull(bannerId)
-            ?: throw KepaException(ExceptionCode.NOT_EXSITS_BANNER)
-        return Banners.of(banner, Image(s3FileManagement.getFile(banner.image), banner.alt))
-    }
+        fun getAll(request: HttpServletRequest): List<Banners> {
+            val origin = request.getHeader("Origin")
+            if (originList.contains(origin)) {
+                return toResponse(bannerRepository.findAllByOrderByOrderNum())
+            }
+            return toResponse(bannerRepository.findAllByIsActiveIsTrueOrderByOrderNum())
+        }
+
+        fun get(bannerId: Long): Banners {
+            val banner = bannerRepository.findByIdOrNull(bannerId)
+                ?: throw KepaException(ExceptionCode.NOT_EXSITS_BANNER)
+            return Banners.of(banner, Image(s3FileManagement.getFile(banner.image), banner.alt))
+        }
 
     private fun toResponse(banners: List<Banner>): List<Banners> {
         return banners.map { Banners.of(it, Image(src = s3FileManagement.getFile(it.image),alt = it.alt)) }
