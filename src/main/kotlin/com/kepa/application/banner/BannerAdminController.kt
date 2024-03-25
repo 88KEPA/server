@@ -28,8 +28,14 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 class BannerAdminController(
     private val bannerWriteService: BannerWriteService,
-    private val bannerReadService: BannerReadService,
+    private val bannerAdminReadService: BannerAdminReadService,
 ) {
+
+    @ApiOperation(value = "배너 목록")
+    @GetMapping
+    fun getAll(request: HttpServletRequest): List<Banners> {
+        return bannerAdminReadService.getAll(request)
+    }
 
     @ApiOperation(value = "배너 등록" )
     @Secured("ROLE_ADMIN")
@@ -54,7 +60,7 @@ class BannerAdminController(
     @GetMapping("/{bannerId}")
     fun get(@PathVariable(value = "bannerId") bannerId: Long,
             @LoginUser loginUserInfo: LoginUserInfo,): Banners {
-        return bannerReadService.get(bannerId)
+        return bannerAdminReadService.get(bannerId)
     }
 
     @ApiOperation(value = "배너 삭제")
@@ -81,14 +87,14 @@ class BannerAdminController(
     fun update(@PathVariable(value = "bannerId") bannerId: Long,
                @LoginUser loginUserInfo: LoginUserInfo,
                @RequestPart bannerCreate: BannerCreate,
-               @RequestPart image: MultipartFile) {
+               @RequestPart src: MultipartFile) {
         bannerWriteService.update(
             bannerId = bannerId,
             title = bannerCreate.title,
             explain = bannerCreate.explain,
             backGroundColor = bannerCreate.backGroundColor,
             isActive = bannerCreate.isActive,
-            image = image,
+            src = src,
             alt = bannerCreate.alt
         )
     }

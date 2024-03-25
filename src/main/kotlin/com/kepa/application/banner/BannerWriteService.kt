@@ -68,13 +68,13 @@ class BannerWriteService(
         explain: List<String>,
         backGroundColor: String,
         isActive: Boolean,
-        image: MultipartFile,
+        src: MultipartFile,
         alt: String?
     ) {
         val banner = bannerRepository.findByIdOrNull(bannerId)
             ?: throw KepaException(ExceptionCode.NOT_EXSITS_BANNER)
         s3FileManagement.delete(banner.image)
-        val uploadImage = s3FileManagement.uploadImage(image)
+        val uploadImage = s3FileManagement.uploadImage(src)
         banner.update(
             title = title,
             explain = explain,

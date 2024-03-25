@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
 
-@Api(tags = ["[Common + Banner] 배너"])
+@Api(tags = ["[Service + Banner] 배너"])
 @RequestMapping("/api/banner")
 @RestController
 class BannerController(
