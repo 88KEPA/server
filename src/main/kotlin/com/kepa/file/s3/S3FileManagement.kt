@@ -29,6 +29,7 @@ class S3FileManagement(
 ) {
     companion object {
         const val TYPE_IMAGE = "image"
+        const val TYPE_FILE = "file"
     }
     fun uploadImage(multipartFile: MultipartFile): String {
         val originalFilename = multipartFile.originalFilename
@@ -37,6 +38,19 @@ class S3FileManagement(
         val fileName = "${UUID.randomUUID()}-${originalFilename}"
         val objectMetadata = setFileDateOption(
             type = TYPE_IMAGE,
+            file = getFileExtension(originalFilename),
+            multipartFile = multipartFile
+        )
+        amazonS3.putObject(bucket, fileName, multipartFile.inputStream, objectMetadata)
+        return fileName
+    }
+    fun uploadFile(multipartFile: MultipartFile): String {
+        val originalFilename = multipartFile.originalFilename
+            ?: throw KepaException(ExceptionCode.WRONG_FORMAT_FILE_NAME)
+        FileValidate.checkFileFormat(originalFilename)
+        val fileName = "${UUID.randomUUID()}-${originalFilename}"
+        val objectMetadata = setFileDateOption(
+            type = TYPE_FILE,
             file = getFileExtension(originalFilename),
             multipartFile = multipartFile
         )

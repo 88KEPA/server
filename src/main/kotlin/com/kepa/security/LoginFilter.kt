@@ -23,8 +23,7 @@ class LoginFilter(
             val loginToken = it.split(" ")[1]
             val findToken = refreshTokenRepository.findByAccessToken(loginToken)
 
-            if (findToken == null || LocalDateTime.now()
-                    .isAfter(findToken.accessTokenExpireAt) || !it.toLowerCase()
+            if (!it.toLowerCase()
                     .startsWith("bearer ") || !tokenProvider.validateToken(loginToken)
             ) {
                 tokenAuthenticationEntryPoint.commence(

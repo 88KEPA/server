@@ -117,6 +117,11 @@ class TokenProvider(
     }
 
     fun getAuthentication(token: String): Authentication {
+        val findToken = refreshTokenRepository.findTokenByLoginInfo(token)
+        if (
+            findToken == null || LocalDateTime.now()
+                .isAfter(findToken.accessTokenExpireAt)) {
+        }
         val account = accountRepository.findByIdOrNull(getAccount(token)) ?: throw KepaException(
             ExceptionCode.NOT_EXSISTS_INFO
         )

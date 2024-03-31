@@ -56,7 +56,6 @@ class BannerAdminController(
     }
 
     @ApiOperation(value = "배너 상세보기")
-    @Secured("ROLE_ADMIN")
     @GetMapping("/{bannerId}")
     fun get(@PathVariable(value = "bannerId") bannerId: Long,
             @LoginUser loginUserInfo: LoginUserInfo,): Banners {
@@ -64,7 +63,6 @@ class BannerAdminController(
     }
 
     @ApiOperation(value = "배너 삭제")
-    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{bannerId}")
     fun delete(@PathVariable(value = "bannerId") bannerId: Long,
                @LoginUser loginUserInfo: LoginUserInfo,) {
@@ -72,7 +70,6 @@ class BannerAdminController(
     }
 
     @ApiOperation(value = "활성화 상태 변경")
-    @Secured("ROLE_ADMIN")
     @PutMapping("/active/{bannerId}")
     fun updateActive(
         @PathVariable(value = "bannerId") bannerId: Long,
@@ -82,7 +79,6 @@ class BannerAdminController(
         bannerWriteService.updateActive(bannerId = bannerId, isActive = isActive)
     }
     @ApiOperation(value = "배너 수정")
-    @Secured("ROLE_ADMIN")
     @PutMapping("/{bannerId}")
     fun update(@PathVariable(value = "bannerId") bannerId: Long,
                @LoginUser loginUserInfo: LoginUserInfo,
@@ -100,7 +96,6 @@ class BannerAdminController(
     }
 
     @ApiOperation(value = "정렬 순서 수정")
-    @Secured("ROLE_ADMIN")
     @PutMapping("/order")
     fun updateOrder(@RequestBody bannerIds: List<Long>) {
         bannerWriteService.updateOrder(bannerIds)
