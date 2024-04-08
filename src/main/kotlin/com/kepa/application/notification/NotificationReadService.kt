@@ -42,7 +42,7 @@ class NotificationReadService(
         val pageRequest = PageRequest.of(page, limit)
         val notifications = notificationRepository.findAll(pageRequest).map {
             Notifications(content = it.content, title = it.title, notificationType = it.notificationType,
-                createdAt = it.createdAt, updatedAt = it.updatedAt)
+                createdAt = it.createdAt, updatedAt = it.updatedAt, id = it.id)
         }
         return PageResponse(limit = limit, page =page, totalCount = notifications.totalElements,notifications = notifications.content)
     }

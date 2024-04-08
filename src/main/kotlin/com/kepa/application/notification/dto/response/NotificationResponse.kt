@@ -41,6 +41,7 @@ data class NotificationFileDetail(
 )
 
 data class Notifications(
+    val id: Long,
     @ApiModelProperty("내용")
     val content: String,
     @ApiModelProperty("제목")
