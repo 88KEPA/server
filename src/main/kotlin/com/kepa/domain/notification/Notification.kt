@@ -13,8 +13,18 @@ class Notification(
     @Enumerated(EnumType.STRING)
     var notificationType: NotificationType,
     @OneToMany(mappedBy = "notification", orphanRemoval = true, cascade = [CascadeType.ALL])
-    val notificationFile: List<NotificationFile> = listOf(),
+    var notificationFile: List<NotificationFile> = listOf(),
     var content: String,
     var title: String,
 ) : BaseWithAccountEntity() {
+
+    fun updateFile(notificationFile: List<NotificationFile>) {
+        this.notificationFile = notificationFile;
+    }
+
+    fun update(notificationType: NotificationType, content: String, title: String) {
+        this.notificationType = notificationType
+        this.content = content
+        this.title = title
+    }
 }
