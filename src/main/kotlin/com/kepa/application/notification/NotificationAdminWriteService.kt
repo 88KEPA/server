@@ -70,6 +70,9 @@ class NotificationAdminWriteService(
                fileSrc: List<MultipartFile>?) {
         val notification = notificationRepository.findByIdOrNull(notificationId)
             ?: throw KepaException(NOT_EXSITS_NOTIFICATION)
+        val notificationFile: MutableList<NotificationFile> = notification.notificationFile
+        notificationFile.forEach {s3FileManagement.delete(it.src)}
+        notificationFileRepository.deleteAllById(notificationFile.map { it.id })
         val images = imageSrc?.let{createFile(imageSrc, FileType.IMAGE)}
         val files = fileSrc?.let{createFile(fileSrc, FileType.FILE)}
         val notificationFileList: MutableList<NotificationFile> = mutableListOf()
@@ -88,6 +91,16 @@ class NotificationAdminWriteService(
     }
 
     private fun createFile(requestSrcList: List<MultipartFile>, fileType: FileType): List<String> {
+        val srcList: MutableList<String> = mutableListOf()
+        if (fileType == FileType.FILE) {
+            srcList.addAll(requestSrcList.map { s3FileManagement.uploadFile(it) })
+            return srcList
+        }
+        srcList.addAll(requestSrcList.map { s3FileManagement.uploadImage(it) })
+        return srcList
+    }
+
+    private fun updateFile(requestSrcList: List<MultipartFile>, fileType: FileType,notificationFile: MutableList<NotificationFile>): List<String> {
         val srcList: MutableList<String> = mutableListOf()
         if (fileType == FileType.FILE) {
             srcList.addAll(requestSrcList.map { s3FileManagement.uploadFile(it) })

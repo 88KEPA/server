@@ -12,13 +12,13 @@ import javax.persistence.OneToMany
 class Notification(
     @Enumerated(EnumType.STRING)
     var notificationType: NotificationType,
-    @OneToMany(mappedBy = "notification", orphanRemoval = true, cascade = [CascadeType.ALL])
-    var notificationFile: List<NotificationFile> = listOf(),
+    @OneToMany(mappedBy = "notification", cascade = [CascadeType.ALL])
+    var notificationFile: MutableList<NotificationFile> = mutableListOf(),
     var content: String,
     var title: String,
 ) : BaseWithAccountEntity() {
 
-    fun updateFile(notificationFile: List<NotificationFile>) {
+    fun updateFile(notificationFile: MutableList<NotificationFile>) {
         this.notificationFile = notificationFile;
     }
 
