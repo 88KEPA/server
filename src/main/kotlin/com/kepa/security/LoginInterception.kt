@@ -1,11 +1,11 @@
 package com.kepa.security
 
-import Role
 import com.kepa.application.user.dto.request.LoginUserInfo
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException
-import com.kepa.domain.user.annotation.LoginUser
 import com.kepa.domain.user.account.AccountRepository
+import com.kepa.domain.user.annotation.LoginUser
+import com.kepa.domain.user.enums.Role
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component

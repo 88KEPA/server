@@ -1,8 +1,8 @@
 package com.kepa.application.user.trainer
 
-import CertType
 import com.kepa.application.user.AccountReadService
 import com.kepa.application.user.trainer.dto.request.*
+import com.kepa.domain.user.enums.CertType
 import com.kepa.externalapi.dto.RandomNumber
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation

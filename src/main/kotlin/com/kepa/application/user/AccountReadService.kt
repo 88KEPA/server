@@ -6,6 +6,7 @@ import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.CertNumberRepository
 import com.kepa.domain.user.account.Account
 import com.kepa.domain.user.account.AccountRepository
+import com.kepa.domain.user.enums.CertType
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

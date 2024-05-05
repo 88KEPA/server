@@ -1,6 +1,5 @@
 package com.kepa.application.user.trainer
 
-import CertType
 import com.kepa.application.user.trainer.dto.request.MailContent
 import com.kepa.application.user.trainer.dto.request.MessageContent
 import com.kepa.common.exception.ExceptionCode
@@ -8,6 +7,7 @@ import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.CertNumber
 import com.kepa.domain.user.CertNumberRepository
 import com.kepa.domain.user.account.AccountRepository
+import com.kepa.domain.user.enums.CertType
 import com.kepa.externalapi.dto.RandomNumber
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service

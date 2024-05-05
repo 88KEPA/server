@@ -1,12 +1,12 @@
 package com.kepa.application.user.trainer.dto.request
 
-import CertType
-import Gender
-import LoginType
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.kepa.common.exception.ExceptionCode.NOT_MATCH_PASSWORD_CONFIRM_PASSWORD
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.account.Account
+import com.kepa.domain.user.enums.CertType
+import com.kepa.domain.user.enums.Gender
+import com.kepa.domain.user.enums.LoginType
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import java.time.LocalDate

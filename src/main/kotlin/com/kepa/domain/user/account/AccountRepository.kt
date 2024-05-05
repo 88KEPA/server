@@ -1,12 +1,12 @@
 package com.kepa.domain.user.account
 
-import Role
+import com.kepa.domain.user.enums.Role
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
-interface AccountRepository : JpaRepository<Account,Long> {
+interface AccountRepository : JpaRepository<Account,Long>, AccountQueryDslRepository {
     fun existsByEmail(email: String) : Boolean
 
     fun findByEmailAndRole(@Param("email")email: String?, @Param("role")role: Role) : Account?
@@ -16,11 +16,6 @@ interface AccountRepository : JpaRepository<Account,Long> {
     fun existsByPhone(phoneNumber: String): Boolean
 
     fun findByEmail(email: String) : Account?
-
-    fun findAllByRole(role: Role) : List<Account>
-
-    @Query(value = "SELECT a FROM Account a WHERE (a.email = :keyword OR a.name = :keyword OR a.phone = :keyword) AND a.role = :role")
-    fun findAllByEmailOrNameOrPhone(@Param("keyword")keyword: String, @Param("role") role: Role): List<Account>
 
     @Modifying
     @Query(value = """

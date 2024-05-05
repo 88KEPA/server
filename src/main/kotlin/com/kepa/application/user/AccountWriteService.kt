@@ -1,6 +1,5 @@
 package com.kepa.application.user
 
-import Role
 import com.kepa.application.user.dto.request.LoginUserInfo
 import com.kepa.application.user.trainer.dto.request.LoginInfo
 import com.kepa.application.user.trainer.dto.response.LoginToken
@@ -11,6 +10,7 @@ import com.kepa.domain.user.AgreementTermsRepository
 import com.kepa.domain.user.account.Account
 import com.kepa.domain.user.account.AccountRepository
 import com.kepa.domain.user.account.RefreshTokenRepository
+import com.kepa.domain.user.enums.Role
 import com.kepa.token.TokenProvider
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder

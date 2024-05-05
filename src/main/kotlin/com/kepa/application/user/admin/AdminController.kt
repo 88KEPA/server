@@ -33,7 +33,7 @@ class AdminController(
     @ApiOperation(value = "트레이너 목록")
     @GetMapping("/list/trainer")
     fun getTrainer(@LoginUser loginUserInfo: LoginUserInfo, filterRequest: FilterRequest) : PageResponse {
-        return adminReadService.getJoinTrainer(page = filterRequest.page, limit = filterRequest.limit, filterRequest.keyword)
+        return adminReadService.getJoinTrainer(page = filterRequest.page, limit = filterRequest.limit, filterRequest.keyword, filterRequest.sort)
     }
     @ApiOperation(value = "회원정보 상세보기")
     @GetMapping("/{id}")

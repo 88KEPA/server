@@ -1,6 +1,6 @@
 package com.kepa.domain.user
 
-import CertType
+import com.kepa.domain.user.enums.CertType
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface CertNumberRepository: JpaRepository<CertNumber, Long> {

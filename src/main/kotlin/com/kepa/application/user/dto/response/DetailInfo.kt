@@ -1,9 +1,9 @@
 package com.kepa.application.user.dto.response
 
-import Gender
-import Role
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.kepa.domain.user.account.Account
+import com.kepa.domain.user.enums.Gender
+import com.kepa.domain.user.enums.Role
 import java.time.LocalDate
 
 data class DetailInfo(

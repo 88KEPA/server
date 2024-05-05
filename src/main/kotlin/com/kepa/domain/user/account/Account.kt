@@ -1,9 +1,9 @@
 package com.kepa.domain.user.account
 
-import Gender
-import LoginType
-import Role
 import com.kepa.common.BaseEntity
+import com.kepa.domain.user.enums.Gender
+import com.kepa.domain.user.enums.LoginType
+import com.kepa.domain.user.enums.Role
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.Column

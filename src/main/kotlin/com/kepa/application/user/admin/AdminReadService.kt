@@ -1,5 +1,6 @@
 package com.kepa.application.user.admin
 
+import com.kepa.application.user.admin.dto.request.enums.Sort
 import com.kepa.application.user.admin.dto.response.AccountDetailInfo
 import com.kepa.application.user.admin.dto.response.ApplyPartnerDetailInfo
 import com.kepa.application.user.admin.dto.response.ApplyPartners
@@ -9,6 +10,7 @@ import com.kepa.common.exception.ExceptionCode.NOT_EXSISTS_INFO
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.partner.PartnerRepository
 import com.kepa.domain.user.account.AccountRepository
+import com.kepa.domain.user.enums.Role
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,11 +22,12 @@ class AdminReadService(
     private val partnerRepository: PartnerRepository,
 ) {
 
-    fun getJoinTrainer(page: Int, limit: Int, keyword: String?): PageResponse {
-        val findAllTrainers = keyword?.let {
-            accountRepository.findAllByEmailOrNameOrPhone(keyword, Role.TRAINER)
-        } ?: accountRepository.findAllByRole(Role.TRAINER)
-
+    fun getJoinTrainer(page: Int, limit: Int, keyword: String?, sort: Sort): PageResponse {
+        val findAllTrainers = accountRepository.findAllByEmailOrNameOrPhone(
+            keyword = keyword,
+            role = Role.TRAINER,
+            sort = sort,
+        )
         val trainers = findAllTrainers.map { JoinTrainers(id = it.id, name = it.name, birth = it.birth, createdAt = it.createdAt) }
         val totalCount = trainers.size.toLong()
         val totalPageCount: Long = totalCount / limit
@@ -37,7 +40,8 @@ class AdminReadService(
     }
 
     fun getAccountDetailInfo(id: Long): AccountDetailInfo {
-        val findAccount = accountRepository.findByIdOrNull(id) ?: throw KepaException(NOT_EXSISTS_INFO)
+        val findAccount = accountRepository.findByIdOrNull(id)
+            ?: throw KepaException(NOT_EXSISTS_INFO)
         return AccountDetailInfo.toResponse(findAccount);
     }
 

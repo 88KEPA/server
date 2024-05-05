@@ -1,7 +1,7 @@
 package com.kepa.domain.user.account
 
-import Role
 import com.kepa.common.BaseEntity
+import com.kepa.domain.user.enums.Role
 import java.time.LocalDateTime
 import javax.persistence.*
 

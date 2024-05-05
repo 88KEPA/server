@@ -8,6 +8,7 @@ import com.kepa.domain.user.AgreementTerms
 import com.kepa.domain.user.AgreementTermsRepository
 import com.kepa.domain.user.CertNumberRepository
 import com.kepa.domain.user.account.AccountRepository
+import com.kepa.domain.user.enums.CertType
 import com.kepa.domain.user.terms.TermsRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder

@@ -1,16 +1,15 @@
 package com.kepa.application.user.admin.dto.response
 
-import Gender
-import LoginType
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.kepa.domain.partner.Partner
 import com.kepa.domain.partner.enums.ApproveStatus
 import com.kepa.domain.user.account.Account
+import com.kepa.domain.user.enums.Gender
+import com.kepa.domain.user.enums.LoginType
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import java.time.LocalDate
 import java.time.LocalDateTime
-import javax.security.auth.login.AccountException
 
 @ApiModel("가입한 트레이너 정보")
 data class JoinTrainers(

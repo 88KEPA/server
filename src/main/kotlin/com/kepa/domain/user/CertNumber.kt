@@ -1,7 +1,7 @@
 package com.kepa.domain.user
 
-import CertType
 import com.kepa.common.BaseEntity
+import com.kepa.domain.user.enums.CertType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType

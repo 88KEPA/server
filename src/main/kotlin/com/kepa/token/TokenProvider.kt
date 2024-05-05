@@ -1,12 +1,12 @@
 package com.kepa.token
 
-import Role
-import com.kepa.domain.user.account.RefreshTokenRepository
-import com.kepa.domain.user.account.RefreshToken
 import com.kepa.application.user.trainer.dto.response.LoginToken
 import com.kepa.common.exception.ExceptionCode
 import com.kepa.common.exception.KepaException
 import com.kepa.domain.user.account.AccountRepository
+import com.kepa.domain.user.account.RefreshToken
+import com.kepa.domain.user.account.RefreshTokenRepository
+import com.kepa.domain.user.enums.Role
 import com.kepa.security.LoginUserDetail
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
@@ -21,9 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import java.security.Key
-import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 import java.util.*
