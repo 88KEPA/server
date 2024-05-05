@@ -10,4 +10,5 @@ abstract class PageRequest(
 data class FilterRequest(
     val keyword: String?,
     val sort: Sort = Sort.ASC,
+    val resource: Boolean?
 ) : PageRequest()

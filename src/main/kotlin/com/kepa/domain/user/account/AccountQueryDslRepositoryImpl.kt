@@ -14,9 +14,11 @@ import org.springframework.stereotype.Repository
 class AccountQueryDslRepositoryImpl(
     private val query: JPAQueryFactory,
 ) : AccountQueryDslRepository {
-    override fun findAllByEmailOrNameOrPhone(keyword: String?, role: Role, sort: Sort): List<Account> {
+    override fun findAllByEmailOrNameOrPhone(keyword: String?, role: Role, sort: Sort, isResource: Boolean?): List<Account> {
         return query.selectFrom(account)
-            .where(eqKeyword(keyword))
+            .where(eqKeyword(keyword),
+                isResource(isResource)
+                )
             .orderBy(getSort(sort))
             .fetch()
     }
@@ -26,6 +28,13 @@ class AccountQueryDslRepositoryImpl(
              account.email.eq(keyword).or(account.phone.eq(keyword).or(account.name.eq(keyword)))
         }
     }
+
+    fun isResource(isResource: Boolean?) : BooleanExpression? {
+        return isResource?.let {
+            account.isResource.eq(isResource)
+        }
+    }
+
 
     fun getSort(sort: Sort):  OrderSpecifier<*> {
         if(sort == Sort.DESC) {

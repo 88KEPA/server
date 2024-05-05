@@ -5,5 +5,5 @@ import com.kepa.domain.user.enums.Role
 
 interface AccountQueryDslRepository {
 
-    fun findAllByEmailOrNameOrPhone(keyword: String?, role: Role, sort: Sort) : List<Account>
+    fun findAllByEmailOrNameOrPhone(keyword: String?, role: Role, sort: Sort, isResource: Boolean?) : List<Account>
 }

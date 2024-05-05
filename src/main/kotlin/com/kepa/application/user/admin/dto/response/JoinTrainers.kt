@@ -23,6 +23,7 @@ data class JoinTrainers(
     @ApiModelProperty("가입일자")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     val createdAt: LocalDateTime,
+    val resource: Boolean = false,
 )
 
 data class AccountDetailInfo(
@@ -50,9 +51,10 @@ data class AccountDetailInfo(
     val addressMeta: String,
     @ApiModelProperty("상세주소")
     val addressDetail: String,
+    val isResource: Boolean,
 ) {
     companion object {
-        fun toResponse(account: Account) : AccountDetailInfo {
+        fun toResponse(account: Account): AccountDetailInfo {
             return AccountDetailInfo(
                 id = account.id,
                 name = account.name,
@@ -64,7 +66,8 @@ data class AccountDetailInfo(
                 createdAt = account.createdAt,
                 address = account.address,
                 addressMeta = account.addressMeta,
-                addressDetail =  account.addressDetail,
+                addressDetail = account.addressDetail,
+                isResource = account.isResource
             )
         }
     }
@@ -99,11 +102,11 @@ data class ApplyPartnerDetailInfo(
     val createdAt: LocalDateTime,
 ) {
     companion object {
-        fun toResponse(partner: Partner) : ApplyPartnerDetailInfo {
+        fun toResponse(partner: Partner): ApplyPartnerDetailInfo {
             return ApplyPartnerDetailInfo(
                 id = partner.id,
-                approveStatus =  partner.approveStatus,
-                organization =  partner.organization,
+                approveStatus = partner.approveStatus,
+                organization = partner.organization,
                 position = partner.position,
                 phone = partner.phone,
                 createdAt = partner.createdAt,

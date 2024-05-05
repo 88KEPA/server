@@ -22,13 +22,14 @@ class AdminReadService(
     private val partnerRepository: PartnerRepository,
 ) {
 
-    fun getJoinTrainer(page: Int, limit: Int, keyword: String?, sort: Sort): PageResponse {
+    fun getJoinTrainer(page: Int, limit: Int, keyword: String?, sort: Sort, isResource: Boolean?): PageResponse {
         val findAllTrainers = accountRepository.findAllByEmailOrNameOrPhone(
             keyword = keyword,
             role = Role.TRAINER,
             sort = sort,
+            isResource = isResource
         )
-        val trainers = findAllTrainers.map { JoinTrainers(id = it.id, name = it.name, birth = it.birth, createdAt = it.createdAt) }
+        val trainers = findAllTrainers.map { JoinTrainers(id = it.id, name = it.name, birth = it.birth, createdAt = it.createdAt, resource = it.isResource) }
         val totalCount = trainers.size.toLong()
         val totalPageCount: Long = totalCount / limit
         if ((totalCount % limit).toInt() != 0) {
