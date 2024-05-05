@@ -19,35 +19,36 @@ data class DetailInfo(
     val role: Role
 ) {
     companion object {
-        fun create(account: Account) : DetailInfo{
+        fun create(account: Account): DetailInfo {
             return DetailInfo(
                 name = account.name,
-                gender =  account.gender,
+                gender = account.gender,
                 email = account.email,
                 birth = account.birth,
                 address = account.address,
                 addressMeta = account.addressMeta,
                 addressDetail = account.addressDetail,
                 phone = account.phone,
-                role =  account.role
+                role = account.role
             )
         }
     }
 }
 
-data class PageResponse(
-    val contents: List<Any>,
+data class PageResponse<T>(
+    val contents: List<T>,
     val totalCount: Long,
     val page: Int,
     var limit: Int,
     var totalPageCount: Long,
 ) {
     companion object {
-        fun toResponse(contents: List<Any>,
-                   totalCount: Long,
-                   page: Int,
-                   limit: Int,
-                   totalPageCount: Long) : PageResponse {
+        fun <T> toResponse(
+            contents: List<T>,
+            totalCount: Long,
+            page: Int,
+            limit: Int,
+            totalPageCount: Long): PageResponse<T> {
             return PageResponse(
                 contents = contents,
                 totalCount = totalCount,

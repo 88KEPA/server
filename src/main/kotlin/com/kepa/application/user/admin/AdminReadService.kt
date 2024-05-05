@@ -22,14 +22,14 @@ class AdminReadService(
     private val partnerRepository: PartnerRepository,
 ) {
 
-    fun getJoinTrainer(page: Int, limit: Int, keyword: String?, sort: Sort, isResource: Boolean?): PageResponse {
+    fun getJoinTrainer(page: Int, limit: Int, keyword: String?, sort: Sort, isResource: Boolean?): PageResponse<JoinTrainers> {
         val findAllTrainers = accountRepository.findAllByEmailOrNameOrPhone(
             keyword = keyword,
             role = Role.TRAINER,
             sort = sort,
             isResource = isResource
         )
-        val trainers = findAllTrainers.map { JoinTrainers(id = it.id, name = it.name, birth = it.birth, createdAt = it.createdAt, resource = it.isResource) }
+        val trainers = findAllTrainers.map { JoinTrainers(id = it.id, name = it.name, birth = it.birth, createdAt = it.createdAt, isResource = it.isResource) }
         val totalCount = trainers.size.toLong()
         val totalPageCount: Long = totalCount / limit
         if ((totalCount % limit).toInt() != 0) {
@@ -46,7 +46,7 @@ class AdminReadService(
         return AccountDetailInfo.toResponse(findAccount);
     }
 
-    fun getPartners(page: Int, limit: Int, keyword: String?): PageResponse {
+    fun getPartners(page: Int, limit: Int, keyword: String?): PageResponse<ApplyPartners> {
         val partners = keyword?.let {
             partnerRepository.findAllByOrganization(keyword)
         } ?: partnerRepository.findAll()
@@ -66,7 +66,7 @@ class AdminReadService(
         return ApplyPartnerDetailInfo.toResponse(partner)
     }
 
-    private fun getSliceResult(data: List<Any>, page: Int, limit: Int): List<Any> {
+    private fun <T> getSliceResult(data: List<T>, page: Int, limit: Int): List<T> {
         val totalCount = data.size.toLong()
         val endIndexTemp = page * limit + limit
         val endIndex = if (endIndexTemp >= totalCount) {

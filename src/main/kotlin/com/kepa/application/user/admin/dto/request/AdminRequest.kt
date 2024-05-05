@@ -6,9 +6,12 @@ abstract class PageRequest(
     var limit: Int = 10,
     var page: Int = 0
 )
-
 data class FilterRequest(
     val keyword: String?,
     val sort: Sort = Sort.ASC,
-    val resource: Boolean?
-) : PageRequest()
+    val isResource: Boolean?
+) : PageRequest() {
+    fun getIsResource(): Boolean? {
+        return isResource
+    }
+}

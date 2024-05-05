@@ -23,7 +23,8 @@ data class JoinTrainers(
     @ApiModelProperty("가입일자")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     val createdAt: LocalDateTime,
-    val resource: Boolean = false,
+    @ApiModelProperty("인재풀 여부")
+    val isResource: Boolean = false,
 )
 
 data class AccountDetailInfo(

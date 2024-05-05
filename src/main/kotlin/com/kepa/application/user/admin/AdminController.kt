@@ -5,6 +5,8 @@ import com.kepa.application.user.admin.dto.request.FilterRequest
 import com.kepa.application.user.admin.dto.request.Resource
 import com.kepa.application.user.admin.dto.response.AccountDetailInfo
 import com.kepa.application.user.admin.dto.response.ApplyPartnerDetailInfo
+import com.kepa.application.user.admin.dto.response.ApplyPartners
+import com.kepa.application.user.admin.dto.response.JoinTrainers
 import com.kepa.application.user.dto.request.LoginUserInfo
 import com.kepa.application.user.dto.response.DetailInfo
 import com.kepa.application.user.dto.response.PageResponse
@@ -31,9 +33,9 @@ class AdminController(
 
     @ApiOperation(value = "트레이너 목록")
     @GetMapping("/list/trainer")
-    fun getTrainer(@LoginUser loginUserInfo: LoginUserInfo, filterRequest: FilterRequest): PageResponse {
+    fun getTrainer(@LoginUser loginUserInfo: LoginUserInfo, filterRequest: FilterRequest): PageResponse<JoinTrainers> {
         return adminReadService.getJoinTrainer(page = filterRequest.page, limit = filterRequest.limit,
-            keyword = filterRequest.keyword, sort = filterRequest.sort, isResource = filterRequest.resource)
+            keyword = filterRequest.keyword, sort = filterRequest.sort, isResource = filterRequest.isResource)
     }
 
     @ApiOperation(value = "회원정보 상세보기")
@@ -44,7 +46,7 @@ class AdminController(
 
     @ApiOperation(value = "신청 제휴업체 목록")
     @GetMapping("/partners")
-    fun getPartners(@LoginUser loginUserInfo: LoginUserInfo, filterRequest: FilterRequest): PageResponse {
+    fun getPartners(@LoginUser loginUserInfo: LoginUserInfo, filterRequest: FilterRequest): PageResponse<ApplyPartners> {
         return adminReadService.getPartners(page = filterRequest.page, limit = filterRequest.limit, filterRequest.keyword)
     }
 
